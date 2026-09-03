@@ -35,7 +35,7 @@ export default function BidDetailPage() {
         <div className="suite-detail-deadline"><span>DEADLINE</span><strong>{formatDate(bid.deadlineAt, true)}</strong><small className={remaining <= 3 && remaining >= 0 ? "urgent" : ""}>{remaining >= 0 ? `${remaining} day${remaining === 1 ? "" : "s"} remaining` : "Closed"}</small></div>
       </section>
 
-      {bid.deadlineChanged && <div className="notice-card"><AlertTriangle size={20} /><div><strong>Deadline change detected</strong><p>This opportunity's deadline changed after it was first discovered{bid.deadlineChangedAt ? ` on ${formatDate(bid.deadlineChangedAt, true)}` : ""}. The current deadline shown above is the latest value collected.</p></div></div>}
+      {bid.deadlineChanged && <div className="notice-card"><AlertTriangle size={20} /><div><strong>Deadline change detected</strong><p>The deadline for this opportunity changed after it was first discovered{bid.deadlineChangedAt ? ` on ${formatDate(bid.deadlineChangedAt, true)}` : ""}. The current deadline shown above is the latest value collected.</p></div></div>}
 
       <div className="suite-detail-layout">
         <div className="suite-detail-main">
