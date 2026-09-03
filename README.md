@@ -2,91 +2,98 @@
 
 Uganda-focused procurement intelligence platform by **AutoMinds Africa**.
 
-The repository now contains a production-minded MVP foundation: Firebase Authentication, Firestore data access, a branded responsive portal, bid search, saved bids, deadline views, organization discovery, a source monitor, an admin testing utility, and an isolated Python collector workspace for the real Uganda source adapters.
-
-## Brand asset
-
-Add the official AutoMinds Africa logo as:
-
-```text
-public/logo.png
-```
-
-Every logo location already points to `/logo.png`. Until it is added, the interface falls back to an AutoMinds text mark instead of showing a broken image.
-
-## Login mascot
-
-The login screen includes **Bid Scout**, an original AutoMinds-colored procurement mascot:
-- idle: “Looking for bids, I see.”
-- email focus: the eyes follow the email interaction and the message changes
-- password focus: the mascot covers its eyes
-- sign-in: the mascot switches to scanning/loading mode
+The project combines a Next.js procurement workspace with a separate Python collection engine. The first live source adapter is **eGP Uganda**. It normalizes public bid notices, deduplicates them by procurement reference, tracks changes such as deadline extensions, and writes the resulting records to the application data layer.
 
 ## Current stack
 
 - Next.js + TypeScript
 - Firebase Authentication
-- Cloud Firestore (MVP/testing data layer)
-- Firebase Analytics
-- strict Firestore rules
-- responsive AutoMinds blue/orange design system
-- isolated Python collector scaffold
+- Cloud Firestore for the MVP data layer
+- strict Firestore rules and indexes
+- responsive AutoMinds suite design
+- Python + BeautifulSoup + HTTPX collector
+- Firebase Admin for server-side collector writes
+- GitHub Actions for scheduled collection and infrastructure deployment
+
+## Security model
+
+No real Firebase configuration values or service-account credentials are committed to source control.
+
+Production web configuration is injected from GitHub Actions secrets during the Pages build. The server-side collector uses a separate `FIREBASE_SERVICE_ACCOUNT_JSON` Actions secret. Never place a service-account JSON file, private key, password, access token or unrestricted Google API key in this repository.
+
+Firebase web configuration is delivered to browsers by design when the client SDK is used. It must therefore be protected with restricted Google API key settings, Firebase Authentication and strict Firestore rules rather than treated as a server credential.
+
+See [`docs/SECURITY_AND_INGESTION.md`](docs/SECURITY_AND_INGESTION.md).
 
 ## Run locally
 
 ```bash
 npm install
 cp .env.example .env.local
+# Fill .env.local with your local web configuration.
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-The Firebase web configuration supplied for `spring-ship-456117-u8` is already used as a fallback, so `.env.local` is optional for the initial test project.
+## eGP collector
 
-## Firebase first-time setup
+From `collector/`:
 
-1. Enable **Email/Password** in Firebase Authentication.
-2. Create Firestore for project `spring-ship-456117-u8`.
-3. Deploy `firestore.rules` and `firestore.indexes.json`.
-4. Create a Firebase Auth user and sign in once.
-5. Change that user's Firestore `/users/{uid}.role` from `viewer` to `admin`.
-6. Open `/admin/bids/new` and add one test bid to validate the complete Firestore → dashboard flow.
+```bash
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -v
+python -m src.run_egp
+```
 
-Full steps: [`docs/FIREBASE_SETUP.md`](docs/FIREBASE_SETUP.md).
+`python -m src.run_egp` requires the `FIREBASE_SERVICE_ACCOUNT_JSON` environment variable. In production this value is supplied only through GitHub Actions secrets.
+
+The collector records:
+
+- normalized bid data
+- source trail
+- first/last seen timestamps
+- deterministic canonical keys for duplicate prevention
+- field-level change history
+- deadline-change flags
+- source health
+- crawl-run statistics
+- discovered organizations
+
+## Automated workflows
+
+- `Deploy to GitHub Pages` — builds the frontend using GitHub Actions secrets.
+- `Deploy Firestore rules and indexes` — deploys the hardened database rules/indexes.
+- `Collect eGP Uganda bids` — runs every two hours and can also be started manually.
 
 ## Portal routes
 
 - `/login`
 - `/dashboard`
 - `/bids`
-- `/bids/[id]`
+- `/bids/view?id=...`
 - `/closing-soon`
 - `/saved`
 - `/organizations`
 - `/sources`
+- `/company`
 - `/admin/source-monitor`
 - `/admin/bids/new`
 - `/settings`
 
-The sidebar is collapsible on desktop, becomes a drawer on mobile, and sign-out is always available both in the sidebar and top bar.
-
 ## Data rule
 
-The product should never be padded with fake tenders. Empty states are intentional until real Uganda bid records are ingested.
+The product is not padded with fake tenders. Search results come from records stored by real source collectors or explicit administrator testing utilities.
 
-## Collector roadmap
+## Next sources
 
-The Python collector workspace is ready for source adapters. Start in this order:
+After eGP Uganda is stable:
 
-1. eGP Uganda
-2. GPP / PPDA
-3. Daily Monitor
-4. New Vision
-5. direct procuring-entity sites
-6. NGO/development organization portals
-
-See [`docs/CODEX_NEXT.md`](docs/CODEX_NEXT.md) for the exact next implementation sequence.
+1. GPP / PPDA
+2. Daily Monitor
+3. New Vision
+4. direct procuring-entity websites
+5. NGO and development-partner portals
 
 ## Commands
 
@@ -97,6 +104,4 @@ npm run lint
 npm run build
 ```
 
-## Architecture
-
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the broader application structure.
