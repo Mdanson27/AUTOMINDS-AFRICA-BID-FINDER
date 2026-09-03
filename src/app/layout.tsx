@@ -3,6 +3,7 @@ import "./globals.css";
 import "./suite-theme.css";
 import "./product-pages.css";
 import "./workspace-pages.css";
+import "./mascot.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 
 export const metadata: Metadata = {
