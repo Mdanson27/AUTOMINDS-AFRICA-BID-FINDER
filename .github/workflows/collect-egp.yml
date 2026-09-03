@@ -1,4 +1,4 @@
-name: Collect eGP Uganda bids
+name: Validate eGP Uganda source
 
 on:
   workflow_dispatch:
@@ -14,18 +14,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: collect-egp-uganda
+  group: validate-egp-uganda
   cancel-in-progress: false
 
 jobs:
-  collect:
+  validate:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     timeout-minutes: 10
-    env:
-      FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-      UNSAFE_SERVICE_ACCOUNT_VARIABLE: ${{ vars.FIREBASE_SERVICE_ACCOUNT_JSON }}
     defaults:
       run:
         working-directory: collector
@@ -40,23 +35,34 @@ jobs:
           cache: pip
           cache-dependency-path: collector/requirements.txt
 
-      - name: Verify collector credential
-        shell: bash
-        run: |
-          if [ -n "$UNSAFE_SERVICE_ACCOUNT_VARIABLE" ]; then
-            echo "::error::FIREBASE_SERVICE_ACCOUNT_JSON must not be stored as an Environment variable. Delete it from Variables and recreate it using Add environment secret."
-            exit 1
-          fi
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON" ]; then
-            echo "::error::FIREBASE_SERVICE_ACCOUNT_JSON is not configured as a github-pages environment secret."
-            exit 1
-          fi
-
       - name: Install collector dependencies
         run: pip install -r requirements.txt
 
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
-      - name: Collect and ingest eGP Uganda bids
-        run: python -m src.run_egp
+      - name: Fetch and normalize live procurement sources
+        run: python -m src.export_live_snapshot
+
+      - name: Verify live eGP coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          sources = json.loads(Path("../public/data/sources.json").read_text(encoding="utf-8"))
+          bids = json.loads(Path("../public/data/bids.json").read_text(encoding="utf-8"))
+
+          egp = next((source for source in sources if source.get("id") == "egp-uganda"), None)
+          assert egp is not None, "eGP Uganda source metadata was not generated"
+          assert egp.get("health") == "healthy", f"eGP Uganda is not healthy: {egp.get('lastError', '')}"
+          assert int(egp.get("recordsFound") or 0) > 0, "eGP Uganda returned zero normalized notices"
+
+          egp_bids = [
+              bid for bid in bids
+              if any(source.get("id") == "egp-uganda" for source in bid.get("sources", []))
+          ]
+          assert egp_bids, "No eligible eGP Uganda opportunities were exported"
+
+          print(f"eGP Uganda healthy: {egp['recordsFound']} parsed, {len(egp_bids)} eligible opportunities in the live search window")
+          PY
