@@ -33,7 +33,7 @@ export default function NewBidPage() {
 
   return (
     <div className="page-stack narrow-page">
-      <PageHeader eyebrow="Testing utility" title="Add a Firestore bid" description="Use this only to validate authentication, rules and dashboard behavior before automated collectors are connected." />
+      <PageHeader eyebrow="Testing utility" title="Add a manual test bid" description="Use this only to validate access, normalized bid fields and dashboard behavior before automated collectors are connected." />
       <form className="panel form-grid" onSubmit={submit}>
         <label className="field full"><span>Bid title *</span><input name="title" required placeholder="e.g. Supply and installation of network equipment" /></label>
         <label className="field"><span>Organization *</span><input name="organization" required /></label>

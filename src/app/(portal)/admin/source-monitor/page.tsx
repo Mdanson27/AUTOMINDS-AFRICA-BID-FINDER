@@ -15,7 +15,7 @@ export default function SourceMonitorPage() {
   return (
     <div className="page-stack">
       <PageHeader eyebrow="Administration" title="Source monitor" description="Watch source health, crawl timing and collection readiness." action={<Link href="/admin/bids/new" className="button primary"><Plus size={16} /> Add test bid</Link>} />
-      <div className="notice-card"><ShieldCheck size={20} /><div><strong>Collector-safe foundation</strong><p>Firestore is ready for normalized records. Automated crawling is intentionally separated into the /collector workspace so source failures never break the dashboard.</p></div></div>
+      <div className="notice-card"><ShieldCheck size={20} /><div><strong>Collector-safe foundation</strong><p>Normalized records and the collector workspace are separated so a source failure cannot take down the user-facing Bid Finder experience.</p></div></div>
       <SourceGrid sources={sources} loading={loading} admin />
     </div>
   );
