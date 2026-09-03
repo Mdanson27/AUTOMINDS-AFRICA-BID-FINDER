@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AlertTriangle, Bookmark, BookmarkCheck, Building2, CalendarDays, ExternalLink, Layers3 } from "lucide-react";
+import { AlertTriangle, Bookmark, BookmarkCheck, Building2, CalendarDays, ExternalLink, Layers3, ReceiptText, Send, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useSavedBids } from "@/hooks/useSavedBids";
 import type { Bid } from "@/lib/types";
@@ -27,6 +27,7 @@ export function BidList({ bids, loading, compact = false }: { bids: Bid[]; loadi
         const primarySource = bid.sources[0];
         const detailHref = `/bids/view?id=${encodeURIComponent(bid.id)}`;
         const urgent = Number.isFinite(remaining) && remaining <= 3 && remaining >= 0;
+        const intelligence = bid.intelligence;
 
         return <article className={`suite-result-card suite-result-card-${bid.status}`} key={bid.id}>
           <div className="suite-result-main">
@@ -45,6 +46,14 @@ export function BidList({ bids, loading, compact = false }: { bids: Bid[]; loadi
               <span><strong>Category</strong>{bid.category || "Uncategorized"}</span>
               <span><strong>Published</strong>{formatDate(bid.publishedAt)}</span>
             </div>
+
+            {(intelligence?.bidSecurity || intelligence?.tenderFee || intelligence?.submissionMethod) && (
+              <div className="bid-intelligence-row">
+                {intelligence?.bidSecurity && <span className="bid-intelligence-pill security"><ShieldCheck size={12} /><strong>Security</strong>{intelligence.bidSecurity}</span>}
+                {intelligence?.tenderFee && <span className="bid-intelligence-pill"><ReceiptText size={12} /><strong>Fee</strong>{intelligence.tenderFee}</span>}
+                {intelligence?.submissionMethod && <span className="bid-intelligence-pill"><Send size={12} /><strong>Submit</strong>{intelligence.submissionMethod}</span>}
+              </div>
+            )}
 
             <div className="suite-source-badges">
               {bid.sources.slice(0, 3).map((item) => <span key={`${bid.id}-${item.name}`}>{item.name}</span>)}
