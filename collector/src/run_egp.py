@@ -23,7 +23,18 @@ def main() -> int:
         bids = list(source.parse(raw))
         if not bids:
             raise RuntimeError("eGP parser returned zero standard bid notices; refusing to write an empty crawl")
+
         log.info("Parsed %s normalized bid notices", len(bids))
+        for index, bid in enumerate(bids[:3], start=1):
+            log.info(
+                "Live eGP sample %s: reference=%s organization=%s deadline=%s title=%s",
+                index,
+                bid.reference_number or "(none)",
+                bid.organization,
+                bid.deadline_at.isoformat() if bid.deadline_at else "unknown",
+                bid.title,
+            )
+
         stats = store.ingest(bids)
         store.finish_run(run_ref, stats)
         log.info(
