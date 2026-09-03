@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Bookmark, CalendarDays, ExternalLink, FileCheck2, Landmark, Share2, Tag } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Bookmark, CalendarDays, ExternalLink, FileCheck2, Landmark, Share2, Tag } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useBids } from "@/hooks/useBids";
 import { daysUntil, formatDate } from "@/lib/date";
@@ -31,9 +31,11 @@ export default function BidDetailPage() {
     <div className="page-stack suite-bid-detail">
       <Link href="/bids" className="back-link"><ArrowLeft size={16} /> Back to search</Link>
       <section className="suite-detail-hero">
-        <div className="suite-detail-heading"><div className="badge-row"><span className={`status-badge status-${bid.status}`}>{bid.status}</span>{bid.procurementType && <span className="soft-badge">{bid.procurementType}</span>}</div><h1>{bid.title}</h1><p><Landmark size={17} /> {bid.organization}</p></div>
+        <div className="suite-detail-heading"><div className="badge-row"><span className={`status-badge status-${bid.status}`}>{bid.status}</span>{bid.procurementType && <span className="soft-badge">{bid.procurementType}</span>}{bid.deadlineChanged && <span className="soft-badge deadline-change-badge"><AlertTriangle size={12} /> Deadline updated</span>}</div><h1>{bid.title}</h1><p><Landmark size={17} /> {bid.organization}</p></div>
         <div className="suite-detail-deadline"><span>DEADLINE</span><strong>{formatDate(bid.deadlineAt, true)}</strong><small className={remaining <= 3 && remaining >= 0 ? "urgent" : ""}>{remaining >= 0 ? `${remaining} day${remaining === 1 ? "" : "s"} remaining` : "Closed"}</small></div>
       </section>
+
+      {bid.deadlineChanged && <div className="notice-card"><AlertTriangle size={20} /><div><strong>Deadline change detected</strong><p>This opportunity's deadline changed after it was first discovered{bid.deadlineChangedAt ? ` on ${formatDate(bid.deadlineChangedAt, true)}` : ""}. The current deadline shown above is the latest value collected.</p></div></div>}
 
       <div className="suite-detail-layout">
         <div className="suite-detail-main">
