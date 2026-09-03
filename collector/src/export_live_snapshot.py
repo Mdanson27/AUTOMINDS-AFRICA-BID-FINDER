@@ -9,16 +9,32 @@ from .sources.daily_monitor import DailyMonitorSource
 from .sources.egp_uganda import EGPUgandaSource
 from .sources.gpp_ppda import GPPPPDASource
 from .sources.new_vision import NewVisionSource
+from .sources.uganda_direct import KCCASource, MoFPEDSource, NITAUgandaSource, UCCSource, URASource
+from .sources.world_bank import WorldBankUgandaSource
 
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "public" / "data"
 SOURCES = (
     EGPUgandaSource(),
+    NITAUgandaSource(),
+    KCCASource(),
+    URASource(),
+    UCCSource(),
+    MoFPEDSource(),
+    WorldBankUgandaSource(),
     GPPPPDASource(),
     DailyMonitorSource(),
     NewVisionSource(),
 )
+
+
+def source_type(source_id: str) -> str:
+    if source_id in {"daily-monitor", "new-vision"}:
+        return "newspaper"
+    if source_id in {"world-bank-uganda"}:
+        return "development"
+    return "government"
 
 
 def iso(value):
@@ -90,7 +106,7 @@ def main() -> int:
             metas.append({
                 "id": source.source_id,
                 "name": source.name,
-                "type": "newspaper" if source.source_id in {"daily-monitor", "new-vision"} else "government",
+                "type": source_type(source.source_id),
                 "baseUrl": source.url,
                 "health": "healthy",
                 "enabled": True,
@@ -107,7 +123,7 @@ def main() -> int:
             metas.append({
                 "id": source.source_id,
                 "name": source.name,
-                "type": "newspaper" if source.source_id in {"daily-monitor", "new-vision"} else "government",
+                "type": source_type(source.source_id),
                 "baseUrl": source.url,
                 "health": "warning",
                 "enabled": True,
