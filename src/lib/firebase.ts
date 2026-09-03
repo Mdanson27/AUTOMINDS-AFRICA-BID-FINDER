@@ -37,7 +37,12 @@ if (missing.length) {
 
 export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// This Firebase project uses a named Enterprise Firestore database whose ID is
+// literally "default" (not the special "(default)" database ID). Keeping the
+// ID configurable makes local/testing migrations straightforward later.
+export const firestoreDatabaseId = process.env.NEXT_PUBLIC_FIRESTORE_DATABASE_ID || "default";
+export const db = getFirestore(app, firestoreDatabaseId);
 
 if (typeof window !== "undefined") {
   isSupported()
