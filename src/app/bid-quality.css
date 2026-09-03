@@ -1,0 +1,210 @@
+/* Bid Finder data-quality presentation guardrails.
+   These rules keep third-party procurement text inside the product layout. */
+
+.suite-find-page,
+.suite-results-section,
+.suite-result-list,
+.suite-result-card,
+.suite-result-main,
+.suite-bid-detail,
+.suite-detail-hero,
+.suite-detail-heading,
+.suite-detail-layout,
+.suite-detail-main,
+.suite-detail-side,
+.suite-opportunity-overview,
+.description-block {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.suite-result-card {
+  overflow: hidden;
+  grid-template-columns: minmax(0, 1fr) 150px 92px;
+}
+
+.suite-result-card-closed {
+  background: #fbfcfd;
+  border-color: #e3e9ed;
+}
+
+.suite-result-card-closed .suite-result-title,
+.suite-result-card-closed .suite-result-org {
+  color: #607585;
+}
+
+.suite-result-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  word-break: normal;
+  max-width: 78ch;
+}
+
+.suite-result-org {
+  min-width: 0;
+}
+
+.suite-result-org > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suite-result-meta {
+  min-width: 0;
+}
+
+.suite-result-meta > span {
+  min-width: 0;
+  max-width: 250px;
+  overflow-wrap: anywhere;
+}
+
+.suite-source-badges {
+  min-width: 0;
+}
+
+.suite-source-badges span {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suite-result-deadline {
+  min-width: 0;
+}
+
+.suite-detail-hero {
+  overflow: hidden;
+}
+
+.suite-detail-heading h1 {
+  max-width: 34ch;
+  font-size: clamp(24px, 2.5vw, 34px);
+  line-height: 1.18;
+  letter-spacing: -0.6px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.suite-detail-heading > p {
+  min-width: 0;
+}
+
+.suite-detail-heading > p span {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.suite-detail-deadline {
+  align-self: start;
+}
+
+.suite-opportunity-overview {
+  overflow: hidden;
+}
+
+.suite-meta-grid > div {
+  min-width: 0;
+}
+
+.suite-meta-grid strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.description-block {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #e5ebef;
+}
+
+.description-block h3 {
+  margin: 0 0 10px;
+  color: #173a57;
+  font-size: 13px;
+}
+
+.description-block p {
+  margin: 0 0 12px;
+  max-width: 92ch;
+  color: #526c7f;
+  font-size: 11px;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
+}
+
+.description-block p:last-child {
+  margin-bottom: 0;
+}
+
+.suite-source-trail,
+.suite-source-trail > a,
+.suite-source-trail > a > div {
+  min-width: 0;
+}
+
+.suite-source-trail strong,
+.suite-source-trail span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1180px) {
+  .suite-result-card {
+    grid-template-columns: minmax(0, 1fr) 145px;
+  }
+
+  .suite-result-actions {
+    grid-column: 1 / -1;
+  }
+
+  .suite-detail-heading h1 {
+    max-width: 42ch;
+  }
+}
+
+@media (max-width: 760px) {
+  .suite-result-card,
+  .suite-result-list.compact .suite-result-card {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 14px;
+  }
+
+  .suite-result-title {
+    font-size: 14px;
+    -webkit-line-clamp: 3;
+  }
+
+  .suite-result-org > span {
+    white-space: normal;
+  }
+
+  .suite-result-deadline {
+    border-left: 0;
+    border-top: 1px solid #e4e9ed;
+    padding: 10px 0 0;
+  }
+
+  .suite-detail-hero {
+    padding: 20px;
+  }
+
+  .suite-detail-heading h1 {
+    font-size: 24px;
+    max-width: none;
+  }
+
+  .description-block p {
+    font-size: 10.5px;
+    line-height: 1.7;
+  }
+}

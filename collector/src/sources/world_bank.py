@@ -50,14 +50,26 @@ class WorldBankUgandaSource(BidSource):
             country = self._pick(item, "project_ctry_name", "country_name", "country")
             if country and "uganda" not in country.lower():
                 continue
-            title = self._pick(item, "notice_text", "notice_title", "title", "description")
-            if not title:
-                continue
+
+            notice_text = self._pick(item, "notice_text")
             project_name = self._pick(item, "project_name")
             project_id = self._pick(item, "project_id")
             reference = self._pick(item, "reference_no", "reference", "notice_reference", "id")
-            notice_type = self._pick(item, "notice_type", "notice_type_exact") or "World Bank procurement notice"
+            notice_type = self._pick(item, "notice_type", "notice_type_exact") or "Procurement notice"
             procurement_type = self._pick(item, "procurement_group_desc", "procurement_type", "procurement_method_name") or notice_type
+            explicit_title = self._pick(item, "notice_title", "title", "short_description")
+
+            if explicit_title:
+                title = explicit_title
+            elif project_name:
+                suffix = procurement_type if procurement_type.lower() not in project_name.lower() else ""
+                title = clean(f"{project_name}{' — ' + suffix if suffix else ''}")
+            else:
+                title = clean(notice_text)[:180]
+
+            if not title:
+                continue
+
             published = parse_date(self._pick(item, "publication_date", "published_date", "date_published"))
             deadline = parse_date(self._pick(item, "submission_deadline_date", "submission_date", "deadline_date", "deadline"))
             status = "open" if deadline is None or deadline >= now else "closed"
@@ -66,12 +78,20 @@ class WorldBankUgandaSource(BidSource):
                 f"https://projects.worldbank.org/en/projects-operations/procurement-detail/{notice_id}"
                 if notice_id else self.url
             )
-            description = clean(" | ".join(part for part in (project_name, project_id, self._pick(item, "notice_text")) if part))
+            agency = self._pick(
+                item,
+                "implementing_agency",
+                "implementing_agency_name",
+                "borrower",
+                "agency_name",
+                "organization",
+            )
+            description = clean(" | ".join(part for part in (project_name, project_id, notice_text) if part))
             bid = NormalizedBid(
-                title=title,
-                organization="World Bank / Uganda project" if not project_name else project_name,
+                title=title[:240],
+                organization=agency or project_name or "World Bank / Uganda project",
                 reference_number=reference,
-                description=description[:1800],
+                description=description[:1600],
                 category=self._pick(item, "sector", "sector_name", "procurement_group_desc") or procurement_type,
                 procurement_type=procurement_type,
                 published_at=published,

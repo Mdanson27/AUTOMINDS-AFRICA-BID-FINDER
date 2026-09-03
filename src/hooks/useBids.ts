@@ -2,14 +2,71 @@
 
 import { useEffect, useState } from "react";
 import { subscribeToBids } from "@/lib/firestore";
-import type { Bid } from "@/lib/types";
+import type { Bid, BidStatus } from "@/lib/types";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const MAX_DAYS_AHEAD = 90;
+const MIN_FY_START = new Date("2026-07-01T00:00:00+03:00").getTime();
+
+function plainText(value: string) {
+  if (!value) return "";
+  let text = value;
+  const parser = new DOMParser();
+  for (let pass = 0; pass < 2; pass += 1) {
+    const doc = parser.parseFromString(text, "text/html");
+    text = doc.body.textContent || text;
+  }
+  return text.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function currentFinancialYearStart(now: Date) {
+  const year = now.getUTCMonth() >= 6 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
+  return Math.max(new Date(`${year}-07-01T00:00:00+03:00`).getTime(), MIN_FY_START);
+}
+
+function normalizeBid(bid: Bid, now = new Date()): Bid | null {
+  const deadline = new Date(bid.deadlineAt);
+  if (Number.isNaN(deadline.getTime())) return null;
+
+  const nowMs = now.getTime();
+  const fyStart = currentFinancialYearStart(now);
+  const latestDeadline = nowMs + MAX_DAYS_AHEAD * 86_400_000;
+  const deadlineMs = deadline.getTime();
+
+  if (deadlineMs < fyStart || deadlineMs > latestDeadline) return null;
+
+  if (bid.publishedAt) {
+    const published = new Date(bid.publishedAt);
+    if (!Number.isNaN(published.getTime()) && published.getTime() < fyStart) return null;
+  }
+
+  const title = plainText(bid.title).slice(0, 240);
+  if (!title) return null;
+
+  const isOpen = deadlineMs >= nowMs;
+  const status: BidStatus = isOpen && bid.status === "planned" ? "planned" : isOpen ? "open" : "closed";
+
+  return {
+    ...bid,
+    title,
+    organization: plainText(bid.organization).slice(0, 180),
+    referenceNumber: plainText(bid.referenceNumber).slice(0, 140),
+    description: plainText(bid.description).slice(0, 1600),
+    category: plainText(bid.category).slice(0, 120),
+    procurementType: plainText(bid.procurementType).slice(0, 100),
+    status,
+    isOpen,
+    sources: (bid.sources || []).map((source) => ({ ...source, name: plainText(source.name) })),
+  };
+}
 
 function mergeBids(snapshotBids: Bid[], liveBids: Bid[]) {
   const merged = new Map<string, Bid>();
-  for (const bid of snapshotBids) merged.set(bid.id, bid);
-  for (const bid of liveBids) merged.set(bid.id, bid);
+  const now = new Date();
+  for (const raw of [...snapshotBids, ...liveBids]) {
+    const bid = normalizeBid(raw, now);
+    if (bid) merged.set(bid.id, bid);
+  }
   return Array.from(merged.values());
 }
 
