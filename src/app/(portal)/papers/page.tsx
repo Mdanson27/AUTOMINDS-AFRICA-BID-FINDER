@@ -5,6 +5,7 @@ import { ExternalLink, Newspaper, RefreshCw, Search } from "lucide-react";
 import { BidList } from "@/components/bids/BidList";
 import { requestSnapshotRefresh, useBids } from "@/hooks/useBids";
 import { useSources } from "@/hooks/useSources";
+import type { BidSource } from "@/lib/types";
 
 const paperNames = new Set(["Daily Monitor", "New Vision"]);
 const paperLinks: Record<string, string> = {
@@ -30,17 +31,21 @@ export default function PapersPage() {
   const [query, setQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
-  const paperSources = useMemo(() => {
+  const paperSources = useMemo<BidSource[]>(() => {
     const existing = sources.filter((source) => source.type === "newspaper" || paperNames.has(source.name));
     const byName = new Map(existing.map((source) => [source.name, source]));
-    return ["Daily Monitor", "New Vision"].map((name) => byName.get(name) || {
-      id: name.toLowerCase().replace(/\s+/g, "-"),
-      name,
-      type: "newspaper",
-      baseUrl: paperLinks[name],
-      health: "planned" as const,
-      enabled: true,
-      recordsFound: 0,
+    return ["Daily Monitor", "New Vision"].map((name) => {
+      const existingSource = byName.get(name);
+      if (existingSource) return existingSource;
+      return {
+        id: name.toLowerCase().replace(/\s+/g, "-"),
+        name,
+        type: "newspaper",
+        baseUrl: paperLinks[name],
+        health: "planned",
+        enabled: true,
+        recordsFound: 0,
+      };
     });
   }, [sources]);
 
