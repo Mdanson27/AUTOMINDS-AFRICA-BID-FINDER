@@ -57,7 +57,11 @@ class FirestoreBidStore:
             except json.JSONDecodeError as exc:
                 raise RuntimeError("FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON") from exc
             firebase_admin.initialize_app(credentials.Certificate(service_account))
-        return firestore.client()
+
+        # The Firebase project uses a named Enterprise Firestore database whose
+        # ID is literally "default" rather than the special "(default)" ID.
+        database_id = os.environ.get("FIRESTORE_DATABASE_ID", "default").strip() or "default"
+        return firestore.client(database_id=database_id)
 
     def start_run(self) -> tuple[Any, datetime]:
         started = datetime.now(timezone.utc)
