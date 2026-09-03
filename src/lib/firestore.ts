@@ -12,7 +12,9 @@ function iso(value: unknown): string {
 }
 
 export function subscribeToBids(onData: (bids: Bid[]) => void, onError: (message: string) => void) {
-  const q = query(collection(db, "bids"), orderBy("deadlineAt", "asc"), limit(500));
+  // Read newest/current deadlines first so a growing archive of closed bids can
+  // never crowd active opportunities out of the client-side search workspace.
+  const q = query(collection(db, "bids"), orderBy("deadlineAt", "desc"), limit(1000));
   return onSnapshot(q, (snapshot) => onData(snapshot.docs.map((item) => {
     const data = item.data();
     return {
