@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { BarChart3, Eye, EyeOff, LockKeyhole, Mail, Search, ShieldCheck, Target, Telescope } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { BidScoutMascot, MascotMode } from "./BidScoutMascot";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const dashboardUrl = `${basePath}/dashboard/`;
+
 export function LoginScreen() {
   const { user, loading: authLoading, signIn, resetPassword } = useAuth();
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [focused, setFocused] = useState<"email" | "password" | null>(null);
@@ -19,7 +20,11 @@ export function LoginScreen() {
   const [resetSent, setResetSent] = useState(false);
   const [result, setResult] = useState<"idle" | "error" | "success">("idle");
 
-  useEffect(() => { if (!authLoading && user) router.replace("/dashboard"); }, [authLoading, router, user]);
+  useEffect(() => {
+    if (!authLoading && user && window.location.pathname !== dashboardUrl) {
+      window.location.replace(dashboardUrl);
+    }
+  }, [authLoading, user]);
 
   const mascotMode: MascotMode = useMemo(() => {
     if (result === "success") return "success";
@@ -36,7 +41,7 @@ export function LoginScreen() {
       await signIn(email, password);
       setBusy(false); setResult("success");
       await new Promise((resolve) => setTimeout(resolve, 360));
-      router.replace("/dashboard");
+      window.location.replace(dashboardUrl);
     } catch (error) {
       setMessage(authMessage(error)); setBusy(false); setResult("error");
     }
