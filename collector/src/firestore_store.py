@@ -211,14 +211,15 @@ class FirestoreBidStore:
         return outcome
 
     def _upsert_bid_source(self, bid_ref: Any, source_entry: dict[str, Any], now: datetime) -> None:
-        bid_ref.collection("sources").document(self.source_id).set(
-            {
-                **source_entry,
-                "firstDetectedAt": firestore.SERVER_TIMESTAMP,
-                "lastDetectedAt": now,
-            },
-            merge=True,
-        )
+        source_ref = bid_ref.collection("sources").document(self.source_id)
+        source_snapshot = source_ref.get()
+        payload = {
+            **source_entry,
+            "lastDetectedAt": now,
+        }
+        if not source_snapshot.exists:
+            payload["firstDetectedAt"] = now
+        source_ref.set(payload, merge=True)
 
     def _upsert_organization(self, organization: str, now: datetime) -> None:
         organization_id = hashlib.sha1(organization.lower().strip().encode("utf-8")).hexdigest()[:32]
