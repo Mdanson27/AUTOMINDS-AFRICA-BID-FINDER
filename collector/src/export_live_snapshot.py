@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 from zoneinfo import ZoneInfo
 
 from .sources.afdb_uganda import AfDBUgandaSource
@@ -85,6 +86,102 @@ def stable_id(canonical_key: str) -> str:
     return hashlib.sha256(canonical_key.encode("utf-8")).hexdigest()[:28]
 
 
+def clipped_phrase(text: str, pattern: str, limit: int = 190) -> str:
+    match = re.search(pattern, text, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    value = clean(match.group(0))
+    return value[:limit]
+
+
+def extract_intelligence(bid) -> dict:
+    """Best-effort structured extraction from the public notice text.
+
+    These fields are deliberately conservative: if the notice does not contain a
+    requirement, Bid Finder leaves it blank instead of inventing a value.
+    """
+    text = clean(" ".join(filter(None, [bid.title, bid.description])))
+    lower = text.lower()
+
+    bid_security = clipped_phrase(
+        text,
+        r"(?:bid security|bid-security|security declaration)[^.;]{0,170}",
+    )
+    tender_fee = clipped_phrase(
+        text,
+        r"(?:non[- ]refundable (?:bid |tender |bidding document )?fee|tender fee|bid document fee|bidding document fee)[^.;]{0,170}",
+    )
+
+    has_email = "email" in lower or "e-mail" in lower
+    has_portal = any(token in lower for token in ["portal", "electronic procurement", "egp", "online submission"])
+    has_physical = any(token in lower for token in ["sealed bid", "sealed envelope", "hand delivered", "physical submission", "delivered to the address"])
+    if has_physical and (has_email or has_portal):
+        submission_method = "Electronic or physical submission instructions detected"
+    elif has_physical:
+        submission_method = "Physical / sealed submission"
+    elif has_portal:
+        submission_method = "Electronic portal submission"
+    elif has_email:
+        submission_method = "Electronic submission by email"
+    else:
+        submission_method = ""
+
+    requirement_patterns = [
+        ("Tax clearance / tax compliance", ["tax clearance", "tax compliance", "tax certificate"]),
+        ("Trading licence", ["trading licence", "trading license"]),
+        ("Certificate of incorporation / registration", ["certificate of incorporation", "certificate of registration", "company registration"]),
+        ("NSSF compliance", ["nssf"]),
+        ("Audited financial statements", ["audited financial", "audited accounts"]),
+        ("Relevant past experience", ["similar experience", "relevant experience", "past experience"]),
+        ("Power of Attorney", ["power of attorney"]),
+        ("Bid security", ["bid security", "security declaration"]),
+        ("Manufacturer authorization", ["manufacturer authorization", "manufacturer's authorization", "manufacturer’s authorization"]),
+        ("Site visit / pre-bid participation", ["site visit", "pre-bid meeting", "prebid meeting"]),
+    ]
+    requirements = [label for label, patterns in requirement_patterns if any(pattern in lower for pattern in patterns)][:8]
+
+    eligibility_patterns = [
+        ("Legally registered entity", ["legally registered", "registered company", "registered firm"]),
+        ("Eligible bidders", ["eligible bidders", "eligible firms", "eligible consultants"]),
+        ("Local registration / Uganda presence", ["registered in uganda", "uganda registration", "local firm"]),
+        ("Joint venture permitted", ["joint venture", "consortium"]),
+    ]
+    eligibility = [label for label, patterns in eligibility_patterns if any(pattern in lower for pattern in patterns)][:5]
+
+    key_date_phrases = []
+    for pattern in [
+        r"(?:pre[- ]bid meeting|prebid meeting)[^.;]{0,150}",
+        r"(?:site visit)[^.;]{0,150}",
+        r"(?:clarification(?: deadline| period| requests?)?)[^.;]{0,150}",
+        r"(?:bid opening|public opening)[^.;]{0,150}",
+    ]:
+        value = clipped_phrase(text, pattern, 175)
+        if value and value not in key_date_phrases:
+            key_date_phrases.append(value)
+
+    extracted_count = sum(bool(value) for value in [bid_security, tender_fee, submission_method, requirements, eligibility, key_date_phrases])
+    if extracted_count >= 4:
+        status = "enriched"
+        confidence = "high"
+    elif extracted_count:
+        status = "partial"
+        confidence = "medium"
+    else:
+        status = "basic"
+        confidence = "low"
+
+    return {
+        "enrichmentStatus": status,
+        "confidence": confidence,
+        "bidSecurity": bid_security,
+        "tenderFee": tender_fee,
+        "submissionMethod": submission_method,
+        "mandatoryRequirements": requirements,
+        "eligibility": eligibility,
+        "keyDates": key_date_phrases[:5],
+    }
+
+
 def record_from_bid(bid, generated_at: str, now: datetime):
     deadline = bid.deadline_at
     is_open = bool(deadline and deadline >= now)
@@ -99,8 +196,8 @@ def record_from_bid(bid, generated_at: str, now: datetime):
             "detectedAt": iso(source_ref.detected_at) or generated_at,
         })
 
-    title = clean(bid.title)[:240]
-    description = clean(bid.description)[:1600]
+    title = clean(bid.title)[:320]
+    description = clean(bid.description)[:2400]
     organization = clean(bid.organization)[:180]
     category = clean(bid.category)[:120]
     procurement_type = clean(bid.procurement_type)[:100]
@@ -123,6 +220,7 @@ def record_from_bid(bid, generated_at: str, now: datetime):
         "lastSeenAt": generated_at,
         "deadlineChanged": False,
         "sources": sources,
+        "intelligence": extract_intelligence(bid),
     }
 
 
@@ -200,14 +298,15 @@ def main() -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "bids.json").write_text(json.dumps(records, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DATA_DIR / "sources.json").write_text(json.dumps(metas, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    # Keep the old paths for users with cached JavaScript while the new build rolls out.
     (DATA_DIR / "egp-bids.json").write_text(json.dumps(records, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     egp_meta = next((item for item in metas if item["id"] == "egp-uganda"), metas[0])
     (DATA_DIR / "egp-meta.json").write_text(json.dumps(egp_meta, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
     healthy = sum(1 for item in metas if item["health"] == "healthy")
+    enriched = sum(1 for item in records if item.get("intelligence", {}).get("enrichmentStatus") in {"partial", "enriched"})
     print(
-        f"Exported {len(records)} eligible opportunities from {healthy}/{len(metas)} healthy sources "
+        f"Exported {len(records)} eligible opportunities from {healthy}/{len(metas)} healthy sources; "
+        f"{enriched} contain structured commercial intelligence "
         f"(financial year starts {financial_year_start(now).date()}, maximum {MAX_DAYS_AHEAD} days ahead)"
     )
     return 0
