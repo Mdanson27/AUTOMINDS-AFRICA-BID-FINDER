@@ -1,3 +1,4 @@
+// AutoMinds Africa Bid Finder production Firestore policy.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
