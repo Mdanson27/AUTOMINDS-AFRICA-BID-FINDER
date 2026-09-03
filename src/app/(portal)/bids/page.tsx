@@ -7,12 +7,12 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { useBids } from "@/hooks/useBids";
 import { daysUntil } from "@/lib/date";
 
-const catalog = ["eGP Uganda", "GPP / PPDA", "NITA-U", "KCCA", "URA", "UCC", "Ministry of Finance", "Daily Monitor", "New Vision", "World Bank Uganda", "UN / Development Partners"];
+const catalog = ["eGP Uganda", "GPP / PPDA", "NITA-U", "KCCA", "URA", "UCC", "Ministry of Finance", "Daily Monitor", "New Vision", "World Bank Uganda", "UNDP / UNCDF Uganda", "African Development Bank Uganda", "UN / Development Partners"];
 const scopes = [
   { id: "all", label: "Everywhere", icon: Globe2, patterns: [] as string[] },
   { id: "government", label: "Government", icon: Landmark, patterns: ["egp", "ppda", "gpp", "ura", "kcca", "nita", "unra", "ucc", "nwsc", "ministry", "finance", "mofped"] },
   { id: "newspapers", label: "Newspapers", icon: Newspaper, patterns: ["monitor", "new vision", "newspaper"] },
-  { id: "development", label: "NGO & Development", icon: UsersRound, patterns: ["un ", "ungm", "giz", "enabel", "usaid", "ngo", "development", "world bank"] },
+  { id: "development", label: "NGO & Development", icon: UsersRound, patterns: ["un ", "ungm", "undp", "uncdf", "afdb", "african development bank", "giz", "enabel", "usaid", "ngo", "development", "world bank"] },
   { id: "private", label: "Private sector", icon: Building2, patterns: ["private", "company", "bank", "telecom"] },
 ] as const;
 
