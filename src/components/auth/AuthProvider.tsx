@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(
       auth,
-      async (nextUser) => {
+      (nextUser) => {
         if (!active) return;
         setUser(nextUser);
 
@@ -46,43 +46,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
+        // A valid authenticated session is enough to open the application.
+        // Profile hydration must never hold the protected route on a spinner,
+        // especially while the procurement data store is being provisioned.
         const initial = fallbackProfile(nextUser);
+        setProfile(initial);
+        setLoading(false);
 
-        try {
-          const ref = doc(db, "users", nextUser.uid);
-          const snapshot = await getDoc(ref);
-          if (!active) return;
+        void (async () => {
+          try {
+            const ref = doc(db, "users", nextUser.uid);
+            const snapshot = await getDoc(ref);
+            if (!active) return;
 
-          if (!snapshot.exists()) {
-            // Profile persistence is useful, but it must never block a valid
-            // authenticated user from opening the workspace.
-            try {
-              await setDoc(ref, {
-                ...initial,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp(),
-              });
-            } catch {
-              // The live data store may still be provisioning. Continue with
-              // the authenticated user's safe in-memory profile.
+            if (!snapshot.exists()) {
+              try {
+                await setDoc(ref, {
+                  ...initial,
+                  createdAt: serverTimestamp(),
+                  updatedAt: serverTimestamp(),
+                });
+              } catch {
+                // Keep the in-memory profile. Persistence is optional for boot.
+              }
+              return;
             }
-            if (active) setProfile(initial);
-          } else {
+
             const data = snapshot.data();
+            if (!active) return;
             setProfile({
               uid: nextUser.uid,
               email: data.email || nextUser.email || "",
               displayName: data.displayName || nextUser.displayName || "",
               role: data.role === "admin" ? "admin" : "viewer",
             });
+          } catch {
+            // Keep the safe fallback profile and leave the workspace usable.
           }
-        } catch {
-          // Authentication and profile storage are separate concerns. If the
-          // profile store is unavailable, keep the signed-in session usable.
-          if (active) setProfile(initial);
-        } finally {
-          if (active) setLoading(false);
-        }
+        })();
       },
       () => {
         if (!active) return;
