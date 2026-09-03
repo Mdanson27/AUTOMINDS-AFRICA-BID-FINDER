@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return signedIn() && currentUser().data.role == 'admin';
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.role == 'viewer';
+      allow update: if signedIn() && (
+        isAdmin() || (
+          request.auth.uid == uid
+          && request.resource.data.role == resource.data.role
+        )
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /bids/{bidId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+
+      match /sources/{sourceId} {
+        allow read: if signedIn();
+        allow write: if isAdmin();
+      }
+
+      match /changes/{changeId} {
+        allow read: if signedIn();
+        allow write: if isAdmin();
+      }
+    }
+
+    match /sources/{sourceId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /crawlRuns/{runId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /organizations/{organizationId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /savedBids/{savedId} {
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /companyProfiles/{uid} {
+      allow read, write: if signedIn() && (request.auth.uid == uid || isAdmin());
+    }
+  }
+}

@@ -1,0 +1,6 @@
+Place the official AutoMinds Africa logo at:
+
+public/logo.png
+
+The application already references /logo.png throughout the login and portal UI.
+A graceful text fallback is shown until the file is added.
