@@ -2,6 +2,8 @@ import { addDoc, collection, deleteDoc, doc, limit, onSnapshot, orderBy, query, 
 import { db } from "./firebase";
 import type { Bid, BidSource, BidStatus } from "./types";
 
+const DATA_UNAVAILABLE_MESSAGE = "Live opportunity data is temporarily unavailable. Please try again shortly.";
+
 function iso(value: unknown): string {
   if (value instanceof Timestamp) return value.toDate().toISOString();
   if (value && typeof value === "object" && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
@@ -43,7 +45,7 @@ export function subscribeToBids(onData: (bids: Bid[]) => void, onError: (message
           }))
         : [],
     };
-  })), (error) => onError(error.message));
+  })), () => onError(DATA_UNAVAILABLE_MESSAGE));
 }
 
 export function subscribeToSources(onData: (sources: BidSource[]) => void, onError: (message: string) => void) {
@@ -64,12 +66,12 @@ export function subscribeToSources(onData: (sources: BidSource[]) => void, onErr
       recordsUnchanged: d.recordsUnchanged || 0,
       lastError: d.lastError || "",
     };
-  })), (error) => onError(error.message));
+  })), () => onError(DATA_UNAVAILABLE_MESSAGE));
 }
 
-export function subscribeSavedBidIds(uid: string, onData: (ids: Set<string>) => void) {
+export function subscribeSavedBidIds(uid: string, onData: (ids: Set<string>) => void, onError: () => void = () => undefined) {
   const q = query(collection(db, "savedBids"), where("ownerUid", "==", uid));
-  return onSnapshot(q, (snapshot) => onData(new Set(snapshot.docs.map((item) => String(item.data().bidId)))));
+  return onSnapshot(q, (snapshot) => onData(new Set(snapshot.docs.map((item) => String(item.data().bidId)))), onError);
 }
 
 export async function setSavedBid(uid: string, bidId: string, saved: boolean) {
