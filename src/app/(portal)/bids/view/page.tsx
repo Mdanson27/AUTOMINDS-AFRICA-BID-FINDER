@@ -1,18 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Bookmark, CalendarDays, ExternalLink, FileCheck2, Landmark, Share2, Tag } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useBids } from "@/hooks/useBids";
 import { daysUntil, formatDate } from "@/lib/date";
 
 export default function BidDetailPage() {
-  const params = useParams<{ id: string }>();
   const { bids, loading, error } = useBids();
-  const bid = bids.find((item) => item.id === params.id);
+  const [bidId, setBidId] = useState("");
+  const [mounted, setMounted] = useState(false);
 
-  if (loading) return <div className="panel skeleton-block" />;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setBidId(params.get("id") || "");
+    setMounted(true);
+  }, []);
+
+  const bid = bids.find((item) => item.id === bidId);
+
+  if (!mounted || loading) return <div className="panel skeleton-block" />;
   if (error) return <EmptyState title="Could not load this bid" description={error} />;
   if (!bid) return <EmptyState title="Bid not found" description="This opportunity may have been removed or is not available to your account." action={<Link href="/bids" className="button secondary">Back to bids</Link>} />;
 

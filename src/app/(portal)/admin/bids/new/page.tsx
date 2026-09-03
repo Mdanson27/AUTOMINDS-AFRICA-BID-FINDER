@@ -27,7 +27,7 @@ export default function NewBidPage() {
         publishedAt: String(data.get("publishedAt") || ""), deadlineAt: String(data.get("deadlineAt") || ""),
         sourceName: String(data.get("sourceName") || "Manual test"), sourceUrl: String(data.get("sourceUrl") || ""),
       });
-      router.push(`/bids/${id}`);
+      router.push(`/bids/view?id=${encodeURIComponent(id)}`);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not save bid."); setSaving(false); }
   }
 
