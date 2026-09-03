@@ -5,6 +5,7 @@ import "./product-pages.css";
 import "./workspace-pages.css";
 import "./mascot.css";
 import "./ingestion-status.css";
+import "./bid-quality.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
