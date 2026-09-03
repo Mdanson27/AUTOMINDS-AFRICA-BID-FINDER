@@ -1,0 +1,48 @@
+/* Bid Finder mascot — aligned to the AutoMinds suite character */
+.suite-mascot{width:100%;max-width:330px;margin:0 auto 2px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:206px}
+.suite-mascot-float{width:218px;height:164px;margin:0 auto;display:grid;place-items:center;animation:suiteMascotFriendlyFloat 3.4s ease-in-out infinite;transform-origin:center center}
+.suite-mascot svg{width:210px;height:164px;overflow:visible;display:block}
+.suite-mascot-copy{display:flex;align-items:center;justify-content:center;min-height:34px;margin-top:-1px;padding:0 12px}
+.suite-mascot-copy strong{max-width:255px;font-family:Georgia,"Times New Roman",serif;color:#5b6f87;font-size:14px;line-height:1.35;font-weight:800;text-align:center}
+.suite-mascot-copy span{display:none!important}
+.suite-mascot .mascot-pupil{transition:cx .18s ease,cy .18s ease}
+.suite-mascot-email .mascot-orb-body{transform-origin:130px 106px;animation:suiteMascotWatch .38s ease-out 1}
+.suite-mascot-password .mascot-orb-body{transform-origin:130px 106px;animation:suiteMascotClose .34s ease-out 1}
+.suite-mascot-loading .mascot-pupil-left{animation:suiteMascotScanLeft 1.15s ease-in-out infinite alternate}
+.suite-mascot-loading .mascot-pupil-right{animation:suiteMascotScanRight 1.15s ease-in-out infinite alternate}
+.suite-mascot-success .mascot-orb-body{transform-origin:130px 106px;animation:suiteMascotHappy .62s cubic-bezier(.22,.9,.3,1.35) 1}
+.suite-mascot-error .mascot-orb-body{transform-origin:130px 106px;animation:suiteMascotNope .36s ease-in-out 1}
+.suite-mascot-error .suite-mascot-copy strong{color:#8a5f5f}
+.suite-mascot-success .suite-mascot-copy strong{color:#4e7280}
+
+@keyframes suiteMascotFriendlyFloat{0%,100%{transform:translateY(2px) rotate(-.45deg)}50%{transform:translateY(-7px) rotate(.45deg)}}
+@keyframes suiteMascotWatch{0%{transform:rotate(0)}45%{transform:rotate(2.2deg)}100%{transform:rotate(0)}}
+@keyframes suiteMascotClose{0%{transform:scale(1)}55%{transform:scale(.985)}100%{transform:scale(1)}}
+@keyframes suiteMascotHappy{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-9px) scale(1.04)}100%{transform:translateY(0) scale(1)}}
+@keyframes suiteMascotNope{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}65%{transform:translateX(4px)}}
+@keyframes suiteMascotScanLeft{from{transform:translateX(-3px)}to{transform:translateX(4px)}}
+@keyframes suiteMascotScanRight{from{transform:translateX(-4px)}to{transform:translateX(3px)}}
+
+/* Keep the login hierarchy close to the suite reference */
+.suite-login-card{padding-top:16px}
+.suite-login-heading{margin-top:0}
+.suite-security-icon{margin-top:2px;margin-bottom:16px;width:56px;height:56px;border-radius:12px;background:#fff6ec;color:#ff6f0a;border:1px solid #fff0df}
+.suite-login-heading h2{font-size:30px;letter-spacing:-.35px}
+.suite-login-heading p{font-size:13px;margin-top:8px;margin-bottom:22px}
+.suite-login-input{min-height:58px;border-radius:8px}
+.suite-login-input.active{border-color:#ff7b11;box-shadow:0 0 0 4px rgba(255,123,17,.14)}
+.suite-login-submit{height:54px;font-size:13px}
+
+@media(max-width:1080px){
+  .suite-mascot{min-height:196px}
+  .suite-mascot-float{width:205px;height:154px}
+  .suite-mascot svg{width:198px;height:154px}
+}
+
+@media(max-width:620px){
+  .suite-mascot{min-height:188px;max-width:285px}
+  .suite-mascot-float{width:194px;height:146px}
+  .suite-mascot svg{width:188px;height:146px}
+  .suite-mascot-copy strong{font-size:13px;max-width:230px}
+  .suite-security-icon{width:52px;height:52px}
+}
