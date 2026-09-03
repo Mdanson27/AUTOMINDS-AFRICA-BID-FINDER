@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *"
 
 permissions:
   contents: read
@@ -37,6 +39,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -53,6 +60,12 @@ jobs:
             fi
           done
           exit "$missing"
+
+      - name: Install collector dependencies
+        run: python -m pip install -r collector/requirements.txt
+
+      - name: Export live eGP search snapshot
+        run: python -m collector.src.export_egp_snapshot
 
       - name: Install dependencies
         run: npm install
