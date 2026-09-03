@@ -14,10 +14,12 @@ log = logging.getLogger("autominds.egp")
 def main() -> int:
     source = EGPUgandaSource()
     store = FirestoreBidStore(source.source_id, source.name, source.url)
-    run_ref, _ = store.start_run()
     stats = IngestionStats()
+    run_ref = None
 
     try:
+        # Prove the public source is reachable and parsable independently of the
+        # database. This keeps source failures distinct from storage failures.
         log.info("Fetching public eGP Uganda bid notices")
         raw = source.fetch()
         bids = list(source.parse(raw))
@@ -35,6 +37,7 @@ def main() -> int:
                 bid.title,
             )
 
+        run_ref, _ = store.start_run()
         stats = store.ingest(bids)
         store.finish_run(run_ref, stats)
         log.info(
@@ -47,7 +50,11 @@ def main() -> int:
         return 0
     except Exception as exc:  # noqa: BLE001 - ingestion boundary must persist failure state
         log.exception("eGP ingestion failed")
-        store.finish_run(run_ref, stats, error=str(exc))
+        if run_ref is not None:
+            try:
+                store.finish_run(run_ref, stats, error=str(exc))
+            except Exception:  # noqa: BLE001 - preserve the primary source/storage error
+                log.exception("Could not persist failed eGP crawl status")
         return 1
 
 
