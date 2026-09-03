@@ -12,26 +12,36 @@ export function useSources() {
 
   useEffect(() => {
     let active = true;
-    let snapshotSource: BidSource | null = null;
+    let snapshotSources: BidSource[] = [];
     let liveSources: BidSource[] = [];
 
     const publish = () => {
       if (!active) return;
       const merged = new Map<string, BidSource>();
-      if (snapshotSource) merged.set(snapshotSource.id, snapshotSource);
+      for (const source of snapshotSources) merged.set(source.id, source);
       for (const source of liveSources) merged.set(source.id, source);
       setSources(Array.from(merged.values()));
       setLoading(false);
     };
 
-    void fetch(`${basePath}/data/egp-meta.json`, { cache: "no-store" })
+    void fetch(`${basePath}/data/sources.json`, { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Source snapshot request failed: ${response.status}`);
-        snapshotSource = (await response.json()) as BidSource;
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Invalid source snapshot");
+        snapshotSources = data as BidSource[];
         publish();
       })
       .catch(() => {
-        if (liveSources.length) publish();
+        void fetch(`${basePath}/data/egp-meta.json`, { cache: "no-store" })
+          .then(async (response) => {
+            if (!response.ok) throw new Error(`Fallback source snapshot request failed: ${response.status}`);
+            snapshotSources = [(await response.json()) as BidSource];
+            publish();
+          })
+          .catch(() => {
+            if (liveSources.length) publish();
+          });
       });
 
     const unsubscribe = subscribeToSources(
@@ -40,7 +50,7 @@ export function useSources() {
         publish();
       },
       () => {
-        if (!snapshotSource && active) setLoading(false);
+        if (!snapshotSources.length && active) setLoading(false);
       },
     );
 
