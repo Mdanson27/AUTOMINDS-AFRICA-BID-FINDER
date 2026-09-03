@@ -2,77 +2,107 @@
 
 export type MascotMode = "idle" | "email" | "password" | "loading" | "error" | "success";
 
-const copy: Record<MascotMode, { title: string; body: string }> = {
-  idle: { title: "Ready when you are.", body: "Let’s find the next opportunity." },
-  email: { title: "Typing email? I am watching right here.", body: "I will keep an eye on the details." },
-  password: { title: "I will close my eyes.", body: "Your password stays private." },
-  loading: { title: "Searching the landscape…", body: "Opening your procurement workspace." },
-  error: { title: "That did not work.", body: "Check the details and we will try again." },
-  success: { title: "Found you. Welcome back!", body: "Your bid workspace is ready." },
+const copy: Record<MascotMode, string> = {
+  idle: "Ready when you are.",
+  email: "Typing email? I am watching right here.",
+  password: "I will close my eyes.",
+  loading: "Looking for today’s opportunities…",
+  error: "Let’s check those details again.",
+  success: "Welcome back! I found you.",
 };
 
 export function BidScoutMascot({ mode, emailProgress = 0 }: { mode: MascotMode; emailProgress?: number }) {
-  const shift = mode === "email" ? Math.min(8, 2 + emailProgress * 7) : 0;
+  const watching = mode === "email";
   const closed = mode === "password";
+  const error = mode === "error";
+  const pupilX = watching ? Math.min(6.2, 2.4 + emailProgress * 4.2) : 0;
+  const pupilY = watching ? 2 : 0;
 
   return (
-    <div className={`suite-mascot suite-mascot-${mode}`}>
+    <div className={`suite-mascot suite-mascot-${mode}`} aria-live="polite">
       <div className="suite-mascot-float">
-        <svg viewBox="0 0 250 220" role="img" aria-label="AutoMinds opportunity scout mascot">
+        <svg viewBox="0 0 260 205" role="img" aria-label="AutoMinds Bid Finder mascot">
           <defs>
-            <radialGradient id="orbBody" cx="35%" cy="22%" r="75%">
-              <stop offset="0" stopColor="#ffad55" />
-              <stop offset=".45" stopColor="#ff8623" />
-              <stop offset="1" stopColor="#df5800" />
+            <radialGradient id="bodyGlow" cx="31%" cy="22%" r="82%">
+              <stop offset="0" stopColor="#ffae58" />
+              <stop offset=".38" stopColor="#ff8a28" />
+              <stop offset=".73" stopColor="#f56b09" />
+              <stop offset="1" stopColor="#bd4d20" />
             </radialGradient>
-            <linearGradient id="orbEar" x1="0" y1="0" x2="1" y2="1">
-              <stop stopColor="#ff8b24" />
-              <stop offset="1" stopColor="#f05e00" />
+            <linearGradient id="finGlow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ff8a27" />
+              <stop offset="1" stopColor="#e85a09" />
             </linearGradient>
-            <filter id="orbShadow" x="-30%" y="-30%" width="160%" height="180%">
-              <feDropShadow dx="0" dy="8" stdDeviation="7" floodColor="#17344b" floodOpacity=".24" />
+            <linearGradient id="faceShade" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ffffff" stopOpacity=".18" />
+              <stop offset=".55" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="1" stopColor="#6f2516" stopOpacity=".28" />
+            </linearGradient>
+            <filter id="softOrbShadow" x="-40%" y="-40%" width="180%" height="200%">
+              <feDropShadow dx="0" dy="9" stdDeviation="8" floodColor="#173a58" floodOpacity=".22" />
+            </filter>
+            <filter id="floorBlur" x="-40%" y="-80%" width="180%" height="260%">
+              <feGaussianBlur stdDeviation="2.2" />
             </filter>
           </defs>
 
-          <ellipse className="mascot-floor-shadow" cx="126" cy="193" rx="48" ry="12" fill="#163d5c" opacity=".17" />
-          <g filter="url(#orbShadow)" className="mascot-orb-body">
-            <path d="M88 48 75 22c-3-7 3-14 10-10l22 17Z" fill="url(#orbEar)" />
-            <path d="m160 48 15-25c4-7 11-5 11 3l-2 29Z" fill="url(#orbEar)" />
-            <path d="M62 101 31 88c-8-3-13 5-7 11l25 25Z" fill="url(#orbEar)" />
-            <path d="m188 101 31-13c8-3 13 5 7 11l-25 25Z" fill="url(#orbEar)" />
-            <circle cx="125" cy="108" r="72" fill="url(#orbBody)" />
-            <path d="M73 65c29-29 77-31 108-3" fill="none" stroke="#ffbe72" strokeWidth="8" strokeLinecap="round" opacity=".44" />
-            <path d="M68 119 45 139c-6 6-3 14 5 12l29-9Z" fill="url(#orbEar)" />
-            <path d="m182 119 23 20c6 6 3 14-5 12l-29-9Z" fill="url(#orbEar)" />
+          <ellipse className="mascot-floor-shadow" cx="130" cy="184" rx="49" ry="11" fill="#9aa5ad" opacity=".42" filter="url(#floorBlur)" />
 
+          <g className="mascot-orb-body" filter="url(#softOrbShadow)">
+            {/* ears / fins */}
+            <path d="M88 50 79 19c-2-8 6-12 12-6l21 23Z" fill="url(#finGlow)" />
+            <path d="m169 49 12-29c3-8 12-7 13 1l-2 34Z" fill="url(#finGlow)" />
+            <path d="M66 87 35 68c-8-5-15 2-10 10l25 30Z" fill="url(#finGlow)" />
+            <path d="m193 88 31-20c8-5 15 3 10 10l-25 30Z" fill="url(#finGlow)" />
+            <path d="M68 124 42 145c-7 6-3 14 6 12l33-10Z" fill="url(#finGlow)" />
+            <path d="m191 124 27 21c7 6 3 14-6 12l-33-10Z" fill="url(#finGlow)" />
+
+            {/* orb */}
+            <circle cx="130" cy="105" r="70" fill="url(#bodyGlow)" />
+            <circle cx="130" cy="105" r="70" fill="url(#faceShade)" opacity=".82" />
+            <path d="M82 61c24-21 65-28 98-11" fill="none" stroke="#ffc179" strokeWidth="8" strokeLinecap="round" opacity=".55" />
+            <path d="M84 52c21-14 46-19 72-14" fill="none" stroke="#ffb25d" strokeWidth="4" strokeLinecap="round" opacity=".38" />
+
+            {/* eyes */}
             {closed ? (
-              <g className="mascot-eyes-closed" fill="none" stroke="#153b59" strokeWidth="5" strokeLinecap="round">
-                <path d="M88 97q14 12 27 0" />
-                <path d="M136 97q14 12 27 0" />
-                <path d="M92 88 86 83" strokeWidth="3" /><path d="m159 88 6-5" strokeWidth="3" />
+              <g className="mascot-eyes-closed" fill="none" stroke="#153d5c" strokeLinecap="round">
+                <path d="M91 95q14 11 27 0" strokeWidth="5" />
+                <path d="M143 95q14 11 27 0" strokeWidth="5" />
+                <path d="m95 86-5-4M114 85l4-5M147 85l-4-5M166 86l5-4" strokeWidth="2.8" />
               </g>
             ) : (
               <g className="mascot-eyes-open">
-                <ellipse cx="103" cy="96" rx="16" ry="20" fill="#fff" />
-                <ellipse cx="151" cy="96" rx="16" ry="20" fill="#fff" />
-                <circle cx={104 + shift} cy="98" r="6" fill="#173d5c" className="mascot-pupil" />
-                <circle cx={152 + shift} cy="98" r="6" fill="#173d5c" className="mascot-pupil" />
-                <circle cx={102 + shift} cy="95" r="2" fill="#fff" />
-                <circle cx={150 + shift} cy="95" r="2" fill="#fff" />
+                <ellipse cx="105" cy="94" rx="16" ry="20" fill="#fff" />
+                <ellipse cx="157" cy="94" rx="16" ry="20" fill="#fff" />
+                <circle cx={106 + pupilX} cy={96 + pupilY} r="6.4" fill="#173f60" className="mascot-pupil mascot-pupil-left" />
+                <circle cx={158 + pupilX} cy={96 + pupilY} r="6.4" fill="#173f60" className="mascot-pupil mascot-pupil-right" />
+                <circle cx={104 + pupilX} cy={93 + pupilY} r="2" fill="#fff" />
+                <circle cx={156 + pupilX} cy={93 + pupilY} r="2" fill="#fff" />
               </g>
             )}
 
-            <path d="M108 130q18 17 38 0" fill="none" stroke="#153b59" strokeWidth="4" strokeLinecap="round" className="mascot-smile" />
-            <circle cx="126" cy="118" r="4" fill="#153b59" />
-            <g fill="#fff" stroke="#fff" strokeWidth="1.5" opacity=".96">
-              <circle cx="82" cy="121" r="3" /><circle cx="92" cy="137" r="3" /><circle cx="107" cy="145" r="3" />
-              <circle cx="169" cy="121" r="3" /><circle cx="159" cy="137" r="3" /><circle cx="144" cy="145" r="3" />
-              <path d="m82 121 10 16 15 8M169 121l-10 16-15 8M107 145l19-27 18 27" fill="none" />
+            {/* nose + expression */}
+            <circle cx="131" cy="117" r="3.6" fill="#173f60" />
+            {error ? (
+              <path d="M111 139q20-13 40 0" fill="none" stroke="#173f60" strokeWidth="4" strokeLinecap="round" className="mascot-mouth" />
+            ) : (
+              <path d="M111 132q20 18 40 0" fill="none" stroke="#173f60" strokeWidth="4" strokeLinecap="round" className="mascot-mouth" />
+            )}
+
+            {/* AutoMinds node smile */}
+            <g className="mascot-node-smile" stroke="#fff" strokeWidth="2" fill="#fff" opacity=".98">
+              <circle cx="87" cy="122" r="3.2" />
+              <circle cx="96" cy="138" r="3.2" />
+              <circle cx="111" cy="146" r="3.2" />
+              <circle cx="174" cy="122" r="3.2" />
+              <circle cx="165" cy="138" r="3.2" />
+              <circle cx="150" cy="146" r="3.2" />
+              <path d="m87 122 9 16 15 8 20-28 19 28 15-8 9-16" fill="none" />
             </g>
           </g>
         </svg>
       </div>
-      <div className="suite-mascot-copy"><strong>{copy[mode].title}</strong><span>{copy[mode].body}</span></div>
+      <div className="suite-mascot-copy"><strong>{copy[mode]}</strong></div>
     </div>
   );
 }
