@@ -7,6 +7,7 @@ import type { Bid, BidStatus } from "@/lib/types";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const MAX_DAYS_AHEAD = 90;
 const MIN_FY_START = new Date("2026-07-01T00:00:00+03:00").getTime();
+export const SNAPSHOT_REFRESH_EVENT = "bidfinder:refresh-snapshot";
 
 function plainText(value: string) {
   if (!value) return "";
@@ -40,7 +41,7 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
     if (!Number.isNaN(published.getTime()) && published.getTime() < fyStart) return null;
   }
 
-  const title = plainText(bid.title).slice(0, 240);
+  const title = plainText(bid.title).slice(0, 320);
   if (!title) return null;
 
   const isOpen = deadlineMs >= nowMs;
@@ -51,7 +52,7 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
     title,
     organization: plainText(bid.organization).slice(0, 180),
     referenceNumber: plainText(bid.referenceNumber).slice(0, 140),
-    description: plainText(bid.description).slice(0, 1600),
+    description: plainText(bid.description).slice(0, 2400),
     category: plainText(bid.category).slice(0, 120),
     procurementType: plainText(bid.procurementType).slice(0, 100),
     status,
@@ -68,6 +69,10 @@ function mergeBids(snapshotBids: Bid[], liveBids: Bid[]) {
     if (bid) merged.set(bid.id, bid);
   }
   return Array.from(merged.values());
+}
+
+export function requestSnapshotRefresh() {
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(SNAPSHOT_REFRESH_EVENT));
 }
 
 export function useBids() {
@@ -88,28 +93,31 @@ export function useBids() {
       setLoading(false);
     };
 
-    void fetch(`${basePath}/data/bids.json`, { cache: "no-store" })
-      .then(async (response) => {
+    const loadSnapshot = async () => {
+      const bust = Date.now();
+      try {
+        const response = await fetch(`${basePath}/data/bids.json?v=${bust}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Snapshot request failed: ${response.status}`);
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error("Invalid opportunity snapshot");
         snapshotBids = data as Bid[];
         publish();
-      })
-      .catch(() => {
-        // Compatibility fallback while older Pages artifacts and browser caches expire.
-        void fetch(`${basePath}/data/egp-bids.json`, { cache: "no-store" })
-          .then(async (response) => {
-            if (!response.ok) throw new Error(`Fallback snapshot request failed: ${response.status}`);
-            const data = await response.json();
-            if (!Array.isArray(data)) throw new Error("Invalid fallback opportunity snapshot");
-            snapshotBids = data as Bid[];
-            publish();
-          })
-          .catch(() => {
-            if (liveBids.length) publish();
-          });
-      });
+      } catch {
+        try {
+          const response = await fetch(`${basePath}/data/egp-bids.json?v=${bust}`, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Fallback snapshot request failed: ${response.status}`);
+          const data = await response.json();
+          if (!Array.isArray(data)) throw new Error("Invalid fallback opportunity snapshot");
+          snapshotBids = data as Bid[];
+          publish();
+        } catch {
+          if (liveBids.length) publish();
+        }
+      }
+    };
+
+    void loadSnapshot();
+    window.addEventListener(SNAPSHOT_REFRESH_EVENT, loadSnapshot);
 
     const unsubscribe = subscribeToBids(
       (items) => {
@@ -126,6 +134,7 @@ export function useBids() {
 
     return () => {
       active = false;
+      window.removeEventListener(SNAPSHOT_REFRESH_EVENT, loadSnapshot);
       unsubscribe();
     };
   }, []);
