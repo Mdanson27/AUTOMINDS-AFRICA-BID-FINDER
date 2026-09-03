@@ -16,6 +16,15 @@ const scopes = [
   { id: "private", label: "Private sector", icon: Building2, patterns: ["private", "company", "bank", "telecom"] },
 ] as const;
 
+const statusRank: Record<string, number> = {
+  open: 0,
+  planned: 1,
+  evaluation: 2,
+  awarded: 3,
+  closed: 4,
+  cancelled: 5,
+};
+
 export default function BidsPage() {
   const { bids, loading, error } = useBids();
   const [search, setSearch] = useState("");
@@ -64,9 +73,13 @@ export default function BidsPage() {
       return matchesText && matchesStatus && matchesCategory && matchesSource && matchesOrg && matchesType && matchesDeadline && matchesScope;
     });
     return [...result].sort((a, b) => {
+      const statusDifference = (statusRank[a.status] ?? 9) - (statusRank[b.status] ?? 9);
+      if (statusDifference !== 0) return statusDifference;
       if (sort === "organization") return a.organization.localeCompare(b.organization);
       if (sort === "newest") return new Date(b.firstSeenAt).getTime() - new Date(a.firstSeenAt).getTime();
-      return new Date(a.deadlineAt).getTime() - new Date(b.deadlineAt).getTime();
+      const aDeadline = a.deadlineAt ? new Date(a.deadlineAt).getTime() : Number.POSITIVE_INFINITY;
+      const bDeadline = b.deadlineAt ? new Date(b.deadlineAt).getTime() : Number.POSITIVE_INFINITY;
+      return aDeadline - bDeadline;
     });
   }, [bids, category, customSources, deadlineWindow, organization, procurementType, scope, search, sort, source, status]);
 
