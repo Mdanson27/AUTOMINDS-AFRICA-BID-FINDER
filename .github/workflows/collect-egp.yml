@@ -2,6 +2,11 @@ name: Collect eGP Uganda bids
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "collector/**"
+      - ".github/workflows/collect-egp.yml"
   schedule:
     - cron: "17 */2 * * *"
 
