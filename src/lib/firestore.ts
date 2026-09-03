@@ -4,27 +4,66 @@ import type { Bid, BidSource, BidStatus } from "./types";
 
 function iso(value: unknown): string {
   if (value instanceof Timestamp) return value.toDate().toISOString();
+  if (value && typeof value === "object" && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
+    try { return (value as { toDate: () => Date }).toDate().toISOString(); } catch { return ""; }
+  }
   if (typeof value === "string") return value;
   return "";
 }
 
 export function subscribeToBids(onData: (bids: Bid[]) => void, onError: (message: string) => void) {
-  const q = query(collection(db, "bids"), orderBy("deadlineAt", "asc"), limit(300));
+  // Read newest/current deadlines first so a growing archive of closed bids can
+  // never crowd active opportunities out of the client-side search workspace.
+  const q = query(collection(db, "bids"), orderBy("deadlineAt", "desc"), limit(1000));
   return onSnapshot(q, (snapshot) => onData(snapshot.docs.map((item) => {
     const data = item.data();
     return {
-      id: item.id, title: data.title || "Untitled opportunity", organization: data.organization || "Unknown organization",
-      referenceNumber: data.referenceNumber || "", description: data.description || "", category: data.category || "",
-      procurementType: data.procurementType || "", publishedAt: iso(data.publishedAt), deadlineAt: iso(data.deadlineAt),
-      status: (data.status || "open") as BidStatus, isOpen: data.isOpen !== false, fingerprint: data.fingerprint || "",
-      firstSeenAt: iso(data.firstSeenAt), lastSeenAt: iso(data.lastSeenAt), sources: Array.isArray(data.sources) ? data.sources.map((source: Record<string, unknown>) => ({ name: String(source.name || "Source"), url: String(source.url || "#"), detectedAt: iso(source.detectedAt) })) : [],
+      id: item.id,
+      title: data.title || "Untitled opportunity",
+      organization: data.organization || "Unknown organization",
+      referenceNumber: data.referenceNumber || "",
+      description: data.description || "",
+      category: data.category || "",
+      procurementType: data.procurementType || "",
+      publishedAt: iso(data.publishedAt),
+      deadlineAt: iso(data.deadlineAt),
+      status: (data.status || "open") as BidStatus,
+      isOpen: data.isOpen !== false,
+      fingerprint: data.fingerprint || "",
+      firstSeenAt: iso(data.firstSeenAt),
+      lastSeenAt: iso(data.lastSeenAt),
+      deadlineChanged: data.deadlineChanged === true,
+      deadlineChangedAt: iso(data.deadlineChangedAt),
+      sources: Array.isArray(data.sources)
+        ? data.sources.map((source: Record<string, unknown>) => ({
+            id: String(source.id || ""),
+            name: String(source.name || "Source"),
+            url: String(source.url || "#"),
+            detectedAt: iso(source.detectedAt),
+          }))
+        : [],
     };
   })), (error) => onError(error.message));
 }
 
 export function subscribeToSources(onData: (sources: BidSource[]) => void, onError: (message: string) => void) {
   return onSnapshot(collection(db, "sources"), (snapshot) => onData(snapshot.docs.map((item) => {
-    const d = item.data(); return { id: item.id, name: d.name || "Unnamed source", type: d.type || "website", baseUrl: d.baseUrl || "", health: d.health || "planned", enabled: d.enabled !== false, lastSuccessfulCrawlAt: iso(d.lastSuccessfulCrawlAt), lastAttemptedCrawlAt: iso(d.lastAttemptedCrawlAt), recordsFound: d.recordsFound || 0, recordsCreated: d.recordsCreated || 0, recordsUpdated: d.recordsUpdated || 0, lastError: d.lastError || "" };
+    const d = item.data();
+    return {
+      id: item.id,
+      name: d.name || "Unnamed source",
+      type: d.type || "website",
+      baseUrl: d.baseUrl || "",
+      health: d.health || "planned",
+      enabled: d.enabled !== false,
+      lastSuccessfulCrawlAt: iso(d.lastSuccessfulCrawlAt),
+      lastAttemptedCrawlAt: iso(d.lastAttemptedCrawlAt),
+      recordsFound: d.recordsFound || 0,
+      recordsCreated: d.recordsCreated || 0,
+      recordsUpdated: d.recordsUpdated || 0,
+      recordsUnchanged: d.recordsUnchanged || 0,
+      lastError: d.lastError || "",
+    };
   })), (error) => onError(error.message));
 }
 
@@ -36,7 +75,7 @@ export function subscribeSavedBidIds(uid: string, onData: (ids: Set<string>) => 
 export async function setSavedBid(uid: string, bidId: string, saved: boolean) {
   const ref = doc(db, "savedBids", `${uid}_${bidId}`);
   if (!saved) return deleteDoc(ref);
-  return setDoc(ref, { ownerUid: uid, bidId, savedAt: serverTimestamp() });
+  return setDoc(ref, { ownerUid: uid, bidId, savedAt: serverTimestamp(), stage: "watching", notes: "", updatedAt: serverTimestamp() });
 }
 
 function fingerprint(value: string) { return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 180); }
@@ -49,7 +88,8 @@ export async function addManualBid(input: { title: string; organization: string;
     title: input.title.trim(), organization: input.organization.trim(), referenceNumber: input.referenceNumber.trim(), description: input.description.trim(), category: input.category.trim(), procurementType: input.procurementType.trim(),
     publishedAt: Timestamp.fromDate(published), deadlineAt: Timestamp.fromDate(deadline), status: "open", isOpen: true,
     fingerprint: fingerprint(input.referenceNumber || `${input.organization}-${input.title}`), firstSeenAt: serverTimestamp(), lastSeenAt: serverTimestamp(), createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
-    sources: [{ name: sourceName, url: input.sourceUrl || "#", detectedAt: new Date().toISOString() }], ingestionMode: "manual-test",
+    deadlineChanged: false,
+    sources: [{ id: "manual-test", name: sourceName, url: input.sourceUrl || "#", detectedAt: new Date().toISOString() }], ingestionMode: "manual-test",
   });
   return record.id;
 }

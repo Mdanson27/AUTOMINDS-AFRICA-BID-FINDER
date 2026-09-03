@@ -13,23 +13,35 @@ service cloud.firestore {
       return signedIn() && currentUser().data.role == 'admin';
     }
 
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function onlyKeys(keys) {
+      return request.resource.data.keys().hasOnly(keys);
+    }
+
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
-      allow create: if signedIn()
-        && request.auth.uid == uid
-        && request.resource.data.role == 'viewer';
-      allow update: if signedIn() && (
-        isAdmin() || (
-          request.auth.uid == uid
-          && request.resource.data.role == resource.data.role
-        )
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role == 'viewer'
+        && request.resource.data.email == request.auth.token.email;
+      allow update: if isAdmin() || (
+        isOwner(uid)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName', 'updatedAt'
+        ])
       );
       allow delete: if isAdmin();
     }
 
     match /bids/{bidId} {
       allow read: if signedIn();
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
 
       match /sources/{sourceId} {
         allow read: if signedIn();
@@ -48,7 +60,7 @@ service cloud.firestore {
     }
 
     match /crawlRuns/{runId} {
-      allow read: if signedIn();
+      allow read: if isAdmin();
       allow write: if isAdmin();
     }
 
@@ -59,12 +71,45 @@ service cloud.firestore {
 
     match /savedBids/{savedId} {
       allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && onlyKeys(['ownerUid', 'bidId', 'savedAt', 'stage', 'notes', 'updatedAt']);
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.bidId == resource.data.bidId;
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /savedSearches/{searchId} {
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
       allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid;
-      allow update, delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /userPreferences/{uid} {
+      allow read, create, update, delete: if isOwner(uid);
     }
 
     match /companyProfiles/{uid} {
-      allow read, write: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow read, create, update, delete: if isOwner(uid) || isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if isAdmin();
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
