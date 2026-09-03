@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { subscribeToSources } from "@/lib/firestore";
 import type { BidSource } from "@/lib/types";
+import { SNAPSHOT_REFRESH_EVENT } from "@/hooks/useBids";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -24,25 +25,29 @@ export function useSources() {
       setLoading(false);
     };
 
-    void fetch(`${basePath}/data/sources.json`, { cache: "no-store" })
-      .then(async (response) => {
+    const loadSnapshot = async () => {
+      const bust = Date.now();
+      try {
+        const response = await fetch(`${basePath}/data/sources.json?v=${bust}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Source snapshot request failed: ${response.status}`);
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error("Invalid source snapshot");
         snapshotSources = data as BidSource[];
         publish();
-      })
-      .catch(() => {
-        void fetch(`${basePath}/data/egp-meta.json`, { cache: "no-store" })
-          .then(async (response) => {
-            if (!response.ok) throw new Error(`Fallback source snapshot request failed: ${response.status}`);
-            snapshotSources = [(await response.json()) as BidSource];
-            publish();
-          })
-          .catch(() => {
-            if (liveSources.length) publish();
-          });
-      });
+      } catch {
+        try {
+          const response = await fetch(`${basePath}/data/egp-meta.json?v=${bust}`, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Fallback source snapshot request failed: ${response.status}`);
+          snapshotSources = [(await response.json()) as BidSource];
+          publish();
+        } catch {
+          if (liveSources.length) publish();
+        }
+      }
+    };
+
+    void loadSnapshot();
+    window.addEventListener(SNAPSHOT_REFRESH_EVENT, loadSnapshot);
 
     const unsubscribe = subscribeToSources(
       (items) => {
@@ -56,6 +61,7 @@ export function useSources() {
 
     return () => {
       active = false;
+      window.removeEventListener(SNAPSHOT_REFRESH_EVENT, loadSnapshot);
       unsubscribe();
     };
   }, []);
