@@ -1,16 +1,24 @@
 from __future__ import annotations
 
 from datetime import datetime
+from html import unescape
 import re
 from zoneinfo import ZoneInfo
 
+from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
 
 KAMPALA = ZoneInfo("Africa/Kampala")
 
 
 def clean(value: str) -> str:
-    return re.sub(r"\s+", " ", (value or "").replace("\xa0", " ")).strip()
+    """Return safe, readable plain text from source HTML or encoded text."""
+    text = unescape(str(value or ""))
+    if "<" in text and ">" in text:
+        text = BeautifulSoup(text, "html.parser").get_text(" ", strip=True)
+    text = unescape(text).replace("\xa0", " ")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
 
 def parse_date(value: str) -> datetime | None:
