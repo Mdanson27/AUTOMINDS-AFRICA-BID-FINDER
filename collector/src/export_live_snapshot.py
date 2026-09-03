@@ -5,11 +5,13 @@ import hashlib
 import json
 from pathlib import Path
 
+from .sources.afdb_uganda import AfDBUgandaSource
 from .sources.daily_monitor import DailyMonitorSource
 from .sources.egp_uganda import EGPUgandaSource
 from .sources.gpp_ppda import GPPPPDASource
 from .sources.new_vision import NewVisionSource
 from .sources.uganda_direct import KCCASource, MoFPEDSource, NITAUgandaSource, UCCSource, URASource
+from .sources.undp_uganda import UNDPUgandaSource
 from .sources.world_bank import WorldBankUgandaSource
 
 
@@ -23,6 +25,8 @@ SOURCES = (
     UCCSource(),
     MoFPEDSource(),
     WorldBankUgandaSource(),
+    UNDPUgandaSource(),
+    AfDBUgandaSource(),
     GPPPPDASource(),
     DailyMonitorSource(),
     NewVisionSource(),
@@ -32,7 +36,7 @@ SOURCES = (
 def source_type(source_id: str) -> str:
     if source_id in {"daily-monitor", "new-vision"}:
         return "newspaper"
-    if source_id in {"world-bank-uganda"}:
+    if source_id in {"world-bank-uganda", "undp-uganda", "afdb-uganda"}:
         return "development"
     return "government"
 
