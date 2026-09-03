@@ -31,7 +31,7 @@ export function useBids() {
       setLoading(false);
     };
 
-    void fetch(`${basePath}/data/egp-bids.json`, { cache: "no-store" })
+    void fetch(`${basePath}/data/bids.json`, { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`Snapshot request failed: ${response.status}`);
         const data = await response.json();
@@ -40,7 +40,18 @@ export function useBids() {
         publish();
       })
       .catch(() => {
-        if (liveBids.length) publish();
+        // Compatibility fallback while older Pages artifacts and browser caches expire.
+        void fetch(`${basePath}/data/egp-bids.json`, { cache: "no-store" })
+          .then(async (response) => {
+            if (!response.ok) throw new Error(`Fallback snapshot request failed: ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error("Invalid fallback opportunity snapshot");
+            snapshotBids = data as Bid[];
+            publish();
+          })
+          .catch(() => {
+            if (liveBids.length) publish();
+          });
       });
 
     const unsubscribe = subscribeToBids(
