@@ -42,6 +42,25 @@ export type Bid = {
   intelligence?: BidIntelligence;
 };
 
+export type ProcurementPlanItem = {
+  number: number;
+  category: string;
+  estimatedAmountUGX: string;
+};
+
+export type ProcurementPlan = {
+  id: string;
+  name: string;
+  organization: string;
+  financialYear: string;
+  totalEstimatedAmountUGX: string;
+  sourceUrl: string;
+  pdfUrl?: string;
+  excelUrl?: string;
+  collectedAt: string;
+  items: ProcurementPlanItem[];
+};
+
 export type SourceHealth = "healthy" | "warning" | "paused" | "planned";
 export type BidSource = {
   id: string;
