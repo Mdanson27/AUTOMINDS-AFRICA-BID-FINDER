@@ -43,6 +43,8 @@ export default function BidDetailPage() {
   const urgent = Number.isFinite(remaining) && remaining <= 3 && remaining >= 0;
   const primarySource = bid.sources[0];
   const intelligence = bid.intelligence;
+  const sourceMetadata = Object.entries(bid.sourceMetadata || {}).filter(([key, value]) => key && value);
+  const documents = bid.documents || [];
 
   return (
     <div className="page-stack suite-bid-detail">
@@ -81,6 +83,18 @@ export default function BidDetailPage() {
               <article><span>Last checked</span><strong>{formatDate(bid.lastSeenAt, true)}</strong></article>
             </div>
 
+            {(bid.noticeType || bid.openingAt || bid.applicationUrl) && (
+              <div className="intelligence-section">
+                <h3>Source notice details</h3>
+                <div className="intelligence-summary">
+                  <article><span>Notice type</span><strong>{bid.noticeType || "Procurement notice"}</strong></article>
+                  <article><span>Bid opening</span><strong>{bid.openingAt ? formatDate(bid.openingAt, true) : "Not published yet"}</strong></article>
+                  <article><span>Source stage</span><strong>{bid.status === "open" ? "Bidding / submission" : bid.status}</strong></article>
+                  <article><span>Application</span><strong>{bid.applicationUrl ? "Online action available" : "Use original notice"}</strong></article>
+                </div>
+              </div>
+            )}
+
             <div className="intelligence-section">
               <h3>Commercial requirements</h3>
               <div className="intelligence-summary">
@@ -99,6 +113,34 @@ export default function BidDetailPage() {
             {intelligence?.eligibility?.length ? <div className="intelligence-section"><h3>Eligibility signals</h3><div className="requirement-chips">{intelligence.eligibility.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
 
             {intelligence?.keyDates?.length ? <div className="intelligence-section"><h3>Additional dates & milestones</h3><div className="requirement-chips">{intelligence.keyDates.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
+
+            {sourceMetadata.length ? (
+              <div className="intelligence-section">
+                <h3>Source-provided procurement details</h3>
+                <div className="source-fact-list">
+                  {sourceMetadata.slice(0, 24).map(([label, value]) => (
+                    <div className="source-fact-row" key={label}>
+                      <span>{label}</span>
+                      <strong>{value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {documents.length ? (
+              <div className="intelligence-section">
+                <h3>Procurement documents</h3>
+                <div className="source-document-list">
+                  {documents.map((document) => (
+                    <a href={document.url} target="_blank" rel="noreferrer" key={document.url}>
+                      <span><strong>{document.title}</strong><small>{document.kind || "Document"}</small></span>
+                      <ExternalLink size={15} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="intelligence-section description-block">
               <h3>Scope / description</h3>
@@ -120,6 +162,7 @@ export default function BidDetailPage() {
           <section className="panel suite-action-panel">
             <h2>Bid actions</h2>
             <button><Bookmark size={16} /> Save opportunity</button>
+            {bid.applicationUrl && <a href={bid.applicationUrl} target="_blank" rel="noreferrer"><Send size={16} /> Apply / submit on source</a>}
             {primarySource?.url && <a href={primarySource.url} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Open original notice</a>}
             <button><Share2 size={16} /> Share</button>
           </section>

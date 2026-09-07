@@ -3,6 +3,7 @@ export type UserRole = "viewer" | "admin";
 
 export type UserProfile = { uid: string; email: string; displayName: string; role: UserRole };
 export type BidSourceRef = { id?: string; name: string; url: string; detectedAt?: string };
+export type BidDocument = { title: string; url: string; kind?: string };
 
 export type BidIntelligence = {
   enrichmentStatus?: "basic" | "partial" | "enriched";
@@ -33,6 +34,11 @@ export type Bid = {
   sources: BidSourceRef[];
   deadlineChanged?: boolean;
   deadlineChangedAt?: string;
+  noticeType?: string;
+  openingAt?: string;
+  applicationUrl?: string;
+  documents?: BidDocument[];
+  sourceMetadata?: Record<string, string>;
   intelligence?: BidIntelligence;
 };
 

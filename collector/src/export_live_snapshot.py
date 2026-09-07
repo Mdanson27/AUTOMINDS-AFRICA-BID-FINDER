@@ -220,6 +220,18 @@ def record_from_bid(bid, generated_at: str, now: datetime):
         "lastSeenAt": generated_at,
         "deadlineChanged": False,
         "sources": sources,
+        "noticeType": clean(bid.notice_type)[:120],
+        "openingAt": iso(bid.opening_at),
+        "applicationUrl": str(bid.application_url) if bid.application_url else "",
+        "documents": [
+            {"title": clean(item.title)[:180], "url": str(item.url), "kind": clean(item.kind)[:40]}
+            for item in bid.documents
+        ],
+        "sourceMetadata": {
+            clean(str(key))[:120]: clean(str(value))[:500]
+            for key, value in bid.source_metadata.items()
+            if clean(str(key)) and clean(str(value))
+        },
         "intelligence": extract_intelligence(bid),
     }
 
@@ -239,6 +251,20 @@ def main() -> int:
                 raise RuntimeError("source returned zero normalized notices")
 
             eligible = [bid for bid in bids if is_eligible_bid(bid, now)]
+
+            # Deep-enrich only actionable/current opportunities. Historical
+            # opening records remain searchable without generating hundreds of
+            # detail-page requests on every scheduled collection cycle.
+            enriched_eligible = []
+            for bid in eligible:
+                if bid.deadline_at is not None and bid.deadline_at >= now:
+                    try:
+                        bid = source.enrich(bid)
+                    except Exception as enrich_exc:  # noqa: BLE001
+                        print(f"WARNING {source.name} detail enrichment for {bid.reference_number or bid.title}: {enrich_exc}")
+                enriched_eligible.append(bid)
+            eligible = enriched_eligible
+
             print(f"{source.name}: parsed {len(bids)} notices; kept {len(eligible)} in FY/current 90-day window")
 
             for bid in eligible:

@@ -50,6 +50,37 @@ HTML = """
 """
 
 
+
+DETAIL_HTML = """
+<html><body>
+<h1>Request for Quotation Notice</h1>
+<table>
+  <tr><th>No #</th><th>Procurement Ref Number</th><th>Subject of Procurement</th></tr>
+  <tr><td>1</td><td>POU/NCONS/2026-2027/00199</td><td>Framework contract for routine maintenance of firefighting equipment at Parliament of Uganda</td></tr>
+</table>
+<p>Parliament of Uganda invites eligible suppliers to submit a bid for the above opportunity.</p>
+<a href="/supplier/apply/199">Click here To Apply</a>
+<a href="/documents/firefighting-tender.pdf">Download PDF</a>
+</body></html>
+"""
+
+OPENING_DETAIL_HTML = """
+<html><body>
+<h1>Particulars of Procurement</h1>
+<table>
+  <tr><td>Subject of Procurement</td><td>REPAIRS FOR UG 2600133</td></tr>
+  <tr><td>Procurement Method</td><td>Micro Procurement</td></tr>
+  <tr><td>Date and Time of bid Opening</td><td>31 Aug 2026 at 15:19</td></tr>
+  <tr><td>Bids received</td><td>1</td></tr>
+</table>
+<table>
+  <tr><th>#</th><th>Name &amp; Address of The Bidder</th><th>Submission Date</th><th>Amount</th></tr>
+  <tr><td>1</td><td>CFAO MOBILITY UGANDA LIMITED</td><td>2026-08-28 15:47:28</td><td>5,702,639.88</td></tr>
+</table>
+</body></html>
+"""
+
+
 class EGPUgandaSourceTests(unittest.TestCase):
     def test_parses_standard_and_quotation_tables(self):
         bids = list(EGPUgandaSource().parse(HTML))
@@ -72,6 +103,49 @@ class EGPUgandaSourceTests(unittest.TestCase):
         self.assertEqual(quotation.title, "PROCUREMENT OF MOTOR VEHICLE REPAIR SERVICES")
         self.assertIsNone(quotation.published_at)
         self.assertEqual(str(quotation.sources[0].url), "https://egpuganda.go.ug/index/micro_egp")
+
+    def test_detail_enrichment_recovers_full_title_apply_link_and_documents(self):
+        source = EGPUgandaSource()
+        bid = list(source.parse(HTML))[0]
+        enriched = source.parse_detail(
+            DETAIL_HTML,
+            bid,
+            "https://egpuganda.go.ug/index/392535474_egp",
+        )
+        self.assertEqual(
+            enriched.title,
+            "Framework contract for routine maintenance of firefighting equipment at Parliament of Uganda",
+        )
+        self.assertEqual(enriched.notice_type, "Request for Quotation Notice")
+        self.assertIn("invites eligible suppliers", enriched.description)
+        self.assertEqual(
+            str(enriched.application_url),
+            "https://egpuganda.go.ug/supplier/apply/199",
+        )
+        self.assertEqual(len(enriched.documents), 1)
+        self.assertEqual(enriched.documents[0].kind, "PDF")
+
+    def test_opening_detail_captures_method_time_bidder_and_amount(self):
+        source = EGPUgandaSource()
+        bid = list(source.parse(HTML))[2]
+        enriched = source.parse_detail(
+            OPENING_DETAIL_HTML,
+            bid,
+            "https://egpuganda.go.ug/bid/notice/147427968/opening/details",
+        )
+        self.assertEqual(enriched.title, "REPAIRS FOR UG 2600133")
+        self.assertEqual(enriched.procurement_type, "Micro Procurement")
+        self.assertEqual(enriched.opening_at.day, 31)
+        self.assertEqual(enriched.opening_at.hour, 15)
+        self.assertEqual(enriched.source_metadata["Bids received"], "1")
+        self.assertIn(
+            "CFAO MOBILITY UGANDA LIMITED",
+            enriched.source_metadata["Bid opening 1 · Name & Address of The Bidder"],
+        )
+        self.assertEqual(
+            enriched.source_metadata["Bid opening 1 · Amount"],
+            "5,702,639.88",
+        )
 
     def test_reference_drives_cross_source_canonical_key(self):
         bid = list(EGPUgandaSource().parse(HTML))[0]
