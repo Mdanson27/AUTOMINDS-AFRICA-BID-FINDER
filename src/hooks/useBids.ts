@@ -55,6 +55,17 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
     description: plainText(bid.description).slice(0, 2400),
     category: plainText(bid.category).slice(0, 120),
     procurementType: plainText(bid.procurementType).slice(0, 100),
+    noticeType: plainText(bid.noticeType || "").slice(0, 120),
+    sourceMetadata: Object.fromEntries(
+      Object.entries(bid.sourceMetadata || {})
+        .map(([key, value]) => [plainText(key).slice(0, 120), plainText(value).slice(0, 500)])
+        .filter(([key, value]) => key && value),
+    ),
+    documents: (bid.documents || []).map((document) => ({
+      ...document,
+      title: plainText(document.title).slice(0, 180),
+      kind: plainText(document.kind || "").slice(0, 40),
+    })),
     status,
     isOpen,
     sources: (bid.sources || []).map((source) => ({ ...source, name: plainText(source.name) })),
