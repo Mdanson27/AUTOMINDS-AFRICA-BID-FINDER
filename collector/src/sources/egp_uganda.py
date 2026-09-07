@@ -111,13 +111,17 @@ class EGPUgandaSource(BidSource):
             if not rows:
                 continue
 
-            headers = [self._clean(cell.get_text(" ", strip=True)) for cell in rows[0].find_all(["th", "td"])]
+            header_cells = rows[0].find_all("th")
+            headers = [self._clean(cell.get_text(" ", strip=True)) for cell in header_cells]
             normalized_headers = [header.lower() for header in headers]
 
+            # Only treat an actual TH header row as a multi-column record.
+            # eGP opening-detail pages also use two-column TD label/value rows,
+            # where the first cell may itself say "Subject of Procurement".
             subject_index = next(
                 (index for index, header in enumerate(normalized_headers) if "subject of procurement" in header),
                 None,
-            )
+            ) if headers else None
             if subject_index is not None:
                 for row in rows[1:]:
                     cells = row.find_all("td")
