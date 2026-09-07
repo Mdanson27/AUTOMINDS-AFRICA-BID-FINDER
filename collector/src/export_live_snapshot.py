@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 from zoneinfo import ZoneInfo
 
+from .egp_plans import EGPProcurementPlansSource
 from .sources.afdb_uganda import AfDBUgandaSource
 from .sources.common_web import clean
 from .sources.daily_monitor import DailyMonitorSource
@@ -311,6 +312,71 @@ def main() -> int:
                 "lastError": str(exc)[:300],
             })
 
+    # eGP Procurement Plans are deliberately exported separately from live
+    # tenders. They are forward-looking market intelligence with estimated
+    # budgets, not active bid invitations with submission deadlines.
+    plans_source = EGPProcurementPlansSource()
+    plan_records = []
+    plan_attempted_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    try:
+        plans = plans_source.collect(financial_year=plans_source.current_financial_year(now))
+        for plan in plans:
+            plan_records.append({
+                "id": plan.id,
+                "name": clean(plan.name)[:260],
+                "organization": clean(plan.organization)[:180],
+                "financialYear": clean(plan.financial_year)[:20],
+                "totalEstimatedAmountUGX": clean(plan.total_estimated_amount_ugx)[:80],
+                "sourceUrl": plan.source_url,
+                "pdfUrl": plan.pdf_url,
+                "excelUrl": plan.excel_url,
+                "collectedAt": generated_at,
+                "items": [
+                    {
+                        "number": item.number,
+                        "category": clean(item.category)[:260],
+                        "estimatedAmountUGX": clean(item.estimated_amount_ugx)[:80],
+                    }
+                    for item in plan.items
+                ],
+            })
+        print(
+            f"{plans_source.name}: collected {len(plan_records)} organization plans "
+            f"with {sum(len(item['items']) for item in plan_records)} planned categories"
+        )
+        metas.append({
+            "id": plans_source.source_id,
+            "name": plans_source.name,
+            "type": "government",
+            "baseUrl": plans_source.url,
+            "health": "healthy" if plan_records else "warning",
+            "enabled": True,
+            "lastSuccessfulCrawlAt": plan_attempted_at if plan_records else "",
+            "lastAttemptedCrawlAt": plan_attempted_at,
+            "recordsFound": len(plan_records),
+            "recordsCreated": len(plan_records),
+            "recordsUpdated": 0,
+            "recordsUnchanged": 0,
+            "lastError": "" if plan_records else "No current-financial-year procurement plans were parsed",
+        })
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARNING {plans_source.name}: {exc}")
+        metas.append({
+            "id": plans_source.source_id,
+            "name": plans_source.name,
+            "type": "government",
+            "baseUrl": plans_source.url,
+            "health": "warning",
+            "enabled": True,
+            "lastSuccessfulCrawlAt": "",
+            "lastAttemptedCrawlAt": plan_attempted_at,
+            "recordsFound": 0,
+            "recordsCreated": 0,
+            "recordsUpdated": 0,
+            "recordsUnchanged": 0,
+            "lastError": str(exc)[:300],
+        })
+
     records = list(merged.values())
     if not records:
         raise RuntimeError("all public procurement sources returned zero eligible records")
@@ -324,6 +390,7 @@ def main() -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     (DATA_DIR / "bids.json").write_text(json.dumps(records, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DATA_DIR / "sources.json").write_text(json.dumps(metas, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    (DATA_DIR / "plans.json").write_text(json.dumps(plan_records, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (DATA_DIR / "egp-bids.json").write_text(json.dumps(records, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     egp_meta = next((item for item in metas if item["id"] == "egp-uganda"), metas[0])
     (DATA_DIR / "egp-meta.json").write_text(json.dumps(egp_meta, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
