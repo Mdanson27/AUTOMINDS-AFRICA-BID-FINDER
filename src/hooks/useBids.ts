@@ -2,12 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { subscribeToBids } from "@/lib/firestore";
-import type { Bid, BidStatus } from "@/lib/types";
+import type { Bid, BidStatus, OpportunityType } from "@/lib/types";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const MAX_DAYS_AHEAD = 90;
+const CLOSED_RETENTION_DAYS = 3;
+const DAY_MS = 86_400_000;
 const MIN_FY_START = new Date("2026-07-01T00:00:00+03:00").getTime();
 export const SNAPSHOT_REFRESH_EVENT = "bidfinder:refresh-snapshot";
+
+const GRANT_TERMS = [
+  "grant",
+  "grants",
+  "funding opportunity",
+  "call for proposals",
+  "call for proposal",
+  "request for proposals",
+  "innovation fund",
+  "challenge fund",
+  "seed fund",
+  "matching grant",
+  "small grants",
+  "funding window",
+  "financial support",
+];
 
 function plainText(value: string) {
   if (!value) return "";
@@ -25,16 +43,35 @@ function currentFinancialYearStart(now: Date) {
   return Math.max(new Date(`${year}-07-01T00:00:00+03:00`).getTime(), MIN_FY_START);
 }
 
+function detectOpportunityType(bid: Bid): OpportunityType {
+  if (bid.opportunityType) return bid.opportunityType;
+  const haystack = [
+    bid.title,
+    bid.description,
+    bid.category,
+    bid.procurementType,
+    bid.noticeType,
+    ...Object.values(bid.sourceMetadata || {}),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  if (GRANT_TERMS.some((term) => haystack.includes(term))) return "grant";
+  return "tender";
+}
+
 function normalizeBid(bid: Bid, now = new Date()): Bid | null {
   const deadline = new Date(bid.deadlineAt);
   if (Number.isNaN(deadline.getTime())) return null;
 
   const nowMs = now.getTime();
   const fyStart = currentFinancialYearStart(now);
-  const latestDeadline = nowMs + MAX_DAYS_AHEAD * 86_400_000;
+  const latestDeadline = nowMs + MAX_DAYS_AHEAD * DAY_MS;
+  const oldestClosedDeadline = nowMs - CLOSED_RETENTION_DAYS * DAY_MS;
   const deadlineMs = deadline.getTime();
 
   if (deadlineMs < fyStart || deadlineMs > latestDeadline) return null;
+  if (deadlineMs < oldestClosedDeadline) return null;
 
   if (bid.publishedAt) {
     const published = new Date(bid.publishedAt);
@@ -55,6 +92,7 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
     description: plainText(bid.description).slice(0, 2400),
     category: plainText(bid.category).slice(0, 120),
     procurementType: plainText(bid.procurementType).slice(0, 100),
+    opportunityType: detectOpportunityType(bid),
     noticeType: plainText(bid.noticeType || "").slice(0, 120),
     sourceMetadata: Object.fromEntries(
       Object.entries(bid.sourceMetadata || {})
