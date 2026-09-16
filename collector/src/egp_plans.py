@@ -170,13 +170,21 @@ class EGPProcurementPlansSource:
 
             for row in table.find_all("tr"):
                 cells = row.find_all("td")
-                if len(cells) < 2:
+                if not cells:
                     continue
                 values = [clean(cell.get_text(" ", strip=True)) for cell in cells]
-                first = values[0].lower()
-                if first.startswith("total") or any(value.lower().startswith("total") for value in values[:2]):
-                    amount_value = next((value for value in reversed(values) if re.search(r"\d", value)), "")
-                    total = re.sub(r"^UGX:\s*", "", amount_value, flags=re.IGNORECASE).strip()
+                row_text = clean(" ".join(values))
+                if row_text.lower().startswith("total") or any(value.lower().startswith("total") for value in values[:2]):
+                    total_match = re.search(
+                        r"(?:UGX\s*:\s*)?([0-9][0-9,]*(?:\.\d+)?)\s*$",
+                        row_text,
+                        flags=re.IGNORECASE,
+                    )
+                    if total_match:
+                        total = total_match.group(1)
+                    continue
+
+                if len(cells) < 2:
                     continue
 
                 number = 0
