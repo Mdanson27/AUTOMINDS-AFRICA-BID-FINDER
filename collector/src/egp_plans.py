@@ -131,12 +131,21 @@ class EGPProcurementPlansSource:
 
         title_node = soup.find(["h1", "h2"])
         title = clean(title_node.get_text(" ", strip=True)) if title_node else plan.name
-        organization = re.sub(
-            rf"\s+Procurement\s+Plan\s+for\s+{re.escape(plan.financial_year)}\s*$",
-            "",
-            title,
-            flags=re.IGNORECASE,
-        ).strip() or plan.organization
+        national_plan_pattern = rf"^National\s+Procurement\s+Plan\s+for\s+{re.escape(plan.financial_year)}\s*$"
+        if re.match(national_plan_pattern, title, flags=re.IGNORECASE):
+            organization = re.sub(
+                rf"\s+for\s+{re.escape(plan.financial_year)}\s*$",
+                "",
+                title,
+                flags=re.IGNORECASE,
+            ).strip()
+        else:
+            organization = re.sub(
+                rf"\s+Procurement\s+Plan\s+for\s+{re.escape(plan.financial_year)}\s*$",
+                "",
+                title,
+                flags=re.IGNORECASE,
+            ).strip() or plan.organization
 
         pdf_url = plan.pdf_url
         excel_url = plan.excel_url
