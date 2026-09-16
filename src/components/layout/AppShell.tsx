@@ -12,6 +12,7 @@ import {
   ClipboardList,
   Clock3,
   Database,
+  Gift,
   LogOut,
   Menu,
   Newspaper,
@@ -30,6 +31,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 const discovery = [
   ["/dashboard", "Overview", CircleGauge],
   ["/bids", "Find bids", Search],
+  ["/grants", "Grants", Gift],
   ["/plans", "Procurement plans", ClipboardList],
   ["/papers", "Current papers", Newspaper],
   ["/closing-soon", "Closing soon", Clock3],
@@ -45,6 +47,7 @@ const intelligence = [
 const pageNames: Record<string, string> = {
   "/dashboard": "Procurement overview",
   "/bids": "Find bids",
+  "/grants": "Grant opportunities",
   "/plans": "Procurement plans",
   "/papers": "Current papers",
   "/scan": "Scan center",

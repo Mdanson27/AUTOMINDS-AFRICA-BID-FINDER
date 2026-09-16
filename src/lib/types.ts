@@ -44,6 +44,24 @@ export type Bid = {
   intelligence?: BidIntelligence;
 };
 
+export type GrantOpportunity = {
+  id: string;
+  title: string;
+  funder: string;
+  opportunityNumber?: string;
+  summary?: string;
+  geography?: string;
+  fundingAmount?: string;
+  eligibility?: string;
+  openDate?: string;
+  deadlineAt?: string;
+  status: "open" | "forecasted" | "closed";
+  sourceName: string;
+  sourceUrl: string;
+  applicationUrl?: string;
+  collectedAt: string;
+};
+
 export type ProcurementPlanItem = {
   number: number;
   category: string;

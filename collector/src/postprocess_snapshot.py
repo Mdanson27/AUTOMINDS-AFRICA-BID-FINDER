@@ -10,22 +10,6 @@ BIDS_PATH = ROOT / "public" / "data" / "bids.json"
 EGP_PATH = ROOT / "public" / "data" / "egp-bids.json"
 CLOSED_RETENTION_DAYS = 3
 
-GRANT_TERMS = (
-    "grant",
-    "grants",
-    "funding opportunity",
-    "call for proposals",
-    "call for proposal",
-    "request for proposals",
-    "innovation fund",
-    "challenge fund",
-    "seed fund",
-    "matching grant",
-    "small grants",
-    "funding window",
-    "financial support",
-)
-
 
 def parse_iso(value: str) -> datetime | None:
     if not value:
@@ -39,31 +23,13 @@ def parse_iso(value: str) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
-def detect_opportunity_type(record: dict) -> str:
-    existing = str(record.get("opportunityType", "")).lower().strip()
-    if existing in {"grant", "tender", "other"}:
-        return existing
-
-    metadata = record.get("sourceMetadata") or {}
-    text = " ".join(
-        str(value)
-        for value in [
-            record.get("title", ""),
-            record.get("description", ""),
-            record.get("category", ""),
-            record.get("procurementType", ""),
-            record.get("noticeType", ""),
-            *metadata.values(),
-        ]
-        if value
-    ).lower()
-
-    if any(term in text for term in GRANT_TERMS):
-        return "grant"
-    return "tender"
-
-
 def process_records(records: list[dict], now: datetime) -> list[dict]:
+    """Apply bid retention only.
+
+    Procurement snapshots are procurement records, not grant records. They are
+    therefore always typed as tenders. Grants are collected independently into
+    public/data/grants.json by export_grants.py.
+    """
     oldest_closed = now - timedelta(days=CLOSED_RETENTION_DAYS)
     output: list[dict] = []
 
@@ -82,7 +48,7 @@ def process_records(records: list[dict], now: datetime) -> list[dict]:
             record["status"] = "open" if is_open else "closed"
         elif record.get("status") == "planned" and not is_open:
             record["status"] = "closed"
-        record["opportunityType"] = detect_opportunity_type(record)
+        record["opportunityType"] = "tender"
         output.append(record)
 
     return output
@@ -104,8 +70,8 @@ def main() -> int:
     before, after = process_file(BIDS_PATH, now)
     egp_before, egp_after = process_file(EGP_PATH, now)
     print(
-        f"Postprocessed opportunities: bids {before}->{after}, eGP {egp_before}->{egp_after}; "
-        f"closed retention={CLOSED_RETENTION_DAYS} days; opportunity typing enabled"
+        f"Postprocessed procurement: bids {before}->{after}, eGP {egp_before}->{egp_after}; "
+        f"closed retention={CLOSED_RETENTION_DAYS} days; procurement records forced to tender"
     )
     return 0
 
