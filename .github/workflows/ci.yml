@@ -47,6 +47,8 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - name: Build live procurement snapshot
         run: python -m src.export_live_snapshot
+      - name: Apply grant typing and closed-opportunity retention
+        run: python -m src.postprocess_snapshot
       - name: Validate live snapshot quality
         run: |
           python - <<'PY'
@@ -65,6 +67,7 @@ jobs:
           year = now.year if now.month >= 7 else now.year - 1
           fy_start = max(datetime(year, 7, 1, tzinfo=kampala), datetime(2026, 7, 1, tzinfo=kampala))
           latest = now + timedelta(days=90, hours=1)
+          oldest_closed = now - timedelta(days=3, minutes=5)
           html_pattern = re.compile(r"<\/?[a-z][^>]*>|&(?:nbsp|amp|lt|gt|quot|#\d+);", re.I)
 
           for bid in bids:
@@ -72,7 +75,9 @@ jobs:
               assert deadline_raw, f"missing deadline: {bid.get('title')}"
               deadline = datetime.fromisoformat(deadline_raw.replace("Z", "+00:00")).astimezone(kampala)
               assert deadline >= fy_start, f"pre-FY deadline: {deadline_raw}"
+              assert deadline >= oldest_closed, f"closed opportunity older than 3 days: {deadline_raw}"
               assert deadline <= latest, f"deadline beyond 90-day window: {deadline_raw}"
+              assert bid.get("opportunityType") in {"tender", "grant", "other"}, f"missing opportunity type: {bid.get('title')}"
               published_raw = bid.get("publishedAt")
               if published_raw:
                   published = datetime.fromisoformat(published_raw.replace("Z", "+00:00")).astimezone(kampala)
@@ -80,5 +85,6 @@ jobs:
               for field in ("title", "description", "organization"):
                   assert not html_pattern.search(bid.get(field, "")), f"raw HTML/entity in {field}: {bid.get(field, '')[:120]}"
 
-          print(f"Validated {len(bids)} live opportunities: current FY, <=90 days, plain text only")
+          grants = sum(1 for bid in bids if bid.get("opportunityType") == "grant")
+          print(f"Validated {len(bids)} live opportunities; grants={grants}; closed retention <=3 days")
           PY

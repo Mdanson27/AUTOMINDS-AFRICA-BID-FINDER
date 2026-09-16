@@ -67,6 +67,9 @@ jobs:
       - name: Export live multi-source search snapshot
         run: python -m collector.src.export_live_snapshot
 
+      - name: Apply grant typing and closed-opportunity retention
+        run: python -m collector.src.postprocess_snapshot
+
       - name: Install dependencies
         run: npm install
 
