@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from src.egp_plans import EGPProcurementPlansSource
+from src.egp_plans import EGPProcurementPlansSource, ProcurementPlan
 
 
 INDEX_HTML = """
@@ -44,6 +44,19 @@ DETAIL_HTML = """
 </body></html>
 """
 
+NATIONAL_DETAIL_HTML = """
+<html><body>
+<h1>National Procurement Plan for 2026-2027</h1>
+<table>
+  <thead><tr><th>No #</th><th>Group/Category</th><th>Estimated Amount in UGX:</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>ICT Hardware and Software Solutions</td><td>126,305,666,126.00</td></tr>
+    <tr><td>TOTAL</td><td>UGX:</td><td>126,305,666,126.00</td></tr>
+  </tbody>
+</table>
+</body></html>
+"""
+
 
 class EGPProcurementPlanTests(unittest.TestCase):
     def test_index_keeps_only_requested_financial_year(self):
@@ -77,6 +90,18 @@ class EGPProcurementPlanTests(unittest.TestCase):
             enriched.pdf_url,
             "https://egpuganda.go.ug/plans/parliament.pdf",
         )
+
+    def test_national_plan_keeps_source_plan_name_as_organization(self):
+        source = EGPProcurementPlansSource()
+        plan = ProcurementPlan(
+            id="national-plan",
+            name="national procurement plan",
+            organization="national procurement plan",
+            financial_year="2026-2027",
+            source_url="https://egpuganda.go.ug/procurement-plans/2026-2027/national-procurement-plan",
+        )
+        enriched = source.parse_detail(NATIONAL_DETAIL_HTML, plan)
+        self.assertEqual(enriched.organization, "National Procurement Plan")
 
     def test_current_financial_year_is_july_to_june(self):
         source = EGPProcurementPlansSource()
