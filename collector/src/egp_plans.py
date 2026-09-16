@@ -174,7 +174,7 @@ class EGPProcurementPlansSource:
                     continue
                 values = [clean(cell.get_text(" ", strip=True)) for cell in cells]
                 first = values[0].lower()
-                if first == "total" or any(value.lower() == "total" for value in values[:2]):
+                if first.startswith("total") or any(value.lower().startswith("total") for value in values[:2]):
                     amount_value = next((value for value in reversed(values) if re.search(r"\d", value)), "")
                     total = re.sub(r"^UGX:\s*", "", amount_value, flags=re.IGNORECASE).strip()
                     continue
