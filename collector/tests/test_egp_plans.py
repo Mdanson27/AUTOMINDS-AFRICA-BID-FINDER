@@ -38,7 +38,7 @@ DETAIL_HTML = """
   <tbody>
     <tr><td>1</td><td>Computer programming and software development</td><td>1,446,567,125.00</td></tr>
     <tr><td>2</td><td>Computer Equipment and Accessories</td><td>4,199,932,875.00</td></tr>
-    <tr><td colspan="2">TOTAL <span>UGX:</span></td><td>5,646,500,000.00</td></tr>
+    <tr><td colspan="3">TOTAL UGX: 5,646,500,000.00</td></tr>
   </tbody>
 </table>
 </body></html>
@@ -51,7 +51,7 @@ NATIONAL_DETAIL_HTML = """
   <thead><tr><th>No #</th><th>Group/Category</th><th>Estimated Amount in UGX:</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>ICT Hardware and Software Solutions</td><td>126,305,666,126.00</td></tr>
-    <tr><td colspan="2">TOTAL UGX:</td><td>126,305,666,126.00</td></tr>
+    <tr><td colspan="3">TOTAL UGX: 126,305,666,126.00</td></tr>
   </tbody>
 </table>
 </body></html>
@@ -74,7 +74,7 @@ class EGPProcurementPlanTests(unittest.TestCase):
             "https://egpuganda.go.ug/plans/parliament.xlsx",
         )
 
-    def test_detail_parses_live_shaped_total_row_without_counting_it_as_category(self):
+    def test_detail_parses_one_cell_live_total_row_without_counting_it_as_category(self):
         source = EGPProcurementPlansSource()
         plan = source.parse_index(INDEX_HTML, financial_year="2026-2027")[0]
         enriched = source.parse_detail(DETAIL_HTML, plan)
