@@ -38,7 +38,7 @@ DETAIL_HTML = """
   <tbody>
     <tr><td>1</td><td>Computer programming and software development</td><td>1,446,567,125.00</td></tr>
     <tr><td>2</td><td>Computer Equipment and Accessories</td><td>4,199,932,875.00</td></tr>
-    <tr><td>TOTAL</td><td>UGX:</td><td>5,646,500,000.00</td></tr>
+    <tr><td colspan="2">TOTAL <span>UGX:</span></td><td>5,646,500,000.00</td></tr>
   </tbody>
 </table>
 </body></html>
@@ -51,7 +51,7 @@ NATIONAL_DETAIL_HTML = """
   <thead><tr><th>No #</th><th>Group/Category</th><th>Estimated Amount in UGX:</th></tr></thead>
   <tbody>
     <tr><td>1</td><td>ICT Hardware and Software Solutions</td><td>126,305,666,126.00</td></tr>
-    <tr><td>TOTAL</td><td>UGX:</td><td>126,305,666,126.00</td></tr>
+    <tr><td colspan="2">TOTAL UGX:</td><td>126,305,666,126.00</td></tr>
   </tbody>
 </table>
 </body></html>
@@ -74,13 +74,14 @@ class EGPProcurementPlanTests(unittest.TestCase):
             "https://egpuganda.go.ug/plans/parliament.xlsx",
         )
 
-    def test_detail_parses_full_plan_categories_total_and_documents(self):
+    def test_detail_parses_live_shaped_total_row_without_counting_it_as_category(self):
         source = EGPProcurementPlansSource()
         plan = source.parse_index(INDEX_HTML, financial_year="2026-2027")[0]
         enriched = source.parse_detail(DETAIL_HTML, plan)
         self.assertEqual(enriched.organization, "Parliament of Uganda")
         self.assertEqual(enriched.total_estimated_amount_ugx, "5,646,500,000.00")
         self.assertEqual(len(enriched.items), 2)
+        self.assertFalse(any(item.category.lower().startswith("total") for item in enriched.items))
         self.assertEqual(
             enriched.items[0].category,
             "Computer programming and software development",
@@ -91,7 +92,7 @@ class EGPProcurementPlanTests(unittest.TestCase):
             "https://egpuganda.go.ug/plans/parliament.pdf",
         )
 
-    def test_national_plan_keeps_source_plan_name_as_organization(self):
+    def test_national_plan_keeps_source_plan_name_as_organization_and_total(self):
         source = EGPProcurementPlansSource()
         plan = ProcurementPlan(
             id="national-plan",
@@ -102,6 +103,8 @@ class EGPProcurementPlanTests(unittest.TestCase):
         )
         enriched = source.parse_detail(NATIONAL_DETAIL_HTML, plan)
         self.assertEqual(enriched.organization, "National Procurement Plan")
+        self.assertEqual(enriched.total_estimated_amount_ugx, "126,305,666,126.00")
+        self.assertEqual(len(enriched.items), 1)
 
     def test_current_financial_year_is_july_to_june(self):
         source = EGPProcurementPlansSource()
