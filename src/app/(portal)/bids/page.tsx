@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { Building2, CalendarRange, Check, ChevronDown, CircleCheckBig, Gift, Globe2, Landmark, Newspaper, Radar, Search, SlidersHorizontal, UsersRound } from "lucide-react";
+import { Building2, Check, ChevronDown, CircleCheckBig, Globe2, Landmark, Newspaper, Radar, Search, SlidersHorizontal, UsersRound } from "lucide-react";
 import { BidList } from "@/components/bids/BidList";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useBids } from "@/hooks/useBids";
@@ -13,7 +13,7 @@ const scopes = [
   { id: "all", label: "Everywhere", icon: Globe2, sourcePatterns: [] as string[] },
   { id: "government", label: "Government", icon: Landmark, sourcePatterns: ["egp", "ppda", "gpp", "ura", "kcca", "nita", "unra", "ucc", "nwsc", "ministry", "finance", "mofped"] },
   { id: "newspapers", label: "Newspapers", icon: Newspaper, sourcePatterns: ["daily monitor", "new vision"] },
-  { id: "development", label: "NGO, Grants & Development", icon: UsersRound, sourcePatterns: ["ungm", "undp", "uncdf", "afdb", "african development bank", "giz", "enabel", "usaid", "world bank", "grant", "foundation", "fund"] },
+  { id: "development", label: "NGO & Development", icon: UsersRound, sourcePatterns: ["ungm", "undp", "uncdf", "afdb", "african development bank", "giz", "enabel", "usaid", "world bank"] },
   { id: "private", label: "Private sector", icon: Building2, sourcePatterns: ["private", "company", "bank", "telecom"] },
 ] as const;
 
@@ -31,7 +31,6 @@ export default function BidsPage() {
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
   const [activeOnly, setActiveOnly] = useState(true);
-  const [opportunityType, setOpportunityType] = useState("all");
   const [status, setStatus] = useState("all");
   const [category, setCategory] = useState("all");
   const [source, setSource] = useState("all");
@@ -48,10 +47,8 @@ export default function BidsPage() {
     const params = new URLSearchParams(window.location.search);
     const q = params.get("q");
     const requestedScope = params.get("scope");
-    const requestedType = params.get("type");
     if (q) setSearch(q);
     if (requestedScope && scopes.some((item) => item.id === requestedScope)) setScope(requestedScope);
-    if (requestedType === "grant" || requestedType === "tender") setOpportunityType(requestedType);
   }, []);
 
   const categories = useMemo(() => [...new Set(bids.map((b) => b.category).filter(Boolean))].sort(), [bids]);
@@ -61,17 +58,7 @@ export default function BidsPage() {
 
   const indexedBids = useMemo(() => bids.map((bid) => ({
     bid,
-    text: [
-      bid.title,
-      bid.organization,
-      bid.referenceNumber,
-      bid.description,
-      bid.category,
-      bid.procurementType,
-      bid.noticeType,
-      bid.opportunityType,
-      ...bid.sources.map((item) => item.name),
-    ].join(" ").toLowerCase(),
+    text: [bid.title, bid.organization, bid.referenceNumber, bid.description, bid.category, bid.procurementType, bid.noticeType, ...bid.sources.map((item) => item.name)].join(" ").toLowerCase(),
     sourceNames: bid.sources.map((item) => item.name.toLowerCase()),
   })), [bids]);
 
@@ -80,22 +67,17 @@ export default function BidsPage() {
     const orgNeedle = organization.trim().toLowerCase();
     const result = indexedBids.filter(({ bid, text, sourceNames }) => {
       if (activeOnly && !bid.isOpen) return false;
-      if (opportunityType !== "all" && bid.opportunityType !== opportunityType) return false;
       if (needle && !text.includes(needle)) return false;
       if (status !== "all" && bid.status !== status) return false;
       if (category !== "all" && bid.category !== category) return false;
       if (source !== "all" && !bid.sources.some((item) => item.name === source)) return false;
       if (orgNeedle && !bid.organization.toLowerCase().includes(orgNeedle)) return false;
       if (procurementType !== "all" && bid.procurementType !== procurementType) return false;
-
       const days = daysUntil(bid.deadlineAt);
       if (deadlineWindow !== "all" && !(days >= 0 && days <= Number(deadlineWindow))) return false;
-
       if (scope === "custom") {
         if (customSources.length && !bid.sources.some((item) => customSources.includes(item.name))) return false;
-      } else if (!sourceMatchesScope(sourceNames, scope)) {
-        return false;
-      }
+      } else if (!sourceMatchesScope(sourceNames, scope)) return false;
       return true;
     }).map(({ bid }) => bid);
 
@@ -108,10 +90,9 @@ export default function BidsPage() {
       const bDeadline = b.deadlineAt ? new Date(b.deadlineAt).getTime() : Number.POSITIVE_INFINITY;
       return aDeadline - bDeadline;
     });
-  }, [activeOnly, category, customSources, deadlineWindow, deferredSearch, indexedBids, opportunityType, organization, procurementType, scope, sort, source, status]);
+  }, [activeOnly, category, customSources, deadlineWindow, deferredSearch, indexedBids, organization, procurementType, scope, sort, source, status]);
 
   const activeCount = useMemo(() => bids.filter((bid) => bid.isOpen).length, [bids]);
-  const grantCount = useMemo(() => bids.filter((bid) => bid.isOpen && bid.opportunityType === "grant").length, [bids]);
 
   function toggleCustom(name: string) {
     setCustomSources((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
@@ -119,32 +100,30 @@ export default function BidsPage() {
   }
 
   function reset() {
-    setSearch(""); setActiveOnly(true); setOpportunityType("all"); setStatus("all"); setCategory("all"); setSource("all"); setScope("all");
+    setSearch(""); setActiveOnly(true); setStatus("all"); setCategory("all"); setSource("all"); setScope("all");
     setOrganization(""); setProcurementType("all"); setDeadlineWindow("all"); setCustomSources([]);
   }
 
   return (
     <div className="page-stack suite-find-page">
       <PageHeader
-        eyebrow="Opportunity search"
-        title="Find opportunities"
-        description="Search active tenders and grants across Uganda-focused public sources. Closed opportunities remain visible for up to 3 days, then disappear automatically."
+        eyebrow="Procurement search"
+        title="Find bids"
+        description="Search procurement notices and tender opportunities. Grants are kept in the separate Grants section. Closed bids remain visible for up to 3 days, then disappear automatically."
         action={<Link href="/scan" className="button primary"><Radar size={15} /> Scan newest</Link>}
       />
 
       <section className="panel suite-search-console">
-        <label className="suite-main-search"><Search size={21} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search title, organization, reference, grant, service or requirement…" /><span>{filtered.length} result{filtered.length === 1 ? "" : "s"}</span></label>
+        <label className="suite-main-search"><Search size={21} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search title, organization, reference, service or requirement…" /><span>{filtered.length} result{filtered.length === 1 ? "" : "s"}</span></label>
 
         <div className="suite-filter-bar" aria-label="Quick filters">
           <button className={activeOnly ? "button primary" : "button secondary"} onClick={() => setActiveOnly((value) => !value)}><CircleCheckBig size={15} /> Active only ({activeCount})</button>
-          <button className={opportunityType === "grant" ? "button primary" : "button secondary"} onClick={() => { setOpportunityType(opportunityType === "grant" ? "all" : "grant"); setActiveOnly(true); }}><Gift size={15} /> Grants ({grantCount})</button>
-          <button className={opportunityType === "tender" ? "button primary" : "button secondary"} onClick={() => setOpportunityType(opportunityType === "tender" ? "all" : "tender")}>Tenders</button>
           <button className="suite-advanced-toggle" onClick={() => setAdvanced((value) => !value)}><SlidersHorizontal size={15} /> More filters</button>
           <button className="suite-reset" onClick={reset}>Reset</button>
         </div>
 
         <div className="suite-search-question">
-          <div><span className="eyebrow">SEARCH COVERAGE</span><h2>Where should we search?</h2><p>Use one broad channel or choose individual sources only when you need to narrow the results.</p></div>
+          <div><span className="eyebrow">SEARCH COVERAGE</span><h2>Where should we search?</h2><p>Use one broad channel or choose individual procurement sources when you need to narrow the results.</p></div>
           <button className="button secondary" onClick={() => setCustomOpen((value) => !value)}>Choose sources <ChevronDown size={15} /></button>
         </div>
         <div className="suite-scope-tabs">{scopes.map(({ id, label, icon: Icon }) => <button className={scope === id ? "active" : ""} onClick={() => setScope(id)} key={id}><Icon size={17} /><span>{label}</span></button>)}</div>
@@ -161,7 +140,7 @@ export default function BidsPage() {
       </section>
 
       <section className="suite-results-section">
-        <div className="suite-results-head"><div><span className="eyebrow">SEARCH RESULTS</span><h2>{opportunityType === "grant" ? "Grant opportunities" : opportunityType === "tender" ? "Tender opportunities" : activeOnly ? "Active opportunities" : "All recent opportunities"}</h2></div><label className="suite-sort">Sort by <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="deadline">Nearest deadline</option><option value="newest">Newest discovered</option><option value="organization">Organization</option></select></label></div>
+        <div className="suite-results-head"><div><span className="eyebrow">SEARCH RESULTS</span><h2>{activeOnly ? "Active bids" : "All recent bids"}</h2></div><label className="suite-sort">Sort by <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="deadline">Nearest deadline</option><option value="newest">Newest discovered</option><option value="organization">Organization</option></select></label></div>
         {error ? <div className="suite-empty"><strong>Search data is temporarily unavailable</strong><span>{error}</span></div> : <BidList bids={filtered} loading={loading} />}
       </section>
     </div>
