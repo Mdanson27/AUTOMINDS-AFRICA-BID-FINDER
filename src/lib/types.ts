@@ -1,4 +1,5 @@
 export type BidStatus = "planned" | "open" | "closed" | "evaluation" | "awarded" | "cancelled";
+export type OpportunityType = "tender" | "grant" | "other";
 export type UserRole = "viewer" | "admin";
 
 export type UserProfile = { uid: string; email: string; displayName: string; role: UserRole };
@@ -24,6 +25,7 @@ export type Bid = {
   description: string;
   category: string;
   procurementType: string;
+  opportunityType?: OpportunityType;
   publishedAt: string;
   deadlineAt: string;
   status: BidStatus;
