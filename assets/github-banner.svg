@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="420" viewBox="0 0 1400 420">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#071426"/>
+    <stop offset="55%" stop-color="#0B2D55"/>
+    <stop offset="100%" stop-color="#08111E"/>
+  </linearGradient>
+  <linearGradient id="pulse" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="#1687FF"/>
+    <stop offset="100%" stop-color="#FF7A00"/>
+  </linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1400" height="420" rx="34" fill="url(#bg)"/>
+<g opacity=".12" stroke="#6AB4FF" stroke-width="1">
+  <path d="M0 70H1400M0 140H1400M0 210H1400M0 280H1400M0 350H1400"/>
+  <path d="M140 0V420M280 0V420M420 0V420M560 0V420M700 0V420M840 0V420M980 0V420M1120 0V420M1260 0V420"/>
+</g>
+<g fill="none" stroke="url(#pulse)" stroke-width="3" opacity=".75" filter="url(#glow)">
+  <path d="M92 318C220 250 274 351 393 278S588 181 715 235 894 328 1030 231 1201 126 1325 177"/>
+</g>
+<g fill="#FF7A00">
+  <circle cx="92" cy="318" r="7"/><circle cx="393" cy="278" r="7"/><circle cx="715" cy="235" r="7"/><circle cx="1030" cy="231" r="7"/><circle cx="1325" cy="177" r="7"/>
+</g>
+<text x="84" y="92" fill="#78BFFF" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="4">PROCUREMENT INTELLIGENCE</text>
+<text x="84" y="176" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="800" letter-spacing="1">AUTOMINDS BID FINDER</text>
+<text x="86" y="226" fill="#D4E8FF" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="600" letter-spacing="3">DISCOVER • NORMALIZE • TRACK • ACT</text>
+<rect x="84" y="270" width="168" height="5" rx="2.5" fill="url(#pulse)"/>
+<text x="84" y="374" fill="#9EB8D4" font-family="Arial, Helvetica, sans-serif" font-size="18">MUSHABE DANSON  •  BUILT IN UGANDA 🇺🇬</text>
+</svg>
