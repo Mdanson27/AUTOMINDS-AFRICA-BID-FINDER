@@ -1,16 +1,29 @@
-# AutoMinds Africa Bid Finder
+<p align="center">
+  <img src="assets/github-banner.svg" alt="AutoMinds Bid Finder — Procurement Intelligence" width="100%" />
+</p>
 
-Uganda-focused procurement intelligence platform by **AutoMinds Africa**.
+<p align="center">
+  <strong>Uganda-focused procurement intelligence by AutoMinds Africa.</strong><br/>
+  Turning fragmented public procurement notices into a structured, searchable operating layer.
+</p>
 
-The project combines a Next.js procurement workspace with a separate Python collection engine. The first live source adapter is **eGP Uganda**. It normalizes public bid notices, deduplicates them by procurement reference, tracks changes such as deadline extensions, and writes the resulting records to the application data layer.
+<p align="center">
+  <code>Next.js</code> · <code>TypeScript</code> · <code>Firebase</code> · <code>Python</code> · <code>BeautifulSoup</code> · <code>GitHub Actions</code>
+</p>
+
+---
+
+## What it does
+
+The platform combines a Next.js procurement workspace with a separate Python collection engine. The first live source adapter is **eGP Uganda**. It normalizes public bid notices, deduplicates them by procurement reference, tracks changes such as deadline extensions, and writes the resulting records to the application data layer.
 
 ## Current stack
 
 - Next.js + TypeScript
 - Firebase Authentication
 - Cloud Firestore for the MVP data layer
-- strict Firestore rules and indexes
-- responsive AutoMinds suite design
+- Strict Firestore rules and indexes
+- Responsive AutoMinds suite design
 - Python + BeautifulSoup + HTTPX collector
 - Firebase Admin for server-side collector writes
 - GitHub Actions for scheduled collection and infrastructure deployment
@@ -87,12 +100,10 @@ The product is not padded with fake tenders. Search results come from records st
 
 ## Next sources
 
-After eGP Uganda is stable:
-
 1. GPP / PPDA
 2. Daily Monitor
 3. New Vision
-4. direct procuring-entity websites
+4. Direct procuring-entity websites
 5. NGO and development-partner portals
 
 ## Commands
@@ -105,3 +116,7 @@ npm run build
 ```
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the broader application structure.
+
+---
+
+<p align="center"><strong>AutoMinds Africa</strong> · Building intelligence around real business workflows.</p>
