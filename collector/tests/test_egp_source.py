@@ -50,7 +50,6 @@ HTML = """
 """
 
 
-
 DETAIL_HTML = """
 <html><body>
 <h1>Request for Quotation Notice</h1>
@@ -147,9 +146,12 @@ class EGPUgandaSourceTests(unittest.TestCase):
             "5,702,639.88",
         )
 
-    def test_reference_drives_cross_source_canonical_key(self):
+    def test_reference_and_organization_drive_canonical_key(self):
         bid = list(EGPUgandaSource().parse(HTML))[0]
-        self.assertEqual(bid.canonical_key(), "ref:pou/ncons/2026-2027/00199")
+        self.assertEqual(
+            bid.canonical_key(),
+            "ref-org:pou/ncons/2026-2027/00199|parliament of uganda",
+        )
 
     def test_date_only_deadline_is_end_of_day(self):
         bid = list(EGPUgandaSource().parse(HTML))[0]
