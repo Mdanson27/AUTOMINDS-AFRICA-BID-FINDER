@@ -63,6 +63,31 @@ class CanonicalBidIdentityTests(unittest.TestCase):
         self.assertEqual(result["title"], "Procurement of Enterprise Systems Cybersecurity Audit Tools")
         self.assertEqual(result["procurementMethod"], "Request For Quotations/Proposals")
 
+    def test_standalone_proposals_is_never_a_valid_public_title(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Proposals",
+                sourceMetadata={"Procurement Method": "Request For Quotations/Proposals"},
+            )
+        )
+        self.assertEqual(result["title"], "Proposals")
+        self.assertEqual(result["titleSpecificity"], "unresolved")
+        self.assertFalse(result["displayEligible"])
+
+    def test_subject_recovers_record_when_listing_title_is_proposals(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Proposals",
+                sourceMetadata={
+                    "Subject of Procurement": "Procurement of Laptop computers",
+                    "Procurement Method": "Request For Quotations/Proposals",
+                },
+            )
+        )
+        self.assertEqual(result["title"], "Procurement of Laptop computers")
+        self.assertEqual(result["titleSource"], "source-metadata")
+        self.assertTrue(result["displayEligible"])
+
     def test_identity_uses_reference_and_organization_not_reference_alone(self):
         first = apply_canonical_fields(self._record())
         second = apply_canonical_fields(self._record(organization="Another Procuring Entity"))
