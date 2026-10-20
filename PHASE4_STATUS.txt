@@ -1,0 +1,1 @@
+Heavy eGP extraction and lifecycle intelligence implementation complete on branch; awaiting CI.
