@@ -9,7 +9,7 @@ import { daysUntil, deadlineLabel, formatDate } from "@/lib/date";
 
 export function BidList({ bids, loading, compact = false }: { bids: Bid[]; loading?: boolean; compact?: boolean }) {
   const { user } = useAuth();
-  const { savedIds, toggle } = useSavedBids();
+  const { isSaved, toggle } = useSavedBids(bids);
 
   if (loading) {
     return <div className="suite-result-list"><div className="suite-result-card skeleton-row" /><div className="suite-result-card skeleton-row" /><div className="suite-result-card skeleton-row" /></div>;
@@ -23,7 +23,7 @@ export function BidList({ bids, loading, compact = false }: { bids: Bid[]; loadi
     <div className={`suite-result-list ${compact ? "compact" : ""}`}>
       {bids.map((bid) => {
         const remaining = daysUntil(bid.deadlineAt);
-        const saved = savedIds.has(bid.id);
+        const saved = isSaved(bid);
         const primarySource = bid.sources[0];
         const detailHref = `/bids/view?id=${encodeURIComponent(bid.id)}`;
         const urgent = Number.isFinite(remaining) && remaining <= 3 && remaining >= 0;
@@ -69,7 +69,7 @@ export function BidList({ bids, loading, compact = false }: { bids: Bid[]; loadi
           </div>
 
           <div className="suite-result-actions">
-            <button onClick={() => user && toggle(bid.id)} className={`suite-save-button ${saved ? "saved" : ""}`} aria-label={saved ? "Remove saved bid" : "Save bid"}>
+            <button onClick={() => user && toggle(bid)} className={`suite-save-button ${saved ? "saved" : ""}`} aria-label={saved ? "Remove saved bid" : "Save bid"}>
               {saved ? <BookmarkCheck size={17} /> : <Bookmark size={17} />}<span>{saved ? "Saved" : "Save"}</span>
             </button>
             <Link href={detailHref} className="suite-view-button">View bid</Link>
