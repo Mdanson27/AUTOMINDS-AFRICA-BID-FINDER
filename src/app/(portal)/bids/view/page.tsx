@@ -2,11 +2,30 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowLeft, Bookmark, BookmarkCheck, CalendarDays, ExternalLink, FileCheck2, Landmark, ReceiptText, Send, Share2, ShieldCheck, Tag } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Bookmark,
+  BookmarkCheck,
+  CalendarDays,
+  ExternalLink,
+  FileCheck2,
+  Gavel,
+  Landmark,
+  Mail,
+  MapPin,
+  ReceiptText,
+  Send,
+  Share2,
+  ShieldCheck,
+  Tag,
+  Users,
+} from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useBids } from "@/hooks/useBids";
 import { useSavedBids } from "@/hooks/useSavedBids";
 import { daysUntil, deadlineLabel, formatDate } from "@/lib/date";
+import type { ProcurementLifecycleEvent } from "@/lib/types";
 
 function splitDescription(value: string) {
   const text = value.replace(/\s*\|\s*/g, ". ").replace(/\s+/g, " ").trim();
@@ -20,6 +39,16 @@ function splitDescription(value: string) {
   }
   if (current) paragraphs.push(current);
   return paragraphs.slice(0, 7);
+}
+
+function lifecycleLabel(stage: ProcurementLifecycleEvent["stage"]) {
+  if (stage === "advertised") return "Advertised";
+  if (stage === "updated") return "Updated / Addendum";
+  if (stage === "bid-opening") return "Bid Opening";
+  if (stage === "evaluation") return "Evaluation / BEB";
+  if (stage === "award") return "Contract Award";
+  if (stage === "cancelled") return "Cancelled";
+  return "Closed";
 }
 
 export default function BidDetailPage() {
@@ -47,6 +76,11 @@ export default function BidDetailPage() {
   const intelligence = bid.intelligence;
   const sourceMetadata = Object.entries(bid.sourceMetadata || {}).filter(([key, value]) => key && value);
   const documents = bid.documents || [];
+  const bidders = bid.bidders || [];
+  const contacts = bid.contacts || [];
+  const amendments = bid.amendments || [];
+  const openingParticipants = bid.openingParticipants || [];
+  const lifecycle = (bid.lifecycleEvents || []).slice().sort((a, b) => (a.occurredAt || "9999").localeCompare(b.occurredAt || "9999"));
   const saved = isSaved(bid);
 
   return (
@@ -58,6 +92,7 @@ export default function BidDetailPage() {
           <div className="badge-row">
             <span className={`status-badge status-${bid.status}`}>{bid.status}</span>
             {bid.procurementType && <span className="soft-badge">{bid.procurementType}</span>}
+            {bid.sourceStage && <span className="soft-badge"><Gavel size={12} /> {bid.sourceStage}</span>}
             {intelligence?.enrichmentStatus && <span className="enrichment-badge"><FileCheck2 size={13} /> {intelligence.enrichmentStatus} intelligence</span>}
             {bid.deadlineChanged && <span className="soft-badge deadline-change-badge"><AlertTriangle size={12} /> Deadline updated</span>}
           </div>
@@ -77,59 +112,118 @@ export default function BidDetailPage() {
       <div className="suite-detail-layout">
         <div className="suite-detail-main">
           <section className="panel suite-opportunity-overview">
-            <div className="suite-section-title"><div><span className="eyebrow">PROCUREMENT BRIEF</span><h2>Opportunity intelligence</h2><p>Structured facts extracted from the public notice. Missing fields are left blank rather than guessed.</p></div></div>
+            <div className="suite-section-title"><div><span className="eyebrow">PROCUREMENT BRIEF</span><h2>Opportunity intelligence</h2><p>Structured facts extracted from the public procurement record. Missing fields remain blank rather than being guessed.</p></div></div>
 
             <div className="intelligence-summary">
               <article><span>Reference</span><strong>{bid.referenceNumber || "Not provided"}</strong></article>
+              <article><span>Method</span><strong>{bid.procurementMethod || bid.procurementType || "Not published"}</strong></article>
               <article><span>Category</span><strong>{bid.category || "Uncategorized"}</strong></article>
               <article><span>Published</span><strong>{formatDate(bid.publishedAt)}</strong></article>
-              <article><span>Last checked</span><strong>{formatDate(bid.lastSeenAt, true)}</strong></article>
             </div>
 
-            {(bid.noticeType || bid.openingAt || bid.applicationUrl) && (
-              <div className="intelligence-section">
-                <h3>Source notice details</h3>
-                <div className="intelligence-summary">
-                  <article><span>Notice type</span><strong>{bid.noticeType || "Procurement notice"}</strong></article>
-                  <article><span>Bid opening</span><strong>{bid.openingAt ? formatDate(bid.openingAt, true) : "Not published yet"}</strong></article>
-                  <article><span>Source stage</span><strong>{bid.status === "open" ? "Bidding / submission" : bid.status}</strong></article>
-                  <article><span>Application</span><strong>{bid.applicationUrl ? "Online action available" : "Use original notice"}</strong></article>
-                </div>
+            <div className="intelligence-section">
+              <h3>Notice & submission</h3>
+              <div className="intelligence-summary">
+                <article><span>Notice type</span><strong>{bid.noticeType || "Procurement notice"}</strong></article>
+                <article><span>Source stage</span><strong>{bid.sourceStage || (bid.status === "open" ? "Bidding / submission" : bid.status)}</strong></article>
+                <article><span>Bid opening</span><strong>{bid.openingAt ? formatDate(bid.openingAt, true) : "Not published yet"}</strong></article>
+                <article><span>Submission</span><strong>{intelligence?.submissionMethod || "Not yet extracted"}</strong></article>
               </div>
-            )}
+            </div>
 
             <div className="intelligence-section">
               <h3>Commercial requirements</h3>
               <div className="intelligence-summary">
                 <article><span>Bid security</span><strong>{intelligence?.bidSecurity || "Not found in collected text"}</strong></article>
                 <article><span>Tender / document fee</span><strong>{intelligence?.tenderFee || "Not found in collected text"}</strong></article>
-                <article><span>Submission method</span><strong>{intelligence?.submissionMethod || "Not yet extracted"}</strong></article>
-                <article><span>Extraction confidence</span><strong>{intelligence?.confidence || "Low"}</strong></article>
+                <article><span>Best evaluated bidder</span><strong>{bid.bestEvaluatedBidder || "Not published yet"}</strong></article>
+                <article><span>Contract / evaluated amount</span><strong>{bid.contractAmount || "Not published yet"}</strong></article>
               </div>
             </div>
+
+            {lifecycle.length ? (
+              <div className="intelligence-section">
+                <h3>Procurement lifecycle</h3>
+                <div className="source-fact-list">
+                  {lifecycle.map((event, index) => (
+                    <div className="source-fact-row" key={`${event.stage}-${event.occurredAt || index}-${event.title}`}>
+                      <span>{lifecycleLabel(event.stage)}{event.occurredAt ? ` · ${formatDate(event.occurredAt, true)}` : ""}</span>
+                      <strong>{event.title}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="intelligence-section">
               <h3>Mandatory requirements detected</h3>
               {intelligence?.mandatoryRequirements?.length ? <div className="requirement-chips">{intelligence.mandatoryRequirements.map((item) => <span key={item}>{item}</span>)}</div> : <p>No structured mandatory requirements have been detected from the currently collected notice text. Open the original notice for the complete procurement document.</p>}
             </div>
 
-            {intelligence?.eligibility?.length ? <div className="intelligence-section"><h3>Eligibility signals</h3><div className="requirement-chips">{intelligence.eligibility.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
+            {intelligence?.eligibility?.length ? <div className="intelligence-section"><h3>Eligibility</h3><div className="requirement-chips">{intelligence.eligibility.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
 
-            {intelligence?.keyDates?.length ? <div className="intelligence-section"><h3>Additional dates & milestones</h3><div className="requirement-chips">{intelligence.keyDates.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
-
-            {sourceMetadata.length ? (
+            {bidders.length || bid.bidsReceived !== undefined && bid.bidsReceived !== null ? (
               <div className="intelligence-section">
-                <h3>Source-provided procurement details</h3>
+                <h3>Bid opening & bidders</h3>
+                <div className="intelligence-summary">
+                  <article><span>Bids received</span><strong>{bid.bidsReceived ?? bidders.length}</strong></article>
+                  <article><span>Opening date/time</span><strong>{bid.openingAt ? formatDate(bid.openingAt, true) : "Not published"}</strong></article>
+                  <article><span>Opening participants</span><strong>{openingParticipants.length || "Not published"}</strong></article>
+                  <article><span>Opening committee</span><strong>{bid.openingCommittee?.length || "Not published"}</strong></article>
+                </div>
+                {bidders.length ? <div className="source-fact-list">
+                  {bidders.map((item, index) => (
+                    <div className="source-fact-row" key={`${item.name}-${item.submissionAt || index}`}>
+                      <span>{item.rank ? `#${item.rank} · ` : ""}{item.status || item.evaluationStage || (item.submissionAt ? `Submitted ${formatDate(item.submissionAt, true)}` : "Bidder")}</span>
+                      <strong>{item.name}{item.amount ? ` — ${item.currency ? `${item.currency} ` : ""}${item.amount}` : ""}</strong>
+                    </div>
+                  ))}
+                </div> : null}
+              </div>
+            ) : null}
+
+            {openingParticipants.length ? (
+              <div className="intelligence-section">
+                <h3>Public opening attendance</h3>
                 <div className="source-fact-list">
-                  {sourceMetadata.slice(0, 24).map(([label, value]) => (
-                    <div className="source-fact-row" key={label}>
-                      <span>{label}</span>
-                      <strong>{value}</strong>
+                  {openingParticipants.map((item, index) => (
+                    <div className="source-fact-row" key={`${item.name}-${index}`}>
+                      <span>{item.position || item.departmentCompany || "Participant"}</span>
+                      <strong>{item.name}{item.departmentCompany ? ` · ${item.departmentCompany}` : ""}</strong>
                     </div>
                   ))}
                 </div>
               </div>
             ) : null}
+
+            {contacts.length ? (
+              <div className="intelligence-section">
+                <h3>Submission contacts & addresses</h3>
+                <div className="source-fact-list">
+                  {contacts.map((item, index) => (
+                    <div className="source-fact-row" key={`${item.kind}-${item.value}-${index}`}>
+                      <span>{item.kind === "email" ? <Mail size={13} /> : item.kind === "address" ? <MapPin size={13} /> : null} {item.label || item.kind || "Contact"}</span>
+                      <strong>{item.value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {amendments.length ? (
+              <div className="intelligence-section">
+                <h3>Amendments & addenda</h3>
+                <div className="source-document-list">
+                  {amendments.map((item, index) => item.url ? (
+                    <a href={item.url} target="_blank" rel="noreferrer" key={`${item.url}-${index}`}>
+                      <span><strong>{item.title}</strong><small>{item.publishedAt ? formatDate(item.publishedAt, true) : "Published update"}</small></span><ExternalLink size={15} />
+                    </a>
+                  ) : <div className="source-fact-row" key={`${item.title}-${index}`}><span>Update</span><strong>{item.title}</strong></div>)}
+                </div>
+              </div>
+            ) : null}
+
+            {intelligence?.keyDates?.length ? <div className="intelligence-section"><h3>Additional dates & milestones</h3><div className="requirement-chips">{intelligence.keyDates.map((item) => <span key={item}>{item}</span>)}</div></div> : null}
 
             {documents.length ? (
               <div className="intelligence-section">
@@ -149,14 +243,25 @@ export default function BidDetailPage() {
               <h3>Scope / description</h3>
               {descriptionParagraphs.length ? descriptionParagraphs.map((paragraph, index) => <p key={`${bid.id}-description-${index}`}>{paragraph}</p>) : <p>A structured description has not been extracted yet. Open the original notice for the complete procurement information.</p>}
             </div>
+
+            {sourceMetadata.length ? (
+              <div className="intelligence-section">
+                <h3>Source-provided procurement facts</h3>
+                <div className="source-fact-list">
+                  {sourceMetadata.slice(0, 36).map(([label, value]) => (
+                    <div className="source-fact-row" key={label}><span>{label}</span><strong>{value}</strong></div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </section>
 
           <section className="panel suite-prepared-sections">
             <div className="suite-section-title"><div><span className="eyebrow">BID PREPARATION</span><h2>Preparation checklist</h2></div></div>
             <div className="suite-prep-grid">
-              <article><ShieldCheck size={20} /><strong>Security & fees</strong><span>{intelligence?.bidSecurity || intelligence?.tenderFee ? "Commercial security / fee information has been detected above." : "Security and fee information still needs deeper source-document enrichment."}</span></article>
-              <article><CalendarDays size={20} /><strong>Dates</strong><span>{intelligence?.keyDates?.length ? `${intelligence.keyDates.length} additional milestone${intelligence.keyDates.length === 1 ? "" : "s"} detected.` : "Deadline captured; pre-bid and clarification dates will appear when detected."}</span></article>
-              <article><Send size={20} /><strong>Submission</strong><span>{intelligence?.submissionMethod || "Submission instructions have not yet been structured."}</span></article>
+              <article><ShieldCheck size={20} /><strong>Security & fees</strong><span>{intelligence?.bidSecurity || intelligence?.tenderFee ? "Commercial security / fee information has been extracted above." : "Security and fee information has not yet been found in the public record."}</span></article>
+              <article><CalendarDays size={20} /><strong>Dates</strong><span>{lifecycle.length ? `${lifecycle.length} procurement lifecycle event${lifecycle.length === 1 ? "" : "s"} captured.` : "Deadline captured; later lifecycle events will appear as eGP publishes them."}</span></article>
+              <article><Users size={20} /><strong>Competition</strong><span>{bidders.length ? `${bidders.length} bidder record${bidders.length === 1 ? "" : "s"} captured from the public procurement lifecycle.` : "Bidder information will appear after a public opening/evaluation record is available."}</span></article>
             </div>
           </section>
         </div>
@@ -176,10 +281,12 @@ export default function BidDetailPage() {
           </section>
 
           <section className="panel suite-source-trail">
-            <div className="suite-section-title"><div><span className="eyebrow">COMMERCIAL CHECK</span><h2>What Bid Finder found</h2></div></div>
+            <div className="suite-section-title"><div><span className="eyebrow">INTELLIGENCE COVERAGE</span><h2>What Bid Finder found</h2></div></div>
             <div className="requirement-chips">
               <span><ShieldCheck size={12} /> {intelligence?.bidSecurity ? "Security detected" : "Security not found"}</span>
               <span><ReceiptText size={12} /> {intelligence?.tenderFee ? "Fee detected" : "Fee not found"}</span>
+              <span><Users size={12} /> {bidders.length ? `${bidders.length} bidders` : "No bidders yet"}</span>
+              <span><Gavel size={12} /> {lifecycle.length ? `${lifecycle.length} lifecycle events` : "Listing stage"}</span>
               <span><Tag size={12} /> {intelligence?.enrichmentStatus || "basic"}</span>
             </div>
           </section>
