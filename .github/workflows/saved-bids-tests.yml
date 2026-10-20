@@ -1,0 +1,17 @@
+name: Saved Bids Persistence
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  saved-bids:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run saved bid persistence tests
+        run: npm run test:saved

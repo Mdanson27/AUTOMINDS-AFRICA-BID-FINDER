@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowLeft, Bookmark, CalendarDays, ExternalLink, FileCheck2, Landmark, ReceiptText, Send, Share2, ShieldCheck, Tag } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Bookmark, BookmarkCheck, CalendarDays, ExternalLink, FileCheck2, Landmark, ReceiptText, Send, Share2, ShieldCheck, Tag } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useBids } from "@/hooks/useBids";
+import { useSavedBids } from "@/hooks/useSavedBids";
 import { daysUntil, deadlineLabel, formatDate } from "@/lib/date";
 
 function splitDescription(value: string) {
@@ -23,6 +24,7 @@ function splitDescription(value: string) {
 
 export default function BidDetailPage() {
   const { bids, loading, error } = useBids();
+  const { savedBids, ready: savedReady, isSaved, toggle } = useSavedBids(bids);
   const [bidId, setBidId] = useState("");
   const [mounted, setMounted] = useState(false);
 
@@ -32,12 +34,12 @@ export default function BidDetailPage() {
     setMounted(true);
   }, []);
 
-  const bid = bids.find((item) => item.id === bidId);
+  const bid = bids.find((item) => item.id === bidId) || savedBids.find((item) => item.id === bidId);
   const descriptionParagraphs = useMemo(() => splitDescription(bid?.description || ""), [bid?.description]);
 
-  if (!mounted || loading) return <div className="premium-loading"><div className="premium-loading-head" /><div className="premium-loading-toolbar" /><div className="premium-loading-card" /></div>;
-  if (error) return <EmptyState title="Could not load this bid" description={error} />;
-  if (!bid) return <EmptyState title="Bid not found" description="This opportunity may have expired, fallen outside the current financial-year window, or been removed from its source." action={<Link href="/bids" className="button secondary">Back to bids</Link>} />;
+  if (!mounted || (loading && !savedReady)) return <div className="premium-loading"><div className="premium-loading-head" /><div className="premium-loading-toolbar" /><div className="premium-loading-card" /></div>;
+  if (error && !bid) return <EmptyState title="Could not load this bid" description={error} />;
+  if (!bid) return <EmptyState title="Bid not found" description="This opportunity is not available in the live dataset or your saved bids." action={<Link href="/bids" className="button secondary">Back to bids</Link>} />;
 
   const remaining = daysUntil(bid.deadlineAt);
   const urgent = Number.isFinite(remaining) && remaining <= 3 && remaining >= 0;
@@ -45,6 +47,7 @@ export default function BidDetailPage() {
   const intelligence = bid.intelligence;
   const sourceMetadata = Object.entries(bid.sourceMetadata || {}).filter(([key, value]) => key && value);
   const documents = bid.documents || [];
+  const saved = isSaved(bid);
 
   return (
     <div className="page-stack suite-bid-detail">
@@ -161,7 +164,7 @@ export default function BidDetailPage() {
         <aside className="suite-detail-side">
           <section className="panel suite-action-panel">
             <h2>Bid actions</h2>
-            <button><Bookmark size={16} /> Save opportunity</button>
+            <button onClick={() => toggle(bid)} className={saved ? "saved" : ""}>{saved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />} {saved ? "Saved — remove" : "Save opportunity"}</button>
             {bid.applicationUrl && <a href={bid.applicationUrl} target="_blank" rel="noreferrer"><Send size={16} /> Apply / submit on source</a>}
             {primarySource?.url && <a href={primarySource.url} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Open original notice</a>}
             <button><Share2 size={16} /> Share</button>

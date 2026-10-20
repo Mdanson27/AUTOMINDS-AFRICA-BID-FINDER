@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:saved": "node --experimental-strip-types --test scripts/saved-bids-state.test.ts"
   },
   "dependencies": {
     "firebase": "^12.2.1",
