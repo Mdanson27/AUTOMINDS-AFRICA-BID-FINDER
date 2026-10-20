@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 
 from .bid_persistence import merge_persistent_records
+from .phase4_intelligence import apply_phase4_intelligence
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -116,18 +117,20 @@ def procurement_method(record: dict) -> str:
 
 
 def source_stage(record: dict) -> str:
-    explicit = metadata_value(record, ("source stage", "procurement stage", "notice stage"))
-    if explicit:
+    explicit = clean_text(record.get("sourceStage")) or metadata_value(record, ("source stage", "procurement stage", "notice stage"))
+    if explicit and explicit.lower() not in {"bidding / submission", "closed"}:
         return explicit
 
     metadata = record.get("sourceMetadata") or {}
     metadata_keys = " ".join(normalized_key(key) for key in metadata.keys()) if isinstance(metadata, dict) else ""
+    if record.get("bestEvaluatedBidder"):
+        return "Evaluation / BEB"
     if record.get("openingAt") or "bids received" in metadata_keys or "date and time of bid opening" in metadata_keys:
         return "Bid opening"
 
     status = clean_text(record.get("status")).lower()
     if status == "evaluation":
-        return "Evaluation"
+        return "Evaluation / BEB"
     if status == "awarded":
         return "Contract award"
     if status == "cancelled":
@@ -184,12 +187,7 @@ def apply_canonical_fields(record: dict) -> dict:
 
 
 def process_records(records: list[dict], now: datetime) -> list[dict]:
-    """Canonicalize procurement records without deleting history.
-
-    Discovery-window rules are applied before records reach this function. Once
-    a bid has entered Bid Finder, its deadline controls status, not whether a
-    later scan happens to return it.
-    """
+    """Canonicalize procurement records without deleting history."""
     output: list[dict] = []
     now_utc = now.astimezone(timezone.utc)
 
@@ -197,18 +195,19 @@ def process_records(records: list[dict], now: datetime) -> list[dict]:
         record = apply_canonical_fields(raw_record)
         deadline = parse_iso(str(record.get("deadlineAt", "")))
         terminal = str(record.get("status") or "").lower() in {"cancelled", "awarded"}
+        evaluation = str(record.get("status") or "").lower() == "evaluation"
 
         if deadline is not None:
-            is_open = deadline >= now_utc
+            is_open = deadline >= now_utc and not terminal and not evaluation
             record["isOpen"] = is_open
-            if not terminal:
+            if not terminal and not evaluation:
                 if record.get("status") == "planned" and is_open:
                     record["status"] = "planned"
                 else:
                     record["status"] = "open" if is_open else "closed"
             record["retentionStatus"] = "active" if is_open else "expired"
         else:
-            record.setdefault("isOpen", not terminal)
+            record.setdefault("isOpen", not terminal and not evaluation)
             record.setdefault("retentionStatus", "deadline-unknown")
 
         record["sourceStage"] = source_stage(record)[:80]
@@ -245,6 +244,10 @@ def process_file(path: Path, now: datetime, *, persistent: bool = False) -> tupl
             now=now,
             generated_at=generated_at,
         )
+        # Phase 4 runs after persistence so saved/retained procurements can gain
+        # opening, BEB and award intelligence even when they are no longer in
+        # the current discovery window.
+        processed = apply_phase4_intelligence(processed)
         processed = process_records(processed, now)
 
     status_rank = {"open": 0, "planned": 1, "evaluation": 2, "awarded": 3, "closed": 4, "cancelled": 5}
@@ -264,7 +267,7 @@ def main() -> int:
     egp_before, egp_after = process_file(EGP_PATH, now, persistent=False)
     print(
         f"Postprocessed procurement: fresh bids {before}, persisted output {after}; "
-        f"eGP {egp_before}->{egp_after}; canonical titles/identity applied; "
+        f"eGP {egp_before}->{egp_after}; canonical identity + Phase 4 lifecycle intelligence applied; "
         "discovery window does not delete retained bids; procurement records forced to tender"
     )
     return 0
