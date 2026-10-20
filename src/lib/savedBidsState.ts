@@ -32,6 +32,7 @@ export function reconcileSavedRecords(records: SavedBidRecord[], currentBids: Bi
   return records.map((record) => {
     const current = currentByKey.get(record.key);
     if (!current) return record;
+    if (record.bidId === current.id && JSON.stringify(record.snapshot) === JSON.stringify(current)) return record;
     return {
       ...record,
       bidId: current.id,
