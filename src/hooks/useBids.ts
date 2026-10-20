@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { subscribeToBids } from "@/lib/firestore";
+import { resolveSpecificBidTitle } from "@/lib/titleSpecificity";
 import type { Bid, BidStatus, OpportunityType } from "@/lib/types";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -78,7 +79,12 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
     if (!Number.isNaN(published.getTime()) && published.getTime() < fyStart) return null;
   }
 
-  const title = plainText(bid.title).slice(0, 320);
+  // Global quality rule: every displayed tender must say what is actually
+  // being procured. Methods such as "Request for Proposals", "Open Domestic"
+  // and "Micro Procurement" are metadata, never display titles.
+  const specificTitle = resolveSpecificBidTitle(bid);
+  if (!specificTitle) return null;
+  const title = plainText(specificTitle).slice(0, 320);
   if (!title) return null;
 
   const isOpen = deadlineMs >= nowMs;
@@ -87,6 +93,8 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
   return {
     ...bid,
     title,
+    titleSpecificity: "specific",
+    displayEligible: true,
     organization: plainText(bid.organization).slice(0, 180),
     referenceNumber: plainText(bid.referenceNumber).slice(0, 140),
     description: plainText(bid.description).slice(0, 2400),
