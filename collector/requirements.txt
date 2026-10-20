@@ -1,5 +1,6 @@
 beautifulsoup4==4.12.3
 firebase-admin==6.6.0
 httpx==0.28.1
+playwright==1.55.0
 pydantic==2.10.4
 python-dateutil==2.9.0.post0

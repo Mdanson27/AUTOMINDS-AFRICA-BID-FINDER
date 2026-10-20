@@ -64,6 +64,9 @@ jobs:
       - name: Install collector dependencies
         run: python -m pip install -r collector/requirements.txt
 
+      - name: Install Chromium for newspaper browser fallback
+        run: python -m playwright install --with-deps chromium
+
       - name: Export live procurement snapshot
         run: python -m collector.src.export_live_snapshot
 

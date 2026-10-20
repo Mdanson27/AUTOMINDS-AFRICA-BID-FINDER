@@ -57,23 +57,16 @@ def financial_year_start(now: datetime) -> datetime:
 
 
 def is_eligible_bid(bid, now: datetime) -> bool:
-    """Keep only current-FY opportunities with a real deadline no more than 90 days ahead."""
-    if bid.status in {"cancelled", "awarded"}:
+    if bid.status in {"cancelled", "awarded"} or bid.deadline_at is None:
         return False
-    if bid.deadline_at is None:
-        return False
-
     local_now = now.astimezone(KAMPALA)
     start = financial_year_start(local_now)
     deadline = bid.deadline_at.astimezone(KAMPALA)
     latest = local_now + timedelta(days=MAX_DAYS_AHEAD)
-
     if deadline < start or deadline > latest:
         return False
-
     if bid.published_at is not None and bid.published_at.astimezone(KAMPALA) < start:
         return False
-
     return True
 
 
@@ -91,23 +84,13 @@ def clipped_phrase(text: str, pattern: str, limit: int = 190) -> str:
     match = re.search(pattern, text, flags=re.IGNORECASE)
     if not match:
         return ""
-    value = clean(match.group(0))
-    return value[:limit]
+    return clean(match.group(0))[:limit]
 
 
 def extract_intelligence(bid) -> dict:
-    """Best-effort structured extraction from the public notice text.
-
-    These fields are deliberately conservative: if the notice does not contain a
-    requirement, Bid Finder leaves it blank instead of inventing a value.
-    """
     text = clean(" ".join(filter(None, [bid.title, bid.description])))
     lower = text.lower()
-
-    bid_security = clipped_phrase(
-        text,
-        r"(?:bid security|bid-security|security declaration)[^.;]{0,170}",
-    )
+    bid_security = clipped_phrase(text, r"(?:bid security|bid-security|security declaration)[^.;]{0,170}")
     tender_fee = clipped_phrase(
         text,
         r"(?:non[- ]refundable (?:bid |tender |bidding document )?fee|tender fee|bid document fee|bidding document fee)[^.;]{0,170}",
@@ -162,14 +145,11 @@ def extract_intelligence(bid) -> dict:
 
     extracted_count = sum(bool(value) for value in [bid_security, tender_fee, submission_method, requirements, eligibility, key_date_phrases])
     if extracted_count >= 4:
-        status = "enriched"
-        confidence = "high"
+        status, confidence = "enriched", "high"
     elif extracted_count:
-        status = "partial"
-        confidence = "medium"
+        status, confidence = "partial", "medium"
     else:
-        status = "basic"
-        confidence = "low"
+        status, confidence = "basic", "low"
 
     return {
         "enrichmentStatus": status,
@@ -197,21 +177,14 @@ def record_from_bid(bid, generated_at: str, now: datetime):
             "detectedAt": iso(source_ref.detected_at) or generated_at,
         })
 
-    title = clean(bid.title)[:320]
-    description = clean(bid.description)[:2400]
-    organization = clean(bid.organization)[:180]
-    category = clean(bid.category)[:120]
-    procurement_type = clean(bid.procurement_type)[:100]
-    reference = clean(bid.reference_number)[:140]
-
     return {
         "id": stable_id(bid.canonical_key()),
-        "title": title,
-        "organization": organization,
-        "referenceNumber": reference,
-        "description": description,
-        "category": category,
-        "procurementType": procurement_type,
+        "title": clean(bid.title)[:320],
+        "organization": clean(bid.organization)[:180],
+        "referenceNumber": clean(bid.reference_number)[:140],
+        "description": clean(bid.description)[:4000],
+        "category": clean(bid.category)[:120],
+        "procurementType": clean(bid.procurement_type)[:100],
         "publishedAt": iso(bid.published_at),
         "deadlineAt": iso(deadline),
         "status": status,
@@ -237,25 +210,75 @@ def record_from_bid(bid, generated_at: str, now: datetime):
     }
 
 
+def newspaper_meta(source, attempted_at: str, bids: list, eligible: list) -> dict:
+    report = getattr(source, "capture_report", None)
+    data = report.as_source_meta() if report is not None else {}
+    capture_status = str(data.get("captureStatus", "INCOMPLETE"))
+    known_zero = capture_status == "SUCCESS" and len(bids) == 0
+    records_found = 0 if known_zero else (len(bids) if bids else None)
+    collector_status = str(data.get("collectorStatus", "UNKNOWN"))
+    health = "healthy" if collector_status == "HEALTHY" and capture_status == "SUCCESS" else "warning"
+    warning_list = data.get("captureWarnings") or []
+    last_error = "; ".join(str(item) for item in warning_list)[:300]
+    successful = bool(bids) or capture_status == "SUCCESS"
+    return {
+        "id": source.source_id,
+        "name": source.name,
+        "type": "newspaper",
+        "baseUrl": source.url,
+        "health": health,
+        "enabled": True,
+        "lastSuccessfulCrawlAt": attempted_at if successful else "",
+        "lastAttemptedCrawlAt": attempted_at,
+        "recordsFound": records_found,
+        "recordsCreated": len(eligible),
+        "recordsUpdated": int(data.get("updates", 0) or 0),
+        "recordsUnchanged": 0,
+        "lastError": last_error,
+        **data,
+    }
+
+
+def generic_meta(source, attempted_at: str, bids: list, eligible: list) -> dict:
+    return {
+        "id": source.source_id,
+        "name": source.name,
+        "type": source_type(source.source_id),
+        "baseUrl": source.url,
+        "health": "healthy",
+        "enabled": True,
+        "lastSuccessfulCrawlAt": attempted_at,
+        "lastAttemptedCrawlAt": attempted_at,
+        "recordsFound": len(bids),
+        "recordsCreated": len(eligible),
+        "recordsUpdated": 0,
+        "recordsUnchanged": 0,
+        "lastError": "",
+    }
+
+
+def collect_one_source(source, now: datetime) -> list:
+    if source_type(source.source_id) == "newspaper" and hasattr(source, "collect"):
+        return list(source.collect())
+    raw = source.fetch()
+    return list(source.parse(raw))
+
+
 def main() -> int:
     now = datetime.now(KAMPALA)
     generated_at = now.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     merged: dict[str, object] = {}
-    metas = []
+    metas: list[dict] = []
 
     for source in SOURCES:
         attempted_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        is_newspaper = source_type(source.source_id) == "newspaper"
         try:
-            raw = source.fetch()
-            bids = list(source.parse(raw))
-            if not bids:
+            bids = collect_one_source(source, now)
+            if not bids and not is_newspaper:
                 raise RuntimeError("source returned zero normalized notices")
 
             eligible = [bid for bid in bids if is_eligible_bid(bid, now)]
-
-            # Deep-enrich only actionable/current opportunities. Historical
-            # opening records remain searchable without generating hundreds of
-            # detail-page requests on every scheduled collection cycle.
             enriched_eligible = []
             for bid in eligible:
                 if bid.deadline_at is not None and bid.deadline_at >= now:
@@ -267,7 +290,6 @@ def main() -> int:
             eligible = enriched_eligible
 
             print(f"{source.name}: parsed {len(bids)} notices; kept {len(eligible)} in FY/current 90-day window")
-
             for bid in eligible:
                 key = bid.canonical_key()
                 if key in merged:
@@ -279,42 +301,47 @@ def main() -> int:
                 else:
                     merged[key] = record_from_bid(bid, generated_at, now)
 
-            metas.append({
-                "id": source.source_id,
-                "name": source.name,
-                "type": source_type(source.source_id),
-                "baseUrl": source.url,
-                "health": "healthy",
-                "enabled": True,
-                "lastSuccessfulCrawlAt": attempted_at,
-                "lastAttemptedCrawlAt": attempted_at,
-                "recordsFound": len(bids),
-                "recordsCreated": len(eligible),
-                "recordsUpdated": 0,
-                "recordsUnchanged": 0,
-                "lastError": "",
-            })
-        except Exception as exc:  # noqa: BLE001 - one public source must not break every other source
+            metas.append(newspaper_meta(source, attempted_at, bids, eligible) if is_newspaper else generic_meta(source, attempted_at, bids, eligible))
+        except Exception as exc:  # noqa: BLE001
             print(f"WARNING {source.name}: {exc}")
-            metas.append({
-                "id": source.source_id,
-                "name": source.name,
-                "type": source_type(source.source_id),
-                "baseUrl": source.url,
-                "health": "warning",
-                "enabled": True,
-                "lastSuccessfulCrawlAt": "",
-                "lastAttemptedCrawlAt": attempted_at,
-                "recordsFound": 0,
-                "recordsCreated": 0,
-                "recordsUpdated": 0,
-                "recordsUnchanged": 0,
-                "lastError": str(exc)[:300],
-            })
+            if is_newspaper:
+                report = getattr(source, "capture_report", None)
+                extra = report.as_source_meta() if report is not None else {}
+                metas.append({
+                    "id": source.source_id,
+                    "name": source.name,
+                    "type": "newspaper",
+                    "baseUrl": source.url,
+                    "health": "warning",
+                    "enabled": True,
+                    "lastSuccessfulCrawlAt": "",
+                    "lastAttemptedCrawlAt": attempted_at,
+                    "recordsFound": None,
+                    "recordsCreated": 0,
+                    "recordsUpdated": 0,
+                    "recordsUnchanged": 0,
+                    "lastError": str(exc)[:300],
+                    "collectorStatus": extra.get("collectorStatus", "DEGRADED"),
+                    "captureStatus": extra.get("captureStatus", "PARSER_FAILURE"),
+                    **extra,
+                })
+            else:
+                metas.append({
+                    "id": source.source_id,
+                    "name": source.name,
+                    "type": source_type(source.source_id),
+                    "baseUrl": source.url,
+                    "health": "warning",
+                    "enabled": True,
+                    "lastSuccessfulCrawlAt": "",
+                    "lastAttemptedCrawlAt": attempted_at,
+                    "recordsFound": 0,
+                    "recordsCreated": 0,
+                    "recordsUpdated": 0,
+                    "recordsUnchanged": 0,
+                    "lastError": str(exc)[:300],
+                })
 
-    # eGP Procurement Plans are deliberately exported separately from live
-    # tenders. They are forward-looking market intelligence with estimated
-    # budgets, not active bid invitations with submission deadlines.
     plans_source = EGPProcurementPlansSource()
     plan_records = []
     plan_attempted_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
