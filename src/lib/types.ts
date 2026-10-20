@@ -16,6 +16,55 @@ export type BidStatusHistoryEntry = {
   reason: string;
 };
 
+export type BidContact = {
+  label?: string;
+  value: string;
+  kind?: "email" | "phone" | "address" | "other";
+};
+
+export type BidderIntelligence = {
+  name: string;
+  address?: string;
+  submissionAt?: string;
+  amount?: string;
+  currency?: string;
+  rank?: string;
+  status?: string;
+  evaluationStage?: string;
+  reasons?: string[];
+};
+
+export type OpeningParticipant = {
+  name: string;
+  address?: string;
+  position?: string;
+  departmentCompany?: string;
+};
+
+export type BidAmendment = {
+  title: string;
+  url?: string;
+  publishedAt?: string;
+  summary?: string;
+};
+
+export type ProcurementLifecycleStage =
+  | "advertised"
+  | "updated"
+  | "closed"
+  | "bid-opening"
+  | "evaluation"
+  | "award"
+  | "cancelled";
+
+export type ProcurementLifecycleEvent = {
+  stage: ProcurementLifecycleStage;
+  title: string;
+  occurredAt?: string;
+  sourceUrl?: string;
+  details?: Record<string, string>;
+};
+
 export type BidIntelligence = {
   enrichmentStatus?: "basic" | "partial" | "enriched";
   confidence?: "low" | "medium" | "high";
@@ -64,6 +113,19 @@ export type Bid = {
   documents?: BidDocument[];
   sourceMetadata?: Record<string, string>;
   intelligence?: BidIntelligence;
+
+  // Phase 4 structured procurement intelligence.
+  contacts?: BidContact[];
+  bidders?: BidderIntelligence[];
+  bidsReceived?: number | null;
+  openingParticipants?: OpeningParticipant[];
+  openingCommittee?: string[];
+  amendments?: BidAmendment[];
+  lifecycleEvents?: ProcurementLifecycleEvent[];
+  bestEvaluatedBidder?: string;
+  contractAmount?: string;
+  contractCurrency?: string;
+  phase4Enriched?: boolean;
 };
 
 export type GrantOpportunity = {
