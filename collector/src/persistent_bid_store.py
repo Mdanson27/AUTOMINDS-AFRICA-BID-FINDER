@@ -33,24 +33,43 @@ def _client():
     return firestore.client(database_id=database_id)
 
 
+def _read_records(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
 def load_previous_snapshot(*, fallback_to_current_file: bool = True) -> int:
     """Materialize durable procurement history for the next collector run.
 
-    On the first migration run, the committed current snapshot is used as a
-    bootstrap if the dedicated persistence collection is still empty.
+    Priority is the dedicated persistence collection. During the Phase 2 first
+    migration, an already-downloaded live Pages snapshot can bootstrap the
+    collection so bids visible before the migration are not lost. The checked
+    out current file is a final fallback for non-Pages environments.
     """
-    db = _client()
+    bootstrap_records = _read_records(PREVIOUS_BIDS_PATH)
     records: list[dict] = []
-    for snapshot in db.collection(COLLECTION).stream():
-        value = snapshot.to_dict() or {}
-        record = value.get("record") if isinstance(value, dict) else None
-        if isinstance(record, dict):
-            records.append(record)
 
-    if not records and fallback_to_current_file and CURRENT_BIDS_PATH.exists():
-        current = json.loads(CURRENT_BIDS_PATH.read_text(encoding="utf-8"))
-        if isinstance(current, list):
-            records = [item for item in current if isinstance(item, dict)]
+    try:
+        db = _client()
+        for snapshot in db.collection(COLLECTION).stream():
+            value = snapshot.to_dict() or {}
+            record = value.get("record") if isinstance(value, dict) else None
+            if isinstance(record, dict):
+                records.append(record)
+    except Exception as exc:  # noqa: BLE001 - deployed snapshot is a safe continuity fallback
+        if not bootstrap_records:
+            raise
+        print(f"WARNING persistent store unavailable during load; using deployed snapshot fallback: {exc}")
+
+    if not records and bootstrap_records:
+        records = bootstrap_records
+
+    if not records and fallback_to_current_file:
+        records = _read_records(CURRENT_BIDS_PATH)
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     PREVIOUS_BIDS_PATH.write_text(
@@ -66,10 +85,7 @@ def save_current_snapshot() -> int:
     if not CURRENT_BIDS_PATH.exists():
         raise RuntimeError("public/data/bids.json does not exist")
 
-    records = json.loads(CURRENT_BIDS_PATH.read_text(encoding="utf-8"))
-    if not isinstance(records, list):
-        raise RuntimeError("public/data/bids.json must contain a list")
-
+    records = _read_records(CURRENT_BIDS_PATH)
     db = _client()
     batch = db.batch()
     pending = 0
@@ -77,8 +93,6 @@ def save_current_snapshot() -> int:
     now = datetime.now(timezone.utc)
 
     for record in records:
-        if not isinstance(record, dict):
-            continue
         record_id = str(record.get("id") or "").strip()
         if not record_id:
             raise RuntimeError("Cannot persist bid without id")
