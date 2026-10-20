@@ -8,7 +8,7 @@ on:
     - cron: "17 */2 * * *"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -30,8 +30,6 @@ jobs:
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
       NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
       NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
-      FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-      FIRESTORE_DATABASE_ID: default
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,11 +49,11 @@ jobs:
         with:
           enablement: true
 
-      - name: Verify web and persistence configuration
+      - name: Verify web configuration
         shell: bash
         run: |
           missing=0
-          for name in NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID NEXT_PUBLIC_FIREBASE_APP_ID FIREBASE_SERVICE_ACCOUNT_JSON; do
+          for name in NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID NEXT_PUBLIC_FIREBASE_APP_ID; do
             if [ -z "${!name}" ]; then
               echo "::error::$name is not configured in the github-pages environment."
               missing=1
@@ -69,31 +67,25 @@ jobs:
       - name: Install Chromium for newspaper browser fallback
         run: python -m playwright install --with-deps chromium
 
-      - name: Bootstrap from currently deployed procurement snapshot
+      - name: Load persistent procurement history
         shell: bash
         run: |
           mkdir -p public/data
-          if curl --fail --silent --show-error --location \
-            "https://mdanson27.github.io/AUTOMINDS-AFRICA-BID-FINDER/data/bids.json" \
-            --output public/data/previous-bids.json; then
+          git fetch --no-tags --depth=1 origin bid-persistence-state
+          if git show FETCH_HEAD:persistence/bids.json > public/data/previous-bids.json; then
             python - <<'PY'
           import json
           from pathlib import Path
           path = Path("public/data/previous-bids.json")
           value = json.loads(path.read_text(encoding="utf-8"))
           if not isinstance(value, list):
-              raise SystemExit("Deployed bids snapshot was not a JSON list")
-          print(f"Bootstrapped {len(value)} records from current Pages deployment")
+              raise SystemExit("Persistent bid state was not a JSON list")
+          print(f"Loaded {len(value)} persistent procurement records")
           PY
           else
             echo '[]' > public/data/previous-bids.json
-            echo "No deployed snapshot available; dedicated persistent store will be used."
+            echo "Persistent state branch had no bid snapshot; starting from an empty history."
           fi
-
-      - name: Load persistent procurement history
-        env:
-          BID_PERSISTENCE_ACTION: load
-        run: python -m collector.src.persistent_bid_store
 
       - name: Export live procurement discovery snapshot
         run: python -m collector.src.export_live_snapshot
@@ -102,9 +94,24 @@ jobs:
         run: python -m collector.src.postprocess_snapshot
 
       - name: Save persistent procurement history
-        env:
-          BID_PERSISTENCE_ACTION: save
-        run: python -m collector.src.persistent_bid_store
+        shell: bash
+        run: |
+          cp public/data/bids.json /tmp/persistent-bids.json
+          rm -rf /tmp/bid-persistence-state
+          git fetch --no-tags origin bid-persistence-state
+          git worktree add --detach /tmp/bid-persistence-state origin/bid-persistence-state
+          mkdir -p /tmp/bid-persistence-state/persistence
+          cp /tmp/persistent-bids.json /tmp/bid-persistence-state/persistence/bids.json
+          git -C /tmp/bid-persistence-state config user.name "github-actions[bot]"
+          git -C /tmp/bid-persistence-state config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C /tmp/bid-persistence-state add persistence/bids.json
+          if git -C /tmp/bid-persistence-state diff --cached --quiet; then
+            echo "Persistent procurement state is unchanged."
+          else
+            git -C /tmp/bid-persistence-state commit -m "Update persistent bid state [skip ci]"
+            git -C /tmp/bid-persistence-state push origin HEAD:bid-persistence-state
+          fi
+          git worktree remove /tmp/bid-persistence-state --force
 
       - name: Remove persistence bootstrap from public artifact
         run: rm -f public/data/previous-bids.json
