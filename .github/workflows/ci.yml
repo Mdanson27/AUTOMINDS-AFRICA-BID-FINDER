@@ -47,6 +47,8 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
+      - name: Install Chromium for newspaper browser fallback
+        run: python -m playwright install --with-deps chromium
       - run: python -m unittest discover -s tests -v
       - name: Build live procurement snapshot
         run: python -m src.export_live_snapshot
@@ -66,6 +68,7 @@ jobs:
           bids = json.loads(Path("../public/data/bids.json").read_text(encoding="utf-8"))
           grants = json.loads(Path("../public/data/grants.json").read_text(encoding="utf-8"))
           plans = json.loads(Path("../public/data/plans.json").read_text(encoding="utf-8"))
+          sources = json.loads(Path("../public/data/sources.json").read_text(encoding="utf-8"))
           assert bids, "live procurement snapshot is empty"
           assert isinstance(grants, list), "grants snapshot must be a list"
           assert plans, "current-financial-year procurement plans snapshot is empty"
@@ -125,6 +128,18 @@ jobs:
           assert enriched_plan_count > 0, "no procurement plan detail pages produced category intelligence"
           assert category_count > 0, "procurement plans contain zero planned procurement categories"
 
+          paper_sources = {item.get("name"): item for item in sources if item.get("name") in {"Daily Monitor", "New Vision"}}
+          assert set(paper_sources) == {"Daily Monitor", "New Vision"}, "newspaper source health entries missing"
+          for name, source in paper_sources.items():
+              capture = source.get("captureStatus")
+              assert capture, f"{name} missing captureStatus"
+              assert source.get("collectorStatus"), f"{name} missing collectorStatus"
+              assert "urlsDiscovered" in source, f"{name} missing discovery telemetry"
+              if capture != "SUCCESS":
+                  assert source.get("recordsFound") is None or source.get("recordsFound", 0) > 0, (
+                      f"{name} incomplete capture incorrectly reported a genuine zero recordsFound"
+                  )
+
           for grant in grants:
               assert grant.get("title"), "grant missing title"
               assert grant.get("sourceName"), "grant missing source"
@@ -134,6 +149,6 @@ jobs:
           print(
               f"Validated separate datasets: {len(bids)} procurement bids; "
               f"{len(plans)} procurement plans / {category_count} planned categories; "
-              f"{len(grants)} grant opportunities"
+              f"{len(grants)} grant opportunities; newspaper capture semantics verified"
           )
           PY
