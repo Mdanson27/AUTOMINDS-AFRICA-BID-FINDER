@@ -19,6 +19,13 @@ const GENERIC_TITLES = [
   /^tender notice$/i,
   /^tender$/i,
   /^bidding$/i,
+  /^bids?$/i,
+  /^proposals?$/i,
+  /^quotations?$/i,
+  /^rfp$/i,
+  /^rfq$/i,
+  /^prequalification$/i,
+  /^supplier prequalification$/i,
   /^supplies$/i,
   /^works$/i,
   /^services$/i,
@@ -29,6 +36,7 @@ const GENERIC_TITLES = [
 const TITLE_METADATA_KEYS = new Set([
   "subject of procurement",
   "procurement subject",
+  "subject",
   "tender title",
   "bid title",
   "title of procurement",
@@ -78,6 +86,8 @@ function specificPhrase(value: unknown) {
 export function resolveSpecificBidTitle(bid: Bid): string | null {
   if (bid.displayEligible === false && bid.titleSpecificity === "unresolved") return null;
 
+  // The publisher's explicit Subject of Procurement (or equivalent field)
+  // always outranks method/category/listing labels for every source.
   for (const [rawKey, rawValue] of Object.entries(bid.sourceMetadata || {})) {
     if (!TITLE_METADATA_KEYS.has(key(rawKey))) continue;
     const candidate = stripMethodPrefix(rawValue);
