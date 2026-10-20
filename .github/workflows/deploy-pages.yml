@@ -69,6 +69,27 @@ jobs:
       - name: Install Chromium for newspaper browser fallback
         run: python -m playwright install --with-deps chromium
 
+      - name: Bootstrap from currently deployed procurement snapshot
+        shell: bash
+        run: |
+          mkdir -p public/data
+          if curl --fail --silent --show-error --location \
+            "https://mdanson27.github.io/AUTOMINDS-AFRICA-BID-FINDER/data/bids.json" \
+            --output public/data/previous-bids.json; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("public/data/previous-bids.json")
+          value = json.loads(path.read_text(encoding="utf-8"))
+          if not isinstance(value, list):
+              raise SystemExit("Deployed bids snapshot was not a JSON list")
+          print(f"Bootstrapped {len(value)} records from current Pages deployment")
+          PY
+          else
+            echo '[]' > public/data/previous-bids.json
+            echo "No deployed snapshot available; dedicated persistent store will be used."
+          fi
+
       - name: Load persistent procurement history
         env:
           BID_PERSISTENCE_ACTION: load
