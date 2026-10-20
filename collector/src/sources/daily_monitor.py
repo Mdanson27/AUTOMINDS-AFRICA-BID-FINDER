@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import datetime
+import re
 
 from bs4 import BeautifulSoup
 
@@ -84,6 +85,47 @@ class DailyMonitorSource(BidSource):
                 deadline_precision="datetime" if deadline else "unknown",
                 status="open" if deadline is None or deadline >= now else "closed",
                 sources=[SourceRef(name=self.name, url=href, detected_at=now)],
+                source_metadata={"captureSurface": "linked-listing-item", "canonicalPublisher": self.name},
+            )
+            discovered[bid.canonical_key()] = bid
+
+        # Monitor's public tender page can render the notices as list blocks without
+        # individual tender URLs. Treat the publisher's tender page itself as the
+        # canonical source in that case rather than pretending the capture was empty.
+        keyword_re = re.compile(
+            r"\b(tender|procurement|expression(?:s)? of interest|invitation (?:to|for) bid|request for (?:proposal|quotation)|pre-?qualification)\b",
+            re.I,
+        )
+        for container in soup.find_all(["li", "article"]):
+            text = clean(container.get_text(" ", strip=True))
+            if len(text) < 40 or not keyword_re.search(text):
+                continue
+            deadline = extract_deadline(text)
+            reference = extract_reference(text)
+            heading = container.find(["h2", "h3", "h4", "strong", "b"])
+            title = clean(heading.get_text(" ", strip=True)) if heading else ""
+            if len(title) < 12:
+                title = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0][:300]
+            if len(title) < 12:
+                continue
+            procurement_type = infer_type(title, text)
+            bid = NormalizedBid(
+                title=title,
+                organization=organization_from_title(title),
+                reference_number=reference,
+                description=text[:3000],
+                category=procurement_type,
+                procurement_type=procurement_type,
+                published_at=None,
+                deadline_at=deadline,
+                deadline_precision="datetime" if deadline else "unknown",
+                status="open" if deadline is None or deadline >= now else "closed",
+                sources=[SourceRef(name=self.name, url=self.url, detected_at=now)],
+                source_metadata={
+                    "captureSurface": "publisher-tender-listing",
+                    "canonicalPublisher": self.name,
+                    "verification": "MANUAL_REVIEW" if not reference else "VERIFIED",
+                },
             )
             discovered[bid.canonical_key()] = bid
         return list(discovered.values())
@@ -94,6 +136,15 @@ class DailyMonitorSource(BidSource):
         candidates: list[str] = []
         normalized: dict[str, NormalizedBid] = {}
 
+        def absorb_listing(raw: str) -> None:
+            for bid in self.parse(raw):
+                key = bid.canonical_key()
+                if key in normalized:
+                    report.duplicates += 1
+                else:
+                    report.records_extracted += 1
+                normalized[key] = bid
+
         direct_raw, status, final_url = direct_fetch(self.url)
         report.http_status = status
         if status == 403:
@@ -103,6 +154,7 @@ class DailyMonitorSource(BidSource):
             report.capture_warnings.append("Direct category fetch returned HTTP 403; records found are UNKNOWN, not zero.")
         elif status is not None and status < 400:
             report.direct_status = "success"
+            absorb_listing(direct_raw)
             candidates.extend(notice_urls_from_html(direct_raw, final_url, self.domain, self.notice_patterns))
         else:
             report.direct_status = f"http_{status or 'error'}"
@@ -111,6 +163,7 @@ class DailyMonitorSource(BidSource):
         rendered_raw, render_status = render_fetch(self.url)
         report.render_status = render_status
         if rendered_raw:
+            absorb_listing(rendered_raw)
             candidates.extend(notice_urls_from_html(rendered_raw, self.url, self.domain, self.notice_patterns))
 
         discovered = discover_with_bing_rss(self.domain)
@@ -123,7 +176,7 @@ class DailyMonitorSource(BidSource):
             and url.rstrip("/") != self.url.rstrip("/")
         ]
         report.urls_discovered = len(candidates)
-        report.discovery_method = "direct+browser+domain_search"
+        report.discovery_method = "direct+browser+publisher_listing+domain_search"
 
         for url in candidates:
             raw, page_status, final_url = direct_fetch(url)
