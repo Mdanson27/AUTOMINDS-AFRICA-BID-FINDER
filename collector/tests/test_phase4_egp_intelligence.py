@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from src.egp_lifecycle import parse_beb_detail
+from src.phase4_intelligence import _overlay_lifecycle
 from src.sources.egp_uganda import EGPUgandaSource
 
 
@@ -114,6 +115,24 @@ class Phase4EGPIntelligenceTests(unittest.TestCase):
         self.assertEqual(record["contractCurrency"], "UGX")
         self.assertTrue(any(item["stage"] == "evaluation" for item in record["lifecycleEvents"]))
         self.assertTrue(any(item["name"] == "BETA LTD" for item in record["bidders"]))
+
+    def test_lifecycle_overlay_preserves_status_history_and_adds_source(self):
+        lifecycle = parse_beb_detail(BEB_HTML, "https://egpuganda.go.ug/best-evaluated-bidder-notice-report/123")
+        assert lifecycle is not None
+        base = {
+            "status": "closed",
+            "isOpen": False,
+            "statusHistory": [{"status": "closed", "at": "2026-11-16T08:00:00Z", "reason": "deadline-passed"}],
+            "sources": [{"id": "egp-uganda", "name": "eGP Uganda", "url": "https://egpuganda.go.ug/index/phase4_egp", "detectedAt": "2026-08-19T00:00:00Z"}],
+            "bidders": [],
+            "lifecycleEvents": [],
+            "sourceMetadata": {},
+        }
+        merged = _overlay_lifecycle(base, lifecycle)
+        self.assertEqual(merged["status"], "evaluation")
+        self.assertEqual(merged["statusHistory"][-1]["status"], "evaluation")
+        self.assertEqual(merged["statusHistory"][-1]["reason"], "egp-lifecycle-evaluation")
+        self.assertTrue(any(source["url"].endswith("/best-evaluated-bidder-notice-report/123") for source in merged["sources"]))
 
 
 if __name__ == "__main__":
