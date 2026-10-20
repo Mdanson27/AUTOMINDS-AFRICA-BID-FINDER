@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ExternalLink, Newspaper, RefreshCw, Search } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ExternalLink, Newspaper, RefreshCw, Search } from "lucide-react";
 import { BidList } from "@/components/bids/BidList";
 import { requestSnapshotRefresh, useBids } from "@/hooks/useBids";
 import { useSources } from "@/hooks/useSources";
@@ -14,7 +14,7 @@ const paperLinks: Record<string, string> = {
 };
 
 function relativeTime(value?: string) {
-  if (!value) return "No successful crawl yet";
+  if (!value) return "No successful verification yet";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unknown";
   const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
@@ -23,6 +23,14 @@ function relativeTime(value?: string) {
   const hours = Math.round(minutes / 60);
   if (hours < 24) return `Checked ${hours} hr ago`;
   return `Checked ${Math.round(hours / 24)} days ago`;
+}
+
+function countLabel(value?: number | null) {
+  return value === null || value === undefined ? "Unknown" : String(value);
+}
+
+function collectorTone(source: BidSource) {
+  return source.collectorStatus === "HEALTHY" ? "healthy" : "warning";
 }
 
 export default function PapersPage() {
@@ -44,7 +52,9 @@ export default function PapersPage() {
         baseUrl: paperLinks[name],
         health: "planned",
         enabled: true,
-        recordsFound: 0,
+        recordsFound: null,
+        collectorStatus: "UNKNOWN",
+        captureStatus: "INCOMPLETE",
       };
     });
   }, [sources]);
@@ -72,28 +82,43 @@ export default function PapersPage() {
         <div>
           <span className="eyebrow">CURRENT PAPERS</span>
           <h1>Search today&apos;s tender pages.</h1>
-          <p>Focus only on opportunities detected directly from Uganda&apos;s major newspaper tender channels. Bid Finder keeps the source identity strict, so an eGP notice containing the word “newspaper” will never be misclassified as a newspaper result.</p>
+          <p>Only opportunities whose canonical publisher is Daily Monitor or New Vision appear here. Collector failures are shown as failures, never disguised as zero tenders.</p>
         </div>
         <button className="papers-refresh" onClick={refresh} disabled={refreshing}>{refreshing ? <RefreshCw size={15} className="spin" /> : <RefreshCw size={15} />} {refreshing ? "Checking latest…" : "Refresh latest"}</button>
       </section>
 
       <div className="paper-source-strip">
-        {paperSources.map((source) => (
-          <article className="paper-source-card" key={source.name}>
-            <span className="paper-source-icon"><Newspaper size={18} /></span>
-            <div><strong>{source.name}</strong><small>{source.health} · {source.recordsFound || 0} notices · {relativeTime(source.lastAttemptedCrawlAt || source.lastSuccessfulCrawlAt)}</small></div>
-            <a href={paperLinks[source.name] || source.baseUrl} target="_blank" rel="noreferrer" aria-label={`Open ${source.name}`}><ExternalLink size={15} /></a>
-          </article>
-        ))}
+        {paperSources.map((source) => {
+          const healthy = collectorTone(source) === "healthy";
+          return (
+            <article className="paper-source-card paper-source-health" key={source.name}>
+              <span className="paper-source-icon"><Newspaper size={18} /></span>
+              <div className="paper-source-health-body">
+                <div className="paper-source-title-row">
+                  <strong>{source.name}</strong>
+                  <span className={`paper-health-badge ${healthy ? "is-healthy" : "is-warning"}`}>{healthy ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />}{source.collectorStatus || source.health}</span>
+                </div>
+                <small>Capture: {source.captureStatus || "UNKNOWN"}</small>
+                <small>Direct access: {source.directStatus || (source.httpStatus ? `HTTP ${source.httpStatus}` : "Not reported")}</small>
+                <small>Discovery fallback: {source.discoveryStatus || "Not reported"}</small>
+                <small>URLs discovered: {countLabel(source.urlsDiscovered)} · fetched: {countLabel(source.urlsSuccessfullyFetched)}</small>
+                <small>Verified: {countLabel(source.verifiedRecords)} · review: {countLabel(source.needsReview)}</small>
+                <small>Records found: {countLabel(source.recordsFound)} · {relativeTime(source.lastAttemptedCrawlAt || source.lastSuccessfulCrawlAt)}</small>
+                {source.captureWarnings?.length ? <small className="paper-health-warning">{source.captureWarnings[0]}</small> : null}
+              </div>
+              <a href={paperLinks[source.name] || source.baseUrl} target="_blank" rel="noreferrer" aria-label={`Open ${source.name}`}><ExternalLink size={15} /></a>
+            </article>
+          );
+        })}
       </div>
 
       <label className="paper-searchbar"><Search size={18} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search current paper tenders by title, organization or reference…" /><span>{paperBids.length} found</span></label>
-      <div className="paper-result-note">Only direct Daily Monitor / New Vision source matches are shown here. Background collection still respects the 2026/27 financial-year and 90-day deadline rules.</div>
+      <div className="paper-result-note">Only direct Daily Monitor / New Vision source matches are shown here. Search-engine discovery may locate an original newspaper URL, but the search engine itself never becomes the source.</div>
 
       {paperBids.length || loading ? (
         <BidList bids={paperBids} loading={loading} />
       ) : (
-        <div className="paper-empty"><Newspaper size={28} /><h3>No directly indexed current-paper bids are available in this snapshot.</h3><p>The newspaper pages are still available through the official links above. If a publisher blocks automated collection or renders notices dynamically, Bid Finder reports that source honestly instead of filling this page with unrelated eGP or development notices.</p></div>
+        <div className="paper-empty"><Newspaper size={28} /><h3>No verified current-paper bids are available in this snapshot.</h3><p>Check the collector cards above: an empty result set is only a genuine zero when capture completed successfully. BLOCKED, PARTIAL, or INCOMPLETE means the true count is unknown.</p></div>
       )}
     </div>
   );
