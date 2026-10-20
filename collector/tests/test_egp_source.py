@@ -50,7 +50,6 @@ HTML = """
 """
 
 
-
 DETAIL_HTML = """
 <html><body>
 <h1>Request for Quotation Notice</h1>
@@ -69,7 +68,7 @@ OPENING_DETAIL_HTML = """
 <h1>Particulars of Procurement</h1>
 <table>
   <tr><td>Subject of Procurement</td><td>REPAIRS FOR UG 2600133</td></tr>
-  <tr><td>Procurement Method</td><td>Micro Procurement</td></tr>
+  <tr><td>Procurement Method</td><td>Request For Quotations/Proposals</td></tr>
   <tr><td>Date and Time of bid Opening</td><td>31 Aug 2026 at 15:19</td></tr>
   <tr><td>Bids received</td><td>1</td></tr>
 </table>
@@ -125,7 +124,7 @@ class EGPUgandaSourceTests(unittest.TestCase):
         self.assertEqual(len(enriched.documents), 1)
         self.assertEqual(enriched.documents[0].kind, "PDF")
 
-    def test_opening_detail_captures_method_time_bidder_and_amount(self):
+    def test_opening_detail_keeps_type_method_title_and_stage_separate(self):
         source = EGPUgandaSource()
         bid = list(source.parse(HTML))[2]
         enriched = source.parse_detail(
@@ -135,6 +134,8 @@ class EGPUgandaSourceTests(unittest.TestCase):
         )
         self.assertEqual(enriched.title, "REPAIRS FOR UG 2600133")
         self.assertEqual(enriched.procurement_type, "Micro Procurement")
+        self.assertEqual(enriched.procurement_method, "Request For Quotations/Proposals")
+        self.assertEqual(enriched.source_stage, "Bid opening")
         self.assertEqual(enriched.opening_at.day, 31)
         self.assertEqual(enriched.opening_at.hour, 15)
         self.assertEqual(enriched.source_metadata["Bids received"], "1")
@@ -147,9 +148,12 @@ class EGPUgandaSourceTests(unittest.TestCase):
             "5,702,639.88",
         )
 
-    def test_reference_drives_cross_source_canonical_key(self):
+    def test_reference_and_organization_drive_canonical_key(self):
         bid = list(EGPUgandaSource().parse(HTML))[0]
-        self.assertEqual(bid.canonical_key(), "ref:pou/ncons/2026-2027/00199")
+        self.assertEqual(
+            bid.canonical_key(),
+            "ref-org:pou/ncons/2026-2027/00199|parliament of uganda",
+        )
 
     def test_date_only_deadline_is_end_of_day(self):
         bid = list(EGPUgandaSource().parse(HTML))[0]
