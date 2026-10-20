@@ -195,6 +195,28 @@ def _merge_unique(existing: list, incoming: list, key_fn) -> list:
     return output
 
 
+def _append_status_history(item: dict, status: str, at: str, reason: str) -> None:
+    history = [deepcopy(entry) for entry in (item.get("statusHistory") or []) if isinstance(entry, dict)]
+    previous = clean(history[-1].get("status")).lower() if history else ""
+    if previous != status:
+        history.append({"status": status, "at": at, "reason": reason})
+    item["statusHistory"] = history[-30:]
+
+
+def _append_lifecycle_source(item: dict, lifecycle: dict) -> None:
+    events = [event for event in (lifecycle.get("lifecycleEvents") or []) if isinstance(event, dict)]
+    for event in events:
+        url = clean(event.get("sourceUrl"))
+        if not url:
+            continue
+        detected_at = clean(event.get("occurredAt")) or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        sources = [deepcopy(source) for source in (item.get("sources") or []) if isinstance(source, dict)]
+        if any(clean(source.get("url")) == url for source in sources):
+            continue
+        sources.append({"id": "egp-uganda", "name": "eGP Uganda", "url": url, "detectedAt": detected_at})
+        item["sources"] = sources
+
+
 def _overlay_lifecycle(record: dict, lifecycle: dict) -> dict:
     item = deepcopy(record)
     if clean(lifecycle.get("title")):
@@ -204,10 +226,19 @@ def _overlay_lifecycle(record: dict, lifecycle: dict) -> dict:
     for field in ("sourceStage", "bestEvaluatedBidder", "contractAmount", "contractCurrency"):
         if clean(lifecycle.get(field)):
             item[field] = clean(lifecycle[field])
+
     stage_status = clean(lifecycle.get("status")).lower()
+    lifecycle_events = [event for event in (lifecycle.get("lifecycleEvents") or []) if isinstance(event, dict)]
+    event_at = next((clean(event.get("occurredAt")) for event in lifecycle_events if clean(event.get("occurredAt"))), "")
+    if not event_at:
+        event_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     if stage_status in {"evaluation", "awarded", "cancelled"}:
+        previous_status = clean(item.get("status")).lower()
         item["status"] = stage_status
         item["isOpen"] = False
+        if previous_status != stage_status:
+            _append_status_history(item, stage_status, event_at, f"egp-lifecycle-{stage_status}")
+
     item["bidders"] = _merge_unique(
         item.get("bidders") or [],
         lifecycle.get("bidders") or [],
@@ -215,9 +246,10 @@ def _overlay_lifecycle(record: dict, lifecycle: dict) -> dict:
     )
     item["lifecycleEvents"] = _merge_unique(
         item.get("lifecycleEvents") or [],
-        lifecycle.get("lifecycleEvents") or [],
+        lifecycle_events,
         lambda x: (clean(x.get("stage")), clean(x.get("title")).lower(), clean(x.get("occurredAt")), clean(x.get("sourceUrl"))),
     )
+    _append_lifecycle_source(item, lifecycle)
     metadata = dict(item.get("sourceMetadata") or {})
     metadata.update({clean(k): clean(v) for k, v in (lifecycle.get("sourceMetadata") or {}).items() if clean(k) and clean(v)})
     item["sourceMetadata"] = metadata
