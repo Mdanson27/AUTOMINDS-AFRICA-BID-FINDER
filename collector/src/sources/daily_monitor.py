@@ -116,7 +116,12 @@ class DailyMonitorSource(BidSource):
         discovered = discover_with_bing_rss(self.domain)
         report.discovery_status = "active" if discovered else "no_results"
         candidates.extend(discovered)
-        candidates = [url for url in dict.fromkeys(candidates) if domain_matches(url, self.domain)]
+        candidates = [
+            url for url in dict.fromkeys(candidates)
+            if domain_matches(url, self.domain)
+            and "/uganda/jobs/tenders/" in url
+            and url.rstrip("/") != self.url.rstrip("/")
+        ]
         report.urls_discovered = len(candidates)
         report.discovery_method = "direct+browser+domain_search"
 
