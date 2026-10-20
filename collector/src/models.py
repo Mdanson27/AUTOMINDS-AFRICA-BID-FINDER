@@ -42,10 +42,24 @@ class NormalizedBid(BaseModel):
     source_metadata: dict[str, str] = Field(default_factory=dict)
     documents: list[SourceDocument] = Field(default_factory=list)
 
+    @staticmethod
+    def _identity_text(value: str) -> str:
+        return " ".join(str(value or "").lower().split())
+
     def canonical_key(self) -> str:
+        """Return a stable multi-field procurement identity.
+
+        Reference numbers remain the strongest identifier, but are never used
+        alone because public procurement sources can repeat or conflict on a
+        reference. Organization is therefore part of every referenced identity.
+        When a reference is unavailable we fall back to organization + title +
+        canonical source, rather than title alone.
+        """
         reference = "".join(self.reference_number.lower().split())
+        organization = self._identity_text(self.organization)
         if reference:
-            return f"ref:{reference}"
-        org = " ".join(self.organization.lower().split())
-        title = " ".join(self.title.lower().split())
-        return f"org-title:{org}|{title}"
+            return f"ref-org:{reference}|{organization}"
+
+        title = self._identity_text(self.title)
+        source = self._identity_text(self.sources[0].name if self.sources else "")
+        return f"org-title-source:{organization}|{title}|{source}"
