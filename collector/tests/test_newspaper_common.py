@@ -19,6 +19,25 @@ NOTICE_HTML = """
 </body></html>
 """
 
+MONITOR_GENERIC_HTML = """
+<html><body>
+<div class="page-shell">
+  <div class="content-column">
+    <div class="listing-card">
+      <strong>EXPRESSION OF INTEREST FOR INDEPENDENT VERIFICATION AGENTS</strong>
+      <p>UECCC invites eligible consultants for procurement reference UECCC-EASP/CONS/2026-27/000006.</p>
+      <p>Submission deadline is 29 October 2026 at 5:00 PM.</p>
+    </div>
+    <div class="listing-card">
+      <strong>INVITATION TO BID FOR SUPPLY OF SOLAR EQUIPMENT</strong>
+      <p>ABC Energy invites eligible bidders. Ref: ABC/SOLAR/2026/04.</p>
+      <p>Bids close on 30 October 2026 at 11:00 AM.</p>
+    </div>
+  </div>
+</div>
+</body></html>
+"""
+
 
 class NewspaperCaptureTests(unittest.TestCase):
     def test_domain_matching_is_strict(self):
@@ -48,6 +67,16 @@ class NewspaperCaptureTests(unittest.TestCase):
         self.assertEqual(bid.source_metadata.get("canonicalPublisher"), "Daily Monitor")
         self.assertIn(bid.source_metadata.get("verification"), {"VERIFIED", "MANUAL_REVIEW"})
         self.assertEqual(len(bid.documents), 1)
+
+    def test_monitor_generic_div_cards_are_parsed_without_parent_duplicates(self):
+        source = DailyMonitorSource()
+        bids = list(source.parse(MONITOR_GENERIC_HTML))
+        self.assertEqual(len(bids), 2)
+        references = {bid.reference_number for bid in bids}
+        self.assertEqual(references, {"UECCC-EASP/CONS/2026-27/000006", "ABC/SOLAR/2026/04"})
+        self.assertTrue(all(str(bid.sources[0].url).rstrip("/") == source.url for bid in bids))
+        self.assertTrue(all(bid.source_metadata.get("captureSurface") == "publisher-tender-listing-generic-block" for bid in bids))
+        self.assertTrue(all(bid.deadline_at is not None for bid in bids))
 
     def test_incomplete_capture_never_reports_false_zero(self):
         source = DailyMonitorSource()
