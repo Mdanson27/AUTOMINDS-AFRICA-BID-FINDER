@@ -212,17 +212,24 @@ class EGPUgandaSource(BidSource):
                     opening_at = parsed
                     break
 
-        procurement_type = bid.procurement_type
+        procurement_method = bid.procurement_method
         for label, value in metadata.items():
             if "procurement method" in label.lower() and value:
-                procurement_type = value
+                procurement_method = value
                 break
+
+        source_stage = bid.source_stage
+        if opening_at or any("bids received" in label.lower() for label in metadata):
+            source_stage = "Bid opening"
+        elif not source_stage:
+            source_stage = "Bidding / submission"
 
         return bid.model_copy(
             update={
                 "title": full_title or bid.title,
                 "description": description,
-                "procurement_type": procurement_type,
+                "procurement_method": procurement_method,
+                "source_stage": source_stage,
                 "notice_type": notice_type,
                 "opening_at": opening_at,
                 "application_url": application_url or None,
@@ -301,6 +308,7 @@ class EGPUgandaSource(BidSource):
             deadline_precision="date" if deadline_at else "unknown",
             status=status,
             opening_at=opening_at,
+            source_stage="Bid opening" if opening_at else "Bidding / submission",
             sources=[SourceRef(name=self.name, url=source_url, detected_at=now)],
         )
 
