@@ -25,6 +25,11 @@ export type Bid = {
   description: string;
   category: string;
   procurementType: string;
+  procurementMethod?: string;
+  sourceStage?: string;
+  canonicalSource?: string;
+  canonicalSourceUrl?: string;
+  canonicalIdentity?: string;
   opportunityType?: OpportunityType;
   publishedAt: string;
   deadlineAt: string;
