@@ -19,6 +19,7 @@ SOURCES_PATH = ROOT / "public" / "data" / "sources.json"
 TITLE_METADATA_KEYS = (
     "subject of procurement",
     "procurement subject",
+    "subject",
     "tender title",
     "bid title",
     "title of procurement",
@@ -59,6 +60,13 @@ VAGUE_TITLE_PATTERNS = (
     r"^tender notice$",
     r"^tender$",
     r"^bidding$",
+    r"^bids?$",
+    r"^proposals?$",
+    r"^quotations?$",
+    r"^rfp$",
+    r"^rfq$",
+    r"^prequalification$",
+    r"^supplier prequalification$",
     r"^supplies$",
     r"^works$",
     r"^services$",
@@ -162,6 +170,7 @@ def resolve_specific_title(record: dict) -> tuple[str, str]:
     newspapers all pass through it. Procurement methods are metadata, never a
     substitute for what is actually being procured.
     """
+    # Explicit Subject of Procurement/equivalent fields always win.
     subject = strip_method_prefix(metadata_value(record, TITLE_METADATA_KEYS))
     if subject and not is_vague_title(subject):
         return subject, "source-metadata"
