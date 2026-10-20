@@ -50,6 +50,8 @@ class CanonicalBidIdentityTests(unittest.TestCase):
         self.assertEqual(result["noticeType"], "Procurement notice")
         self.assertEqual(result["sourceStage"], "Bid opening")
         self.assertEqual(result["canonicalSource"], "eGP Uganda")
+        self.assertEqual(result["titleSpecificity"], "specific")
+        self.assertTrue(result["displayEligible"])
 
     def test_method_never_overwrites_real_subject(self):
         result = apply_canonical_fields(
@@ -97,6 +99,77 @@ class CanonicalBidIdentityTests(unittest.TestCase):
         self.assertEqual(record["sourceStage"], "Bid opening")
         self.assertEqual(record["deadlineAt"], "2026-10-20T23:59:59Z")
         self.assertEqual(record["canonicalSource"], "eGP Uganda")
+
+    def test_global_rule_strips_method_prefix_when_title_contains_real_subject(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Request for Proposals: Provision of Managed Network Security Services",
+                sourceMetadata={"Procurement Method": "Request for Proposals"},
+                sources=[{
+                    "id": "world-bank-uganda",
+                    "name": "World Bank Uganda",
+                    "url": "https://example.org/opportunity/1",
+                    "detectedAt": "2026-10-20T08:00:00Z",
+                }],
+            )
+        )
+        self.assertEqual(result["title"], "Provision of Managed Network Security Services")
+        self.assertTrue(result["displayEligible"])
+
+    def test_global_rule_recovers_specific_subject_from_description(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Open Domestic",
+                description="The entity invites eligible bidders for the supply of laptops, desktop computers and related ICT accessories for regional offices.",
+                sourceMetadata={"Procurement Method": "Open Domestic Bidding"},
+                sources=[{
+                    "id": "new-vision",
+                    "name": "New Vision",
+                    "url": "https://www.newvision.co.ug/opportunities/notices-123",
+                    "detectedAt": "2026-10-20T08:00:00Z",
+                }],
+            )
+        )
+        self.assertEqual(result["title"], "supply of laptops, desktop computers and related ICT accessories for regional offices")
+        self.assertEqual(result["titleSource"], "description")
+        self.assertTrue(result["displayEligible"])
+
+    def test_global_rule_uses_scope_metadata_for_any_source(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Micro Procurement",
+                sourceMetadata={
+                    "Scope of Work": "Maintenance of air conditioning systems at the headquarters and regional offices",
+                    "Procurement Method": "Micro Procurement",
+                },
+                sources=[{
+                    "id": "kcca",
+                    "name": "KCCA",
+                    "url": "https://example.org/tender/2",
+                    "detectedAt": "2026-10-20T08:00:00Z",
+                }],
+            )
+        )
+        self.assertEqual(result["title"], "Maintenance of air conditioning systems at the headquarters and regional offices")
+        self.assertTrue(result["displayEligible"])
+
+    def test_unresolved_generic_title_is_retained_but_not_display_eligible(self):
+        result = apply_canonical_fields(
+            self._record(
+                title="Request for Proposals",
+                description="",
+                sourceMetadata={"Procurement Method": "Request for Proposals"},
+                sources=[{
+                    "id": "daily-monitor",
+                    "name": "Daily Monitor",
+                    "url": "https://www.monitor.co.ug/uganda/advertise/tenders/example",
+                    "detectedAt": "2026-10-20T08:00:00Z",
+                }],
+            )
+        )
+        self.assertEqual(result["titleSpecificity"], "unresolved")
+        self.assertFalse(result["displayEligible"])
+        self.assertTrue(result["canonicalIdentity"].startswith("ref-org:"))
 
 
 if __name__ == "__main__":

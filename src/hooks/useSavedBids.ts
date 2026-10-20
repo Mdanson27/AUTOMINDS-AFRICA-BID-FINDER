@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { resolveSpecificBidTitle } from "@/lib/titleSpecificity";
 import type { Bid } from "@/lib/types";
 import {
   canonicalSavedBidKey,
@@ -91,10 +92,16 @@ export function useSavedBids(currentBids: Bid[] = []) {
     });
   }, [user]);
 
+  // The save relationship remains stored even when an older snapshot only has
+  // a generic procurement method. Such records are simply withheld from the
+  // visible saved-bids list until a source-supported specific title is recovered.
   const savedBids = useMemo(() => records
     .slice()
     .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
-    .map((record) => record.snapshot), [records]);
+    .flatMap((record) => {
+      const title = resolveSpecificBidTitle(record.snapshot);
+      return title ? [{ ...record.snapshot, title, titleSpecificity: "specific" as const, displayEligible: true }] : [];
+    }), [records]);
 
   const savedIds = useMemo(() => new Set(records.map((record) => record.bidId)), [records]);
   const savedKeys = useMemo(() => new Set(records.map((record) => record.key)), [records]);

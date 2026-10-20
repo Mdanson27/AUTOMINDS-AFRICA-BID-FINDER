@@ -89,6 +89,9 @@ export type Bid = {
   canonicalSource?: string;
   canonicalSourceUrl?: string;
   canonicalIdentity?: string;
+  titleSpecificity?: "specific" | "unresolved";
+  titleSource?: "source-metadata" | "source-title" | "description" | "unresolved" | string;
+  displayEligible?: boolean;
   opportunityType?: OpportunityType;
   publishedAt: string;
   deadlineAt: string;

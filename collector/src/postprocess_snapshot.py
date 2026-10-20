@@ -23,6 +23,16 @@ TITLE_METADATA_KEYS = (
     "bid title",
     "title of procurement",
     "description of procurement",
+    "procurement description",
+    "assignment title",
+    "assignment",
+    "scope of procurement",
+    "scope of work",
+    "description of goods",
+    "description of works",
+    "description of services",
+    "lot description",
+    "project title",
 )
 METHOD_METADATA_KEYS = (
     "procurement method",
@@ -32,21 +42,49 @@ METHOD_METADATA_KEYS = (
 VAGUE_TITLE_PATTERNS = (
     r"^request for quotations?(?:/proposals?)?$",
     r"^request for proposals?$",
+    r"^request for bids?$",
     r"^request for quotation notice$",
     r"^invitation to bid$",
     r"^invitation for bids$",
-    r"^open domestic bidding$",
-    r"^open international bidding$",
+    r"^invitation to tender$",
+    r"^open domestic(?: bidding)?$",
+    r"^open international(?: bidding)?$",
     r"^micro procurement$",
     r"^direct procurement$",
     r"^restricted bidding$",
     r"^expression of interest$",
+    r"^expressions of interest$",
     r"^procurement notice$",
     r"^bid notice$",
+    r"^tender notice$",
+    r"^tender$",
+    r"^bidding$",
+    r"^supplies$",
+    r"^works$",
+    r"^services$",
+    r"^consultancy services$",
+    r"^non consultancy services$",
+)
+METHOD_PREFIX_PATTERN = re.compile(
+    r"^(?:request\s+for\s+(?:quotations?(?:/proposals?)?|proposals?|bids?)|"
+    r"invitation\s+(?:to\s+bid|to\s+tender|for\s+bids?)|"
+    r"open\s+(?:domestic|international)(?:\s+bidding)?|"
+    r"micro\s+procurement|direct\s+procurement|restricted\s+bidding|"
+    r"expressions?\s+of\s+interest|procurement\s+notice|bid\s+notice|tender\s+notice)"
+    r"\s*(?:[-–—:|/]\s*)+",
+    flags=re.IGNORECASE,
+)
+SPECIFIC_PHRASE_PATTERN = re.compile(
+    r"\b(?:procurement|supply|provision|construction|rehabilitation|maintenance|"
+    r"development|acquisition|purchase|installation|upgrade|implementation|design|"
+    r"consultancy\s+services|non[- ]consultancy\s+services|framework\s+contract|"
+    r"prequalification)\s+(?:of|for)\s+[^\n\r.;]{8,260}",
+    flags=re.IGNORECASE,
 )
 METHOD_HINTS = (
     "request for quotation",
     "request for proposal",
+    "request for bid",
     "open domestic bidding",
     "open international bidding",
     "micro procurement",
@@ -97,12 +135,62 @@ def is_vague_title(value: str) -> bool:
     return any(re.fullmatch(pattern, title, flags=re.IGNORECASE) for pattern in VAGUE_TITLE_PATTERNS)
 
 
-def authoritative_title(record: dict) -> str:
-    subject = metadata_value(record, TITLE_METADATA_KEYS)
-    current = clean_text(record.get("title"))
+def strip_method_prefix(value: str) -> str:
+    text = clean_text(value)
+    stripped = METHOD_PREFIX_PATTERN.sub("", text, count=1).strip(" -–—:|/")
+    if stripped and stripped != text and not is_vague_title(stripped):
+        return stripped
+    return text
+
+
+def specific_phrase_from_text(value: object) -> str:
+    text = clean_text(value)
+    if not text:
+        return ""
+    match = SPECIFIC_PHRASE_PATTERN.search(text)
+    if not match:
+        return ""
+    candidate = clean_text(match.group(0)).strip(" -–—:|/")
+    candidate = re.sub(r"\s+\b(?:Ref(?:erence)?(?:\s+No\.?|\s+Number)?|Deadline)\b.*$", "", candidate, flags=re.IGNORECASE).strip()
+    return candidate if len(candidate) >= 16 and not is_vague_title(candidate) else ""
+
+
+def resolve_specific_title(record: dict) -> tuple[str, str]:
+    """Return the most specific source-supported procurement title available.
+
+    This rule is global: eGP, direct government sites, development partners and
+    newspapers all pass through it. Procurement methods are metadata, never a
+    substitute for what is actually being procured.
+    """
+    subject = strip_method_prefix(metadata_value(record, TITLE_METADATA_KEYS))
     if subject and not is_vague_title(subject):
-        return subject
-    return current
+        return subject, "source-metadata"
+
+    current = strip_method_prefix(clean_text(record.get("title")))
+    if current and not is_vague_title(current):
+        return current, "source-title"
+
+    description_candidate = specific_phrase_from_text(record.get("description"))
+    if description_candidate:
+        return description_candidate, "description"
+
+    metadata = record.get("sourceMetadata") or {}
+    if isinstance(metadata, dict):
+        for raw_key, raw_value in metadata.items():
+            key = normalized_key(raw_key)
+            if any(token in key for token in ("subject", "title", "description", "scope", "assignment", "goods", "works", "services", "project")):
+                candidate = strip_method_prefix(clean_text(raw_value))
+                if candidate and not is_vague_title(candidate) and len(candidate) >= 16:
+                    return candidate, "source-metadata"
+                phrase = specific_phrase_from_text(raw_value)
+                if phrase:
+                    return phrase, "source-metadata"
+
+    return clean_text(record.get("title")), "unresolved"
+
+
+def authoritative_title(record: dict) -> str:
+    return resolve_specific_title(record)[0]
 
 
 def procurement_method(record: dict) -> str:
@@ -152,11 +240,13 @@ def canonical_identity(record: dict) -> str:
     reference = re.sub(r"\s+", "", clean_text(record.get("referenceNumber")).lower())
     organization = normalized_key(record.get("organization"))
     title = normalized_key(record.get("title"))
-    source_name, _ = canonical_source(record)
+    source_name, source_url = canonical_source(record)
     source = normalized_key(source_name)
 
     if reference:
         return f"ref-org:{reference}|{organization}"
+    if record.get("titleSpecificity") == "unresolved":
+        return f"org-source-url:{organization}|{source}|{normalized_key(source_url)}"
     return f"org-title-source:{organization}|{title}|{source}"
 
 
@@ -167,9 +257,16 @@ def stable_id(identity: str) -> str:
 def apply_canonical_fields(record: dict) -> dict:
     record = dict(record)
 
-    title = authoritative_title(record)
+    title, title_source = resolve_specific_title(record)
     if title:
         record["title"] = title[:320]
+    title_specificity = "specific" if title and not is_vague_title(title) else "unresolved"
+    record["titleSpecificity"] = title_specificity
+    record["titleSource"] = title_source
+    # Keep unresolved records in persistence/history so scans do not erase them,
+    # but do not present them as usable opportunities until a specific subject
+    # can be recovered from the publisher.
+    record["displayEligible"] = title_specificity == "specific"
 
     method = procurement_method(record)
     record["procurementMethod"] = method[:140]
@@ -268,7 +365,7 @@ def main() -> int:
     print(
         f"Postprocessed procurement: fresh bids {before}, persisted output {after}; "
         f"eGP {egp_before}->{egp_after}; canonical identity + Phase 4 lifecycle intelligence applied; "
-        "discovery window does not delete retained bids; procurement records forced to tender"
+        "global specific-title rule applied; unresolved generic records retained internally but hidden from display"
     )
     return 0
 
