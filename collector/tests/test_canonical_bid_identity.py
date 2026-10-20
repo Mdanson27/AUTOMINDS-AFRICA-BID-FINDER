@@ -71,7 +71,16 @@ class CanonicalBidIdentityTests(unittest.TestCase):
 
     def test_identity_without_reference_uses_org_title_and_source(self):
         first = apply_canonical_fields(self._record(referenceNumber=""))
-        second = apply_canonical_fields(self._record(referenceNumber="", title="Different procurement"))
+        second = apply_canonical_fields(
+            self._record(
+                referenceNumber="",
+                title="Different procurement",
+                sourceMetadata={
+                    "Subject of Procurement": "Different procurement",
+                    "Procurement Method": "Request For Quotations/Proposals",
+                },
+            )
+        )
         self.assertNotEqual(first["canonicalIdentity"], second["canonicalIdentity"])
         self.assertTrue(first["canonicalIdentity"].startswith("org-title-source:"))
 
