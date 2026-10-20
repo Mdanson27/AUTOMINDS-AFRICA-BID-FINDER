@@ -1,0 +1,20 @@
+name: Phase 4 eGP Intelligence
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  phase4-egp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r collector/requirements.txt
+      - name: Run Phase 4 extraction tests
+        working-directory: collector
+        run: python -m unittest tests.test_phase4_egp_intelligence tests.test_egp_source -v

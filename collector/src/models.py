@@ -6,6 +6,15 @@ from pydantic import BaseModel, Field, HttpUrl
 
 
 BidStatus = Literal["planned", "open", "closed", "evaluation", "awarded", "cancelled"]
+LifecycleStage = Literal[
+    "advertised",
+    "updated",
+    "closed",
+    "bid-opening",
+    "evaluation",
+    "award",
+    "cancelled",
+]
 
 
 class SourceRef(BaseModel):
@@ -18,6 +27,46 @@ class SourceDocument(BaseModel):
     title: str
     url: HttpUrl
     kind: str = ""
+
+
+class ContactPoint(BaseModel):
+    label: str = ""
+    value: str
+    kind: Literal["email", "phone", "address", "other"] = "other"
+
+
+class BidderRecord(BaseModel):
+    name: str
+    address: str = ""
+    submission_at: datetime | None = None
+    amount: str = ""
+    currency: str = ""
+    rank: str = ""
+    status: str = ""
+    evaluation_stage: str = ""
+    reasons: list[str] = Field(default_factory=list)
+
+
+class OpeningParticipant(BaseModel):
+    name: str
+    address: str = ""
+    position: str = ""
+    department_company: str = ""
+
+
+class AmendmentRecord(BaseModel):
+    title: str
+    url: HttpUrl | None = None
+    published_at: datetime | None = None
+    summary: str = ""
+
+
+class LifecycleEvent(BaseModel):
+    stage: LifecycleStage
+    title: str
+    occurred_at: datetime | None = None
+    source_url: HttpUrl | None = None
+    details: dict[str, str] = Field(default_factory=dict)
 
 
 class NormalizedBid(BaseModel):
@@ -35,14 +84,29 @@ class NormalizedBid(BaseModel):
     status: BidStatus = "open"
     sources: list[SourceRef]
 
-    # Rich source detail fields. These are intentionally generic so the same
-    # structure can later be populated by newspapers, development partners and
-    # direct organization websites without redesigning the core model.
+    # Rich source detail fields. These remain generic enough for sources other
+    # than eGP, but Phase 4 uses them to preserve structured procurement facts
+    # instead of flattening everything into description/sourceMetadata.
     notice_type: str = ""
     opening_at: datetime | None = None
     application_url: HttpUrl | None = None
     source_metadata: dict[str, str] = Field(default_factory=dict)
     documents: list[SourceDocument] = Field(default_factory=list)
+    eligibility: list[str] = Field(default_factory=list)
+    mandatory_requirements: list[str] = Field(default_factory=list)
+    bid_security: str = ""
+    tender_fee: str = ""
+    submission_method: str = ""
+    contacts: list[ContactPoint] = Field(default_factory=list)
+    bidders: list[BidderRecord] = Field(default_factory=list)
+    bids_received: int | None = None
+    opening_participants: list[OpeningParticipant] = Field(default_factory=list)
+    opening_committee: list[str] = Field(default_factory=list)
+    amendments: list[AmendmentRecord] = Field(default_factory=list)
+    lifecycle_events: list[LifecycleEvent] = Field(default_factory=list)
+    best_evaluated_bidder: str = ""
+    contract_amount: str = ""
+    contract_currency: str = ""
 
     @staticmethod
     def _identity_text(value: str) -> str:
