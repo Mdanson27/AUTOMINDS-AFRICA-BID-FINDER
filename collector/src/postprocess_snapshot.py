@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import re
 
+from .bid_persistence import merge_persistent_records
+
 
 ROOT = Path(__file__).resolve().parents[2]
 BIDS_PATH = ROOT / "public" / "data" / "bids.json"
 EGP_PATH = ROOT / "public" / "data" / "egp-bids.json"
-CLOSED_RETENTION_DAYS = 3
+PREVIOUS_BIDS_PATH = ROOT / "public" / "data" / "previous-bids.json"
+SOURCES_PATH = ROOT / "public" / "data" / "sources.json"
 
 TITLE_METADATA_KEYS = (
     "subject of procurement",
@@ -94,10 +97,8 @@ def is_vague_title(value: str) -> bool:
 
 
 def authoritative_title(record: dict) -> str:
-    """Prefer an explicit procurement subject/title over method-like labels."""
     subject = metadata_value(record, TITLE_METADATA_KEYS)
     current = clean_text(record.get("title"))
-
     if subject and not is_vague_title(subject):
         return subject
     return current
@@ -107,8 +108,7 @@ def procurement_method(record: dict) -> str:
     explicit = metadata_value(record, METHOD_METADATA_KEYS)
     if explicit:
         return explicit
-
-    legacy = clean_text(record.get("procurementType"))
+    legacy = clean_text(record.get("procurementMethod") or record.get("procurementType"))
     lower = legacy.lower()
     if any(hint in lower for hint in METHOD_HINTS):
         return legacy
@@ -146,13 +146,6 @@ def canonical_source(record: dict) -> tuple[str, str]:
 
 
 def canonical_identity(record: dict) -> str:
-    """Build identity from multiple stable procurement fields.
-
-    Reference + organization is preferred because a reference alone can be
-    reused or conflict. Without a reference, organization + authoritative title
-    + canonical source is used. Deadline is intentionally excluded so an
-    extension does not manufacture a second procurement record.
-    """
     reference = re.sub(r"\s+", "", clean_text(record.get("referenceNumber")).lower())
     organization = normalized_key(record.get("organization"))
     title = normalized_key(record.get("title"))
@@ -191,30 +184,33 @@ def apply_canonical_fields(record: dict) -> dict:
 
 
 def process_records(records: list[dict], now: datetime) -> list[dict]:
-    """Apply canonical bid fields and current bid retention.
+    """Canonicalize procurement records without deleting history.
 
-    Procurement snapshots are procurement records, not grant records. They are
-    therefore always typed as tenders. Grants are collected independently into
-    public/data/grants.json by export_grants.py.
+    Discovery-window rules are applied before records reach this function. Once
+    a bid has entered Bid Finder, its deadline controls status, not whether a
+    later scan happens to return it.
     """
-    oldest_closed = now - timedelta(days=CLOSED_RETENTION_DAYS)
     output: list[dict] = []
+    now_utc = now.astimezone(timezone.utc)
 
     for raw_record in records:
         record = apply_canonical_fields(raw_record)
         deadline = parse_iso(str(record.get("deadlineAt", "")))
-        if deadline is None:
-            continue
+        terminal = str(record.get("status") or "").lower() in {"cancelled", "awarded"}
 
-        is_open = deadline >= now
-        if not is_open and deadline < oldest_closed:
-            continue
+        if deadline is not None:
+            is_open = deadline >= now_utc
+            record["isOpen"] = is_open
+            if not terminal:
+                if record.get("status") == "planned" and is_open:
+                    record["status"] = "planned"
+                else:
+                    record["status"] = "open" if is_open else "closed"
+            record["retentionStatus"] = "active" if is_open else "expired"
+        else:
+            record.setdefault("isOpen", not terminal)
+            record.setdefault("retentionStatus", "deadline-unknown")
 
-        record["isOpen"] = is_open
-        if record.get("status") not in {"planned", "cancelled", "awarded"}:
-            record["status"] = "open" if is_open else "closed"
-        elif record.get("status") == "planned" and not is_open:
-            record["status"] = "closed"
         record["sourceStage"] = source_stage(record)[:80]
         record["opportunityType"] = "tender"
         output.append(record)
@@ -222,25 +218,54 @@ def process_records(records: list[dict], now: datetime) -> list[dict]:
     return output
 
 
-def process_file(path: Path, now: datetime) -> tuple[int, int]:
+def read_list(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, list):
+        raise ValueError(f"Expected a list in {path}")
+    return [item for item in value if isinstance(item, dict)]
+
+
+def process_file(path: Path, now: datetime, *, persistent: bool = False) -> tuple[int, int]:
     if not path.exists():
         return 0, 0
-    records = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(records, list):
-        raise ValueError(f"Expected a list in {path}")
+
+    records = read_list(path)
     processed = process_records(records, now)
+
+    if persistent:
+        previous = process_records(read_list(PREVIOUS_BIDS_PATH), now)
+        source_metas = read_list(SOURCES_PATH)
+        generated_at = now.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+        processed = merge_persistent_records(
+            previous,
+            processed,
+            source_metas,
+            now=now,
+            generated_at=generated_at,
+        )
+        processed = process_records(processed, now)
+
+    status_rank = {"open": 0, "planned": 1, "evaluation": 2, "awarded": 3, "closed": 4, "cancelled": 5}
+    processed.sort(
+        key=lambda item: (
+            status_rank.get(str(item.get("status") or ""), 9),
+            item.get("deadlineAt") or "9999-12-31T23:59:59Z",
+        )
+    )
     path.write_text(json.dumps(processed, ensure_ascii=False, indent=2), encoding="utf-8")
     return len(records), len(processed)
 
 
 def main() -> int:
     now = datetime.now(timezone.utc)
-    before, after = process_file(BIDS_PATH, now)
-    egp_before, egp_after = process_file(EGP_PATH, now)
+    before, after = process_file(BIDS_PATH, now, persistent=True)
+    egp_before, egp_after = process_file(EGP_PATH, now, persistent=False)
     print(
-        f"Postprocessed procurement: bids {before}->{after}, eGP {egp_before}->{egp_after}; "
-        f"canonical titles/identity applied; closed retention={CLOSED_RETENTION_DAYS} days; "
-        "procurement records forced to tender"
+        f"Postprocessed procurement: fresh bids {before}, persisted output {after}; "
+        f"eGP {egp_before}->{egp_after}; canonical titles/identity applied; "
+        "discovery window does not delete retained bids; procurement records forced to tender"
     )
     return 0
 

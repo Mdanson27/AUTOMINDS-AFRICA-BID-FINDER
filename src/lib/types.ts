@@ -5,6 +5,16 @@ export type UserRole = "viewer" | "admin";
 export type UserProfile = { uid: string; email: string; displayName: string; role: UserRole };
 export type BidSourceRef = { id?: string; name: string; url: string; detectedAt?: string };
 export type BidDocument = { title: string; url: string; kind?: string };
+export type BidVerificationStatus =
+  | "verified"
+  | "source-unavailable"
+  | "not-seen-current-scan"
+  | "not-verified-current-scan";
+export type BidStatusHistoryEntry = {
+  status: BidStatus;
+  at: string;
+  reason: string;
+};
 
 export type BidIntelligence = {
   enrichmentStatus?: "basic" | "partial" | "enriched";
@@ -37,7 +47,14 @@ export type Bid = {
   isOpen: boolean;
   fingerprint: string;
   firstSeenAt: string;
+  firstDetectedAt?: string;
   lastSeenAt: string;
+  lastVerifiedAt?: string;
+  verificationStatus?: BidVerificationStatus;
+  verificationNote?: string;
+  retentionStatus?: "active" | "active-retained" | "expired" | "deadline-unknown";
+  retainedFromPreviousSnapshot?: boolean;
+  statusHistory?: BidStatusHistoryEntry[];
   sources: BidSourceRef[];
   deadlineChanged?: boolean;
   deadlineChangedAt?: string;

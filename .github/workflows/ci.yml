@@ -50,16 +50,20 @@ jobs:
       - name: Install Chromium for newspaper browser fallback
         run: python -m playwright install --with-deps chromium
       - run: python -m unittest discover -s tests -v
-      - name: Build live procurement snapshot
+      - name: Prepare persistence fixture
+        run: |
+          mkdir -p ../public/data
+          echo '[]' > ../public/data/previous-bids.json
+      - name: Build live procurement discovery snapshot
         run: python -m src.export_live_snapshot
-      - name: Apply procurement retention
+      - name: Merge procurement persistence
         run: python -m src.postprocess_snapshot
       - name: Build grants snapshot
         run: python -m src.export_grants
-      - name: Validate separated datasets
+      - name: Validate separated persistent datasets
         run: |
           python - <<'PY'
-          from datetime import datetime, timedelta
+          from datetime import datetime
           import json
           from pathlib import Path
           import re
@@ -77,23 +81,33 @@ jobs:
           now = datetime.now(kampala)
           year = now.year if now.month >= 7 else now.year - 1
           expected_plan_fy = f"{year}-{year + 1}"
-          fy_start = max(datetime(year, 7, 1, tzinfo=kampala), datetime(2026, 7, 1, tzinfo=kampala))
-          latest = now + timedelta(days=90, hours=1)
-          oldest_closed = now - timedelta(days=3, minutes=5)
           html_pattern = re.compile(r"<\/?[a-z][^>]*>|&(?:nbsp|amp|lt|gt|quot|#\d+);", re.I)
+          allowed_verification = {
+              "verified",
+              "source-unavailable",
+              "not-seen-current-scan",
+              "not-verified-current-scan",
+          }
 
           for bid in bids:
               deadline_raw = bid.get("deadlineAt")
               assert deadline_raw, f"missing deadline: {bid.get('title')}"
               deadline = datetime.fromisoformat(deadline_raw.replace("Z", "+00:00")).astimezone(kampala)
-              assert deadline >= fy_start, f"pre-FY deadline: {deadline_raw}"
-              assert deadline >= oldest_closed, f"closed opportunity older than 3 days: {deadline_raw}"
-              assert deadline <= latest, f"deadline beyond 90-day window: {deadline_raw}"
               assert bid.get("opportunityType") == "tender", f"procurement record misclassified: {bid.get('title')}"
-              published_raw = bid.get("publishedAt")
-              if published_raw:
-                  published = datetime.fromisoformat(published_raw.replace("Z", "+00:00")).astimezone(kampala)
-                  assert published >= fy_start, f"pre-FY publication: {published_raw}"
+              assert bid.get("firstDetectedAt"), f"missing firstDetectedAt: {bid.get('title')}"
+              assert bid.get("lastSeenAt"), f"missing lastSeenAt: {bid.get('title')}"
+              assert bid.get("lastVerifiedAt"), f"missing lastVerifiedAt: {bid.get('title')}"
+              assert bid.get("verificationStatus") in allowed_verification, (
+                  f"invalid verificationStatus: {bid.get('verificationStatus')}"
+              )
+              assert isinstance(bid.get("statusHistory"), list) and bid.get("statusHistory"), (
+                  f"missing status history: {bid.get('title')}"
+              )
+              if bid.get("status") == "open":
+                  assert deadline >= now, f"open bid has passed deadline: {bid.get('title')}"
+                  assert bid.get("isOpen") is True
+              if bid.get("status") == "closed":
+                  assert bid.get("isOpen") is False
               for field in ("title", "description", "organization"):
                   assert not html_pattern.search(bid.get(field, "")), f"raw HTML/entity in {field}: {bid.get(field, '')[:120]}"
 
@@ -111,7 +125,6 @@ jobs:
               assert not html_pattern.search(plan.get("organization", "")), (
                   f"raw HTML/entity in procurement-plan organization: {plan.get('organization', '')[:120]}"
               )
-
               items = plan.get("items") or []
               if items:
                   enriched_plan_count += 1
@@ -147,8 +160,8 @@ jobs:
               assert grant.get("status") in {"open", "forecasted", "closed"}, "invalid grant status"
 
           print(
-              f"Validated separate datasets: {len(bids)} procurement bids; "
+              f"Validated persistent datasets: {len(bids)} procurement bids; "
               f"{len(plans)} procurement plans / {category_count} planned categories; "
-              f"{len(grants)} grant opportunities; newspaper capture semantics verified"
+              f"{len(grants)} grant opportunities; persistence timestamps/history verified"
           )
           PY
