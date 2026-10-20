@@ -22,13 +22,17 @@ function storageKey(uid: string) {
 
 function readSaved(uid: string): SavedBidRecord[] {
   if (typeof window === "undefined") return [];
-  return parseSavedBidRecords(window.localStorage.getItem(storageKey(uid)));
+  try {
+    return parseSavedBidRecords(window.localStorage.getItem(storageKey(uid)));
+  } catch {
+    return [];
+  }
 }
 
 function writeSaved(uid: string, records: SavedBidRecord[]) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(storageKey(uid), JSON.stringify(records));
-  window.dispatchEvent(new CustomEvent(SAVED_EVENT, { detail: { uid } }));
+  queueMicrotask(() => window.dispatchEvent(new CustomEvent(SAVED_EVENT, { detail: { uid } })));
 }
 
 export function useSavedBids(currentBids: Bid[] = []) {
