@@ -106,6 +106,9 @@ jobs:
           BID_PERSISTENCE_ACTION: save
         run: python -m collector.src.persistent_bid_store
 
+      - name: Remove persistence bootstrap from public artifact
+        run: rm -f public/data/previous-bids.json
+
       - name: Export real grants snapshot
         run: python -m collector.src.export_grants
 
