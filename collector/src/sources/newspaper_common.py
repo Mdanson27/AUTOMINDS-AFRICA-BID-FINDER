@@ -89,7 +89,7 @@ def direct_fetch(url: str) -> tuple[str, int | None, str]:
     try:
         response = httpx.get(
             url,
-            timeout=45,
+            timeout=20,
             follow_redirects=True,
             headers={
                 "User-Agent": "AutoMindsBidFinder/1.0 (+public procurement indexing; Uganda)",
@@ -111,7 +111,8 @@ def render_fetch(url: str) -> tuple[str, str]:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
-            page.goto(url, wait_until="networkidle", timeout=60000)
+            page.goto(url, wait_until="domcontentloaded", timeout=30000)
+            page.wait_for_timeout(2500)
             html = page.content()
             browser.close()
             return html, "success"
@@ -135,7 +136,7 @@ def discover_with_bing_rss(domain: str, recent_days: int = 30) -> list[str]:
     try:
         response = httpx.get(
             url,
-            timeout=30,
+            timeout=20,
             follow_redirects=True,
             headers={"User-Agent": "AutoMindsBidFinder/1.0 (+public procurement discovery; Uganda)"},
         )
@@ -158,7 +159,7 @@ def discover_with_bing_rss(domain: str, recent_days: int = 30) -> list[str]:
             candidate = unescape(candidate)
             if domain_matches(candidate, domain):
                 found.append(candidate)
-    return list(dict.fromkeys(found))
+    return list(dict.fromkeys(found))[:12]
 
 
 def notice_urls_from_html(raw: str, base_url: str, allowed_domain: str, patterns: tuple[str, ...]) -> list[str]:
@@ -172,7 +173,7 @@ def notice_urls_from_html(raw: str, base_url: str, allowed_domain: str, patterns
             continue
         if any(pattern in href for pattern in patterns):
             urls.append(href)
-    return list(dict.fromkeys(urls))
+    return list(dict.fromkeys(urls))[:25]
 
 
 def parse_notice_page(
