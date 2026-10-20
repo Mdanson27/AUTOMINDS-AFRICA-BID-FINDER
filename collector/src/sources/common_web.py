@@ -40,7 +40,13 @@ def extract_deadline(text: str) -> datetime | None:
     if not text:
         return None
     month = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
-    lead = r"(?:deadline|closing date|submission deadline|no later than|must be submitted by|submit(?:ted)?(?:\s+electronically)?\s+by|before)"
+    lead = (
+        r"(?:deadline|closing date|submission deadline|no later than|must be submitted by|"
+        r"submit(?:ted)?(?:\s+electronically)?\s+by|before|"
+        r"bids?\s+(?:close|closes|closing)(?:\s+on)?|"
+        r"tenders?\s+(?:close|closes|closing)(?:\s+on)?|"
+        r"applications?\s+(?:close|closes|closing)(?:\s+on)?)"
+    )
     patterns = [
         rf"{lead}\D{{0,90}}?(\d{{1,2}}(?:st|nd|rd|th)?\s+{month}\s+20\d{{2}}(?:\s+(?:at\s+)?\d{{1,2}}(?::\d{{2}})?\s*(?:AM|PM|hours?)?)?)",
         rf"{lead}\D{{0,90}}?({month}\s+\d{{1,2}}(?:st|nd|rd|th)?,?\s+20\d{{2}}(?:\s+(?:at\s+)?\d{{1,2}}(?::\d{{2}})?\s*(?:AM|PM)?)?)",
