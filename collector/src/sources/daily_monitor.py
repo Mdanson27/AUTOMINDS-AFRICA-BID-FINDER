@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import datetime
+import hashlib
 import re
 
 from bs4 import BeautifulSoup
@@ -19,6 +20,12 @@ from .newspaper_common import (
     utc_now_iso,
 )
 from ..models import NormalizedBid, SourceRef
+
+
+KEYWORD_RE = re.compile(
+    r"\b(tender|procurement|expression(?:s)? of interest|invitation (?:to|for) (?:bid|bids)|request for (?:proposal|quotation)|pre-?qualification)\b",
+    re.I,
+)
 
 
 class DailyMonitorSource(BidSource):
@@ -47,6 +54,80 @@ class DailyMonitorSource(BidSource):
             return raw
         self.capture_report.direct_status = "success"
         return raw
+
+    @staticmethod
+    def _qualifying_block(container) -> tuple[str, object | None, object | None] | None:
+        text = clean(container.get_text(" ", strip=True))
+        if len(text) < 70 or len(text) > 6000 or not KEYWORD_RE.search(text):
+            return None
+
+        deadline = extract_deadline(text)
+        reference = extract_reference(text)
+        heading = container.find(["h1", "h2", "h3", "h4", "h5", "strong", "b"])
+        if not deadline and not reference and heading is None:
+            return None
+        return text, deadline, reference
+
+    def _generic_listing_bids(self, soup: BeautifulSoup, now: datetime) -> list[NormalizedBid]:
+        candidates = []
+        seen_text: set[str] = set()
+
+        # Prefer the smallest qualifying DOM block. This avoids turning a parent
+        # page wrapper containing many tenders into one giant false notice.
+        for container in soup.find_all(["article", "li", "section", "div"]):
+            qualified = self._qualifying_block(container)
+            if qualified is None:
+                continue
+            text, deadline, reference = qualified
+            digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+            if digest in seen_text:
+                continue
+
+            child_has_notice = False
+            for child in container.find_all(["article", "li", "section", "div"], recursive=False):
+                if self._qualifying_block(child) is not None:
+                    child_has_notice = True
+                    break
+            if child_has_notice:
+                continue
+
+            heading = container.find(["h1", "h2", "h3", "h4", "h5", "strong", "b"])
+            title = clean(heading.get_text(" ", strip=True)) if heading else ""
+            if len(title) < 12:
+                # Monitor listing entries often lead with the procurement title,
+                # followed by a sentence describing the entity and deadline.
+                title = re.split(r"(?<=[.!?])\s+|\s{2,}", text, maxsplit=1)[0][:320]
+            if len(title) < 12 or len(title) > 320:
+                continue
+
+            procurement_type = infer_type(title, text)
+            verification = "VERIFIED" if reference and deadline else "MANUAL_REVIEW"
+            candidates.append(
+                NormalizedBid(
+                    title=title,
+                    organization=organization_from_title(title),
+                    reference_number=reference or "",
+                    description=text[:4000],
+                    category=procurement_type,
+                    procurement_type=procurement_type,
+                    published_at=None,
+                    deadline_at=deadline,
+                    deadline_precision="datetime" if deadline else "unknown",
+                    status="open" if deadline is None or deadline >= now else "closed",
+                    sources=[SourceRef(name=self.name, url=self.url, detected_at=now)],
+                    source_metadata={
+                        "captureSurface": "publisher-tender-listing-generic-block",
+                        "canonicalPublisher": self.name,
+                        "verification": verification,
+                    },
+                )
+            )
+            seen_text.add(digest)
+
+        unique: dict[str, NormalizedBid] = {}
+        for bid in candidates:
+            unique[bid.canonical_key()] = bid
+        return list(unique.values())
 
     def parse(self, raw: str) -> Iterable[NormalizedBid]:
         soup = BeautifulSoup(raw, "html.parser")
@@ -89,44 +170,7 @@ class DailyMonitorSource(BidSource):
             )
             discovered[bid.canonical_key()] = bid
 
-        # Monitor's public tender page can render the notices as list blocks without
-        # individual tender URLs. Treat the publisher's tender page itself as the
-        # canonical source in that case rather than pretending the capture was empty.
-        keyword_re = re.compile(
-            r"\b(tender|procurement|expression(?:s)? of interest|invitation (?:to|for) bid|request for (?:proposal|quotation)|pre-?qualification)\b",
-            re.I,
-        )
-        for container in soup.find_all(["li", "article"]):
-            text = clean(container.get_text(" ", strip=True))
-            if len(text) < 40 or not keyword_re.search(text):
-                continue
-            deadline = extract_deadline(text)
-            reference = extract_reference(text)
-            heading = container.find(["h2", "h3", "h4", "strong", "b"])
-            title = clean(heading.get_text(" ", strip=True)) if heading else ""
-            if len(title) < 12:
-                title = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0][:300]
-            if len(title) < 12:
-                continue
-            procurement_type = infer_type(title, text)
-            bid = NormalizedBid(
-                title=title,
-                organization=organization_from_title(title),
-                reference_number=reference,
-                description=text[:3000],
-                category=procurement_type,
-                procurement_type=procurement_type,
-                published_at=None,
-                deadline_at=deadline,
-                deadline_precision="datetime" if deadline else "unknown",
-                status="open" if deadline is None or deadline >= now else "closed",
-                sources=[SourceRef(name=self.name, url=self.url, detected_at=now)],
-                source_metadata={
-                    "captureSurface": "publisher-tender-listing",
-                    "canonicalPublisher": self.name,
-                    "verification": "MANUAL_REVIEW" if not reference else "VERIFIED",
-                },
-            )
+        for bid in self._generic_listing_bids(soup, now):
             discovered[bid.canonical_key()] = bid
         return list(discovered.values())
 
@@ -176,7 +220,7 @@ class DailyMonitorSource(BidSource):
             and url.rstrip("/") != self.url.rstrip("/")
         ]
         report.urls_discovered = len(candidates)
-        report.discovery_method = "direct+browser+publisher_listing+domain_search"
+        report.discovery_method = "direct+browser+publisher_listing+generic_blocks+domain_search"
 
         for url in candidates:
             raw, page_status, final_url = direct_fetch(url)
