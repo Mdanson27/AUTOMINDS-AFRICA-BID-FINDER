@@ -27,6 +27,8 @@ class NormalizedBid(BaseModel):
     description: str = ""
     category: str = ""
     procurement_type: str = ""
+    procurement_method: str = ""
+    source_stage: str = ""
     published_at: datetime | None = None
     deadline_at: datetime | None = None
     deadline_precision: Literal["date", "datetime", "unknown"] = "unknown"
