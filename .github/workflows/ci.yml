@@ -54,8 +54,8 @@ jobs:
         run: |
           mkdir -p ../public/data
           echo '[]' > ../public/data/previous-bids.json
-      - name: Build live procurement discovery snapshot
-        run: python -m src.export_live_snapshot
+      - name: Build live procurement discovery snapshot from 30-source network
+        run: python -m src.export_30_source_snapshot
       - name: Merge procurement persistence
         run: python -m src.postprocess_snapshot
       - name: Build grants snapshot
@@ -76,6 +76,7 @@ jobs:
           assert bids, "live procurement snapshot is empty"
           assert isinstance(grants, list), "grants snapshot must be a list"
           assert plans, "current-financial-year procurement plans snapshot is empty"
+          assert len({item.get("id") for item in sources}) == 30, f"expected 30 unique procurement sources, got {len(sources)}"
 
           kampala = ZoneInfo("Africa/Kampala")
           now = datetime.now(kampala)
@@ -97,12 +98,8 @@ jobs:
               assert bid.get("firstDetectedAt"), f"missing firstDetectedAt: {bid.get('title')}"
               assert bid.get("lastSeenAt"), f"missing lastSeenAt: {bid.get('title')}"
               assert bid.get("lastVerifiedAt"), f"missing lastVerifiedAt: {bid.get('title')}"
-              assert bid.get("verificationStatus") in allowed_verification, (
-                  f"invalid verificationStatus: {bid.get('verificationStatus')}"
-              )
-              assert isinstance(bid.get("statusHistory"), list) and bid.get("statusHistory"), (
-                  f"missing status history: {bid.get('title')}"
-              )
+              assert bid.get("verificationStatus") in allowed_verification, f"invalid verificationStatus: {bid.get('verificationStatus')}"
+              assert isinstance(bid.get("statusHistory"), list) and bid.get("statusHistory"), f"missing status history: {bid.get('title')}"
               if bid.get("status") == "open":
                   assert deadline >= now, f"open bid has passed deadline: {bid.get('title')}"
                   assert bid.get("isOpen") is True
@@ -116,27 +113,17 @@ jobs:
           for plan in plans:
               assert plan.get("id"), "procurement plan missing id"
               assert plan.get("organization"), "procurement plan missing organization"
-              assert plan.get("financialYear") == expected_plan_fy, (
-                  f"unexpected procurement-plan FY: {plan.get('financialYear')} != {expected_plan_fy}"
-              )
-              assert plan.get("sourceUrl", "").startswith("https://egpuganda.go.ug/"), (
-                  f"unexpected procurement-plan source URL: {plan.get('sourceUrl')}"
-              )
-              assert not html_pattern.search(plan.get("organization", "")), (
-                  f"raw HTML/entity in procurement-plan organization: {plan.get('organization', '')[:120]}"
-              )
+              assert plan.get("financialYear") == expected_plan_fy, f"unexpected procurement-plan FY: {plan.get('financialYear')} != {expected_plan_fy}"
+              assert plan.get("sourceUrl", "").startswith("https://egpuganda.go.ug/"), f"unexpected procurement-plan source URL: {plan.get('sourceUrl')}"
+              assert not html_pattern.search(plan.get("organization", "")), f"raw HTML/entity in procurement-plan organization: {plan.get('organization', '')[:120]}"
               items = plan.get("items") or []
               if items:
                   enriched_plan_count += 1
               category_count += len(items)
               for item in items:
                   assert item.get("category"), f"procurement-plan category missing name: {plan.get('organization')}"
-                  assert re.search(r"\d", item.get("estimatedAmountUGX", "")), (
-                      f"procurement-plan category missing estimated UGX value: {item.get('category')}"
-                  )
-                  assert not html_pattern.search(item.get("category", "")), (
-                      f"raw HTML/entity in procurement-plan category: {item.get('category', '')[:120]}"
-                  )
+                  assert re.search(r"\d", item.get("estimatedAmountUGX", "")), f"procurement-plan category missing estimated UGX value: {item.get('category')}"
+                  assert not html_pattern.search(item.get("category", "")), f"raw HTML/entity in procurement-plan category: {item.get('category', '')[:120]}"
 
           assert enriched_plan_count > 0, "no procurement plan detail pages produced category intelligence"
           assert category_count > 0, "procurement plans contain zero planned procurement categories"
@@ -149,9 +136,7 @@ jobs:
               assert source.get("collectorStatus"), f"{name} missing collectorStatus"
               assert "urlsDiscovered" in source, f"{name} missing discovery telemetry"
               if capture != "SUCCESS":
-                  assert source.get("recordsFound") is None or source.get("recordsFound", 0) > 0, (
-                      f"{name} incomplete capture incorrectly reported a genuine zero recordsFound"
-                  )
+                  assert source.get("recordsFound") is None or source.get("recordsFound", 0) > 0, f"{name} incomplete capture incorrectly reported a genuine zero recordsFound"
 
           for grant in grants:
               assert grant.get("title"), "grant missing title"
@@ -160,8 +145,8 @@ jobs:
               assert grant.get("status") in {"open", "forecasted", "closed"}, "invalid grant status"
 
           print(
-              f"Validated persistent datasets: {len(bids)} procurement bids; "
+              f"Validated 30-source network: {len(bids)} procurement bids; "
               f"{len(plans)} procurement plans / {category_count} planned categories; "
-              f"{len(grants)} grant opportunities; persistence timestamps/history verified"
+              f"{len(grants)} grant opportunities; {len(sources)} source monitors"
           )
           PY
