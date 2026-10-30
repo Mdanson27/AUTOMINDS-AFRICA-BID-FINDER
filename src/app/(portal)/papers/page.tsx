@@ -2,18 +2,20 @@
 
 import { ExternalLink } from "lucide-react";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const papers = [
   {
     name: "Daily Monitor",
     href: "https://www.monitor.co.ug/uganda/jobs/tenders",
-    logo: "https://www.thecitizen.co.tz/resource/image/2710224/landscape_ratio3x2/1620/1080/18926b999ccec70c91c7a4b87efa7d58/xj/monitor.jpg",
-    logoClassName: "monitor-logo",
+    logo: `${basePath}/dailymonitor.png`,
+    theme: "monitor",
   },
   {
     name: "New Vision",
     href: "https://www.newvision.co.ug/opportunities/tenders",
-    logo: "https://assets.kreatio.net/new_vision/images/small_logo1.jpg",
-    logoClassName: "newvision-logo",
+    logo: `${basePath}/newvision.png`,
+    theme: "newvision",
   },
 ] as const;
 
@@ -23,23 +25,24 @@ export default function PapersPage() {
       <header className="newspaper-heading">
         <span className="eyebrow">CURRENT PAPERS</span>
         <h1>Newspaper tender pages</h1>
-        <p>Choose a newspaper to open its tender and procurement notices.</p>
+        <p>Select a newspaper to open its latest tender and procurement notices.</p>
       </header>
 
       <section className="newspaper-grid" aria-label="Uganda newspaper tender pages">
         {papers.map((paper) => (
-          <article className="newspaper-card" key={paper.name}>
+          <article className={`newspaper-card newspaper-card-${paper.theme}`} key={paper.name}>
+            <div className="brand-line" aria-hidden="true" />
+
             <div className="newspaper-logo-wrap">
-              <img
-                className={`newspaper-logo ${paper.logoClassName}`}
-                src={paper.logo}
-                alt={`${paper.name} logo`}
-              />
+              <img className={`newspaper-logo newspaper-logo-${paper.theme}`} src={paper.logo} alt={`${paper.name} logo`} />
             </div>
 
             <div className="newspaper-card-copy">
-              <h2>{paper.name}</h2>
-              <span>Tenders &amp; procurement opportunities</span>
+              <div>
+                <span className="paper-label">NEWSPAPER SOURCE</span>
+                <h2>{paper.name}</h2>
+              </div>
+              <p>Tenders &amp; procurement opportunities</p>
             </div>
 
             <a
@@ -49,7 +52,7 @@ export default function PapersPage() {
               rel="noreferrer"
               aria-label={`Open ${paper.name} tenders`}
             >
-              Open tender page
+              <span>Open tender page</span>
               <ExternalLink size={17} aria-hidden="true" />
             </a>
           </article>
@@ -60,7 +63,7 @@ export default function PapersPage() {
         .newspaper-page {
           width: min(1240px, 100%);
           margin: 0 auto;
-          padding: 8px 0 30px;
+          padding: 8px 0 34px;
         }
 
         .newspaper-heading {
@@ -86,57 +89,91 @@ export default function PapersPage() {
         .newspaper-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 20px;
+          gap: 22px;
           margin-top: 28px;
         }
 
         .newspaper-card {
-          min-height: 440px;
-          padding: 28px;
+          position: relative;
+          min-height: 410px;
+          padding: 24px;
           display: flex;
           flex-direction: column;
-          align-items: stretch;
           background: #fff;
-          border: 1px solid rgba(14, 48, 77, 0.1);
+          border: 2px solid var(--paper-accent);
           border-radius: 20px;
-          box-shadow: 0 12px 34px rgba(7, 29, 53, 0.05);
+          box-shadow: 0 14px 36px rgba(7, 29, 53, 0.055);
           overflow: hidden;
-          transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+          transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .newspaper-card-monitor {
+          --paper-accent: #cf2027;
+          --paper-accent-soft: #fff4f4;
+          --paper-accent-hover: #b81920;
+        }
+
+        .newspaper-card-newvision {
+          --paper-accent: #e21b23;
+          --paper-accent-soft: #fff5f5;
+          --paper-accent-hover: #c8171e;
         }
 
         .newspaper-card:hover {
-          transform: translateY(-2px);
-          border-color: rgba(14, 48, 77, 0.17);
-          box-shadow: 0 18px 42px rgba(7, 29, 53, 0.08);
+          transform: translateY(-3px);
+          box-shadow: 0 20px 46px rgba(7, 29, 53, 0.09);
+        }
+
+        .brand-line {
+          position: absolute;
+          inset: 0 0 auto;
+          height: 7px;
+          background: var(--paper-accent);
         }
 
         .newspaper-logo-wrap {
-          min-height: 235px;
+          height: 205px;
           display: grid;
           place-items: center;
-          padding: 24px;
+          margin-top: 5px;
+          padding: 24px 34px;
+          border: 1px solid color-mix(in srgb, var(--paper-accent) 18%, transparent);
           border-radius: 15px;
-          background: #f7f8fa;
+          background: linear-gradient(180deg, #ffffff 0%, var(--paper-accent-soft) 100%);
           overflow: hidden;
         }
 
         .newspaper-logo {
           display: block;
-          width: min(100%, 420px);
-          max-height: 180px;
+          max-width: 100%;
+          max-height: 150px;
           object-fit: contain;
+          object-position: center;
         }
 
-        .monitor-logo {
-          border-radius: 8px;
+        .newspaper-logo-monitor {
+          width: min(100%, 350px);
         }
 
-        .newvision-logo {
-          width: min(100%, 300px);
+        .newspaper-logo-newvision {
+          width: min(100%, 250px);
         }
 
         .newspaper-card-copy {
-          padding: 22px 2px 19px;
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 20px 2px 18px;
+        }
+
+        .paper-label {
+          display: block;
+          margin-bottom: 6px;
+          color: var(--paper-accent);
+          font-size: 8px;
+          font-weight: 900;
+          letter-spacing: 1.3px;
         }
 
         .newspaper-card-copy h2 {
@@ -146,11 +183,11 @@ export default function PapersPage() {
           letter-spacing: -0.5px;
         }
 
-        .newspaper-card-copy span {
-          display: block;
-          margin-top: 6px;
+        .newspaper-card-copy p {
+          margin: 0 0 2px;
           color: #7d8e9b;
-          font-size: 11px;
+          font-size: 10px;
+          white-space: nowrap;
         }
 
         .newspaper-open-button {
@@ -168,17 +205,31 @@ export default function PapersPage() {
           font-weight: 850;
           text-decoration: none;
           box-shadow: 0 8px 20px rgba(7, 29, 53, 0.14);
-          transition: transform 0.16s ease, background 0.16s ease;
+          transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
         }
 
         .newspaper-open-button:hover {
-          background: #0c3158;
+          background: var(--paper-accent-hover);
           transform: translateY(-1px);
+          box-shadow: 0 10px 24px color-mix(in srgb, var(--paper-accent) 26%, transparent);
+        }
+
+        @media (max-width: 980px) {
+          .newspaper-card-copy {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 7px;
+          }
+
+          .newspaper-card-copy p {
+            white-space: normal;
+          }
         }
 
         @media (max-width: 820px) {
           .newspaper-grid {
             grid-template-columns: 1fr;
+            gap: 18px;
           }
 
           .newspaper-card {
@@ -186,23 +237,53 @@ export default function PapersPage() {
           }
 
           .newspaper-logo-wrap {
-            min-height: 200px;
+            height: 190px;
           }
         }
 
         @media (max-width: 520px) {
+          .newspaper-page {
+            padding-bottom: 22px;
+          }
+
+          .newspaper-heading {
+            padding-bottom: 20px;
+          }
+
           .newspaper-card {
-            padding: 18px;
+            min-height: 350px;
+            padding: 16px;
             border-radius: 16px;
           }
 
           .newspaper-logo-wrap {
-            min-height: 170px;
-            padding: 18px;
+            height: 165px;
+            padding: 18px 24px;
+            border-radius: 12px;
+          }
+
+          .newspaper-logo {
+            max-height: 125px;
+          }
+
+          .newspaper-logo-monitor {
+            width: min(100%, 290px);
+          }
+
+          .newspaper-logo-newvision {
+            width: min(100%, 210px);
+          }
+
+          .newspaper-card-copy {
+            padding: 17px 2px 15px;
           }
 
           .newspaper-card-copy h2 {
             font-size: 19px;
+          }
+
+          .newspaper-open-button {
+            min-height: 48px;
           }
         }
       `}</style>
