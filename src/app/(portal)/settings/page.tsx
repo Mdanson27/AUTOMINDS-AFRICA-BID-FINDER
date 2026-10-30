@@ -7,7 +7,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { saveUserPreferences, subscribeUserPreferences, type UserPreferences } from "@/lib/userWorkspace";
 
 export default function SettingsPage() {
-  const { user, profile, resetPassword } = useAuth();
+  const { user, profile, resetPassword, updateDisplayName } = useAuth();
   const [scope, setScope] = useState<UserPreferences["scope"]>("all");
   const [deadline, setDeadline] = useState<UserPreferences["closingSoonDays"]>(14);
   const [sort, setSort] = useState<UserPreferences["defaultSort"]>("deadline");
@@ -17,6 +17,13 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [message, setMessage] = useState("");
   const [resetting, setResetting] = useState(false);
+  const [accountName, setAccountName] = useState("");
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameMessage, setNameMessage] = useState("");
+
+  useEffect(() => {
+    setAccountName(profile?.displayName || "");
+  }, [profile?.displayName]);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -28,6 +35,16 @@ export default function SettingsPage() {
       setLoading(false);
     }, (error) => { setMessage(error); setLoading(false); });
   }, [user?.uid]);
+
+  async function saveName() {
+    setNameSaving(true); setNameMessage("");
+    try {
+      await updateDisplayName(accountName);
+      setNameMessage("Account holder name updated.");
+    } catch (error) {
+      setNameMessage(error instanceof Error ? error.message : "The account holder name could not be updated.");
+    } finally { setNameSaving(false); }
+  }
 
   async function savePreferences() {
     if (!user?.uid) return;
@@ -57,9 +74,18 @@ export default function SettingsPage() {
 
       <div className="suite-settings-layout production-settings">
         <aside className="suite-settings-sidebar">
-          <section className="panel suite-account-card"><span className="suite-account-icon"><UserRound size={22} /></span><div className="avatar-large">{(profile?.displayName || user?.email || "U").slice(0, 1).toUpperCase()}</div><div><h2>{profile?.displayName || "Bid Finder user"}</h2><p>{user?.email}</p><span className="soft-badge">{profile?.role || "viewer"}</span></div></section>
+          <section className="panel suite-account-card account-profile-card">
+            <span className="suite-account-icon"><UserRound size={22} /></span>
+            <div className="avatar-large">{(profile?.displayName || user?.email || "U").slice(0, 1).toUpperCase()}</div>
+            <div><h2>{profile?.displayName || "Account holder"}</h2><p>{user?.email}</p><span className="soft-badge">{profile?.role || "viewer"}</span></div>
+            <div className="account-name-settings">
+              <label><span>Account holder name</span><input value={accountName} onChange={(event) => { setAccountName(event.target.value); setNameMessage(""); }} placeholder="Your full name" maxLength={80} /></label>
+              <button type="button" onClick={saveName} disabled={nameSaving || accountName.trim().length < 2 || accountName.trim() === (profile?.displayName || "").trim()}>{nameSaving ? <Loader2 className="spin" size={14} /> : <Save size={14} />} Update name</button>
+              {nameMessage && <small className={nameMessage.includes("updated") ? "success" : "error"}>{nameMessage}</small>}
+            </div>
+          </section>
           <section className="panel suite-security-card"><div className="suite-settings-mini-head"><span><ShieldCheck size={18} /></span><div><strong>Account security</strong><small>Manage access to this account.</small></div></div><button className="button secondary" type="button" onClick={sendReset} disabled={resetting || !user?.email}>{resetting ? <Loader2 className="spin" size={14} /> : <KeyRound size={14} />} Send password reset</button></section>
-          <section className="panel suite-settings-status"><div><span className="status-dot healthy" /> <strong>Production workspace</strong></div><p>Your preferences are stored in Firestore under your authenticated account, not only on this browser.</p></section>
+          <section className="panel suite-settings-status"><div><span className="status-dot healthy" /> <strong>Production workspace</strong></div><p>Your preferences and account identity are stored in Firestore under your authenticated account.</p></section>
         </aside>
 
         <div className="suite-settings-main">
