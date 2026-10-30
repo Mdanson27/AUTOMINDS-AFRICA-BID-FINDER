@@ -51,7 +51,7 @@ def source_type(source_id: str) -> str:
 
 def financial_year_start(now: datetime) -> datetime:
     local_now = now.astimezone(KAMPALA)
-    year = local_now.year if local_now.month >= 6 else local_now.year - 1
+    year = local_now.year if local_now.month >= 7 else local_now.year - 1
     start = datetime(year, 7, 1, tzinfo=KAMPALA)
     return max(start, MIN_FINANCIAL_YEAR_START)
 
