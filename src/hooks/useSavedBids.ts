@@ -16,6 +16,7 @@ import {
 
 const SAVED_EVENT = "bidfinder:saved-bids-changed";
 const STORAGE_PREFIX = "autominds-bidfinder:saved-bids:v2";
+const COMPLETED_STATUSES = new Set(["closed", "evaluation", "awarded", "cancelled"]);
 
 function storageKey(uid: string) {
   return `${STORAGE_PREFIX}:${uid}`;
@@ -34,6 +35,15 @@ function writeSaved(uid: string, records: SavedBidRecord[]) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(storageKey(uid), JSON.stringify(records));
   queueMicrotask(() => window.dispatchEvent(new CustomEvent(SAVED_EVENT, { detail: { uid } })));
+}
+
+function isActiveSavedSnapshot(bid: Bid) {
+  if (bid.displayEligible === false || COMPLETED_STATUSES.has(bid.status)) return false;
+  const deadline = new Date(bid.deadlineAt);
+  if (Number.isNaN(deadline.getTime()) || deadline.getTime() <= Date.now()) return false;
+  const published = bid.publishedAt ? new Date(bid.publishedAt) : null;
+  if (published && !Number.isNaN(published.getTime()) && published > deadline) return false;
+  return true;
 }
 
 export function useSavedBids(currentBids: Bid[] = []) {
@@ -92,13 +102,13 @@ export function useSavedBids(currentBids: Bid[] = []) {
     });
   }, [user]);
 
-  // The save relationship remains stored even when an older snapshot only has
-  // a generic procurement method. Such records are simply withheld from the
-  // visible saved-bids list until a source-supported specific title is recovered.
+  // Saved relationships stay in local history, but expired/completed snapshots
+  // are never surfaced as live Bid Finder opportunities.
   const savedBids = useMemo(() => records
     .slice()
     .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
     .flatMap((record) => {
+      if (!isActiveSavedSnapshot(record.snapshot)) return [];
       const title = resolveSpecificBidTitle(record.snapshot);
       return title ? [{ ...record.snapshot, title, titleSpecificity: "specific" as const, displayEligible: true }] : [];
     }), [records]);
