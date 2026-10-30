@@ -6,10 +6,11 @@ from .sources.public_portals import PUBLIC_PORTAL_SOURCES, PUBLIC_SOURCE_TYPES
 
 BASE_SOURCES = tuple(live.SOURCES)
 NETWORK_SOURCES = (*BASE_SOURCES, *PUBLIC_PORTAL_SOURCES)
+ORIGINAL_SOURCE_TYPE = live.source_type
 
 
 def _network_source_type(source_id: str) -> str:
-    return PUBLIC_SOURCE_TYPES.get(source_id, live.source_type(source_id))
+    return PUBLIC_SOURCE_TYPES.get(source_id, ORIGINAL_SOURCE_TYPE(source_id))
 
 
 def validate_network() -> None:
