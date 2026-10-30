@@ -60,16 +60,11 @@ def main() -> int:
         rejected = 0
         deadline_updates = 0
 
-        # The list page is discovery only. Before a record is written to the live
-        # application collection, fetch its detail page so an authoritative
-        # submission deadline can replace a stale/list-only date when available.
+        # The list page is discovery only. Always inspect the detail page before
+        # deciding whether a notice is expired: the list can lag behind a formal
+        # deadline extension/addendum. Only the post-enrichment deadline is used
+        # to decide whether the opportunity may be written to the live dataset.
         for bid in parsed_bids:
-            precheck, precheck_reason = _display_candidate(bid, now)
-            if not precheck:
-                rejected += 1
-                log.info("Withholding %s before enrichment: %s", bid.reference_number or bid.title, precheck_reason)
-                continue
-
             discovered_deadline = bid.deadline_at
             try:
                 enriched = source.enrich(bid)
