@@ -48,6 +48,30 @@ class SourceNetworkTests(unittest.TestCase):
         self.assertEqual(23, bids[0].deadline_at.hour)
         self.assertEqual("open", bids[0].status)
 
+    def test_day_first_numeric_deadline_is_supported(self):
+        source = PublicProcurementPortalSource(
+            PortalConfig(
+                "numeric-date-fixture",
+                "Numeric Date Fixture",
+                "https://example.org/tenders",
+                "Fixture Uganda",
+                "development",
+            )
+        )
+        closing = datetime.now(KAMPALA) + timedelta(days=20)
+        html = f"""
+        <article>
+          <h3>Invitation to Tender for Consultancy Services</h3>
+          <p>Reference No: 7000025994</p>
+          <p>Deadline: {closing.strftime('%d.%m.%Y')}</p>
+        </article>
+        """
+        bids = list(source.parse(html))
+        self.assertEqual(1, len(bids))
+        self.assertEqual("7000025994", bids[0].reference_number)
+        self.assertEqual(closing.date(), bids[0].deadline_at.date())
+        self.assertEqual(23, bids[0].deadline_at.hour)
+
     def test_country_filter_blocks_other_countries(self):
         source = PublicProcurementPortalSource(
             PortalConfig(
