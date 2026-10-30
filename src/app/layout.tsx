@@ -3,6 +3,7 @@ import "./globals.css";
 import "./suite-theme.css";
 import "./product-pages.css";
 import "./workspace-pages.css";
+import "./profile-settings.css";
 import "./mascot.css";
 import "./ingestion-status.css";
 import "./bid-quality.css";
