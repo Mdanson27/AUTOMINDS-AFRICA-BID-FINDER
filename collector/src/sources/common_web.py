@@ -63,14 +63,19 @@ def extract_deadline(text: str) -> datetime | None:
 
 def extract_reference(text: str) -> str:
     text = clean(text)
+    # Labels must terminate on a word boundary. Without this, the short `ref`
+    # alternative can match the beginning of the word `reference` and produce
+    # nonsense such as `erence` as the procurement reference number.
     patterns = [
-        r"(?:procurement\s+reference(?:\s+number)?|reference|ref\.?|rfq\s*no\.?|rfp\s*no\.?|itb\s*no\.?|eoi\s*no\.?)\s*[:#-]?\s*([A-Z0-9][A-Z0-9._/()\-]{4,})",
+        r"(?:procurement\s+reference(?:\s+(?:number|no\.?))?|tender\s+reference(?:\s+(?:number|no\.?))?|reference(?:\s+(?:number|no\.?))?|ref\.?\b|rfq\s*no\.?\b|rfp\s*no\.?\b|itb\s*no\.?\b|eoi\s*no\.?\b)\s*[:#-]?\s*([A-Z0-9][A-Z0-9._/()\-]{4,})",
         r"\b([A-Z]{2,}[A-Z0-9._/-]*/[A-Z0-9._/-]+/20\d{2}(?:-20\d{2})?/[A-Z0-9._/-]+)\b",
     ]
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.I)
         if match:
-            return clean(match.group(1)).strip(".,;:")
+            candidate = clean(match.group(1)).strip(".,;:")
+            if candidate.lower() not in {"reference", "number", "erence"}:
+                return candidate
     return ""
 
 
