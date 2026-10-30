@@ -179,6 +179,7 @@ export function useBids() {
     let liveBids: Bid[] = [];
     let snapshotSettled = false;
     let liveSettled = false;
+    let expiryTimer: number | undefined;
 
     const publish = () => {
       if (!active) return;
@@ -186,6 +187,21 @@ export function useBids() {
       setBids(merged);
       if (merged.length) setError("");
       if (snapshotSettled && liveSettled) setLoading(false);
+
+      // Firestore's `Timestamp.now()` query bound is evaluated when the
+      // subscription is created. Schedule a local revalidation at the exact
+      // next deadline so a tab left open cannot continue displaying an expired
+      // opportunity just because no database event arrived.
+      if (expiryTimer !== undefined) window.clearTimeout(expiryTimer);
+      const nowMs = Date.now();
+      const nextDeadline = [...snapshotBids, ...liveBids]
+        .map((item) => new Date(item.deadlineAt).getTime())
+        .filter((value) => Number.isFinite(value) && value > nowMs)
+        .sort((a, b) => a - b)[0];
+      if (nextDeadline !== undefined) {
+        const delay = Math.min(Math.max(nextDeadline - nowMs + 100, 100), 2_147_000_000);
+        expiryTimer = window.setTimeout(publish, delay);
+      }
     };
 
     const loadSnapshot = async () => {
@@ -230,6 +246,7 @@ export function useBids() {
 
     return () => {
       active = false;
+      if (expiryTimer !== undefined) window.clearTimeout(expiryTimer);
       window.removeEventListener(SNAPSHOT_REFRESH_EVENT, loadSnapshot);
       unsubscribe();
     };
