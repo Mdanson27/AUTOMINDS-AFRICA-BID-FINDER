@@ -86,12 +86,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     router.push(query ? `/bids?q=${encodeURIComponent(query)}` : "/bids");
   }
 
+  function warmRoute(href: string) {
+    router.prefetch(href);
+  }
+
   function navLink(href: string, label: string, Icon: typeof Search) {
     const active = pathname === href || (href === "/bids" && pathname.startsWith("/bids/"));
     return (
       <Link
         key={href}
         href={href}
+        prefetch={false}
+        onMouseEnter={() => warmRoute(href)}
+        onFocus={() => warmRoute(href)}
         title={collapsed ? label : undefined}
         onClick={() => setMobileOpen(false)}
         className={active ? "active" : ""}
@@ -121,7 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
           </button>
 
-          <Link href="/scan" className={`premium-new-scan ${pathname === "/scan" ? "active" : ""}`} title={collapsed ? "Scan newest bids" : undefined}>
+          <Link href="/scan" prefetch={false} onMouseEnter={() => warmRoute("/scan")} onFocus={() => warmRoute("/scan")} className={`premium-new-scan ${pathname === "/scan" ? "active" : ""}`} title={collapsed ? "Scan newest bids" : undefined}>
             <Sparkles size={18} />
             <span>Scan newest bids</span>
           </Link>
@@ -137,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {profile?.role === "admin" && (
             <div className="admin-nav premium-admin-nav">
               {!collapsed && <span className="suite-nav-label premium-second-label">ADMINISTRATION</span>}
-              <Link href="/admin/source-monitor" title={collapsed ? "Source monitor" : undefined} className={pathname.startsWith("/admin") ? "active" : ""}>
+              <Link href="/admin/source-monitor" prefetch={false} onMouseEnter={() => warmRoute("/admin/source-monitor")} onFocus={() => warmRoute("/admin/source-monitor")} title={collapsed ? "Source monitor" : undefined} className={pathname.startsWith("/admin") ? "active" : ""}>
                 <Shield size={18} /><span>Source monitor</span>
               </Link>
             </div>
@@ -146,7 +153,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <div className="sidebar-footer premium-sidebar-footer">
           <div className="premium-live-state"><span className="premium-live-dot" />{!collapsed && <span>Collection network online</span>}</div>
-          <Link href="/settings" title={collapsed ? "Settings" : undefined} className={pathname === "/settings" ? "active" : ""}><Settings size={18} /><span>Settings</span></Link>
+          <Link href="/settings" prefetch={false} onMouseEnter={() => warmRoute("/settings")} onFocus={() => warmRoute("/settings")} title={collapsed ? "Settings" : undefined} className={pathname === "/settings" ? "active" : ""}><Settings size={18} /><span>Settings</span></Link>
           <button onClick={logout} title={collapsed ? "Sign out" : undefined}><LogOut size={18} /><span>Sign out</span></button>
           <div className="user-chip premium-user-chip">
             <div className="avatar">{(profile?.displayName || user?.email || "U")[0].toUpperCase()}</div>
@@ -167,9 +174,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <kbd>↵</kbd>
           </form>
           <div className="suite-topbar-actions premium-topbar-actions">
-            <Link href="/sources" className="suite-network-status premium-network-status"><span className="topbar-dot" /> Live sources</Link>
+            <Link href="/sources" prefetch={false} onMouseEnter={() => warmRoute("/sources")} onFocus={() => warmRoute("/sources")} className="suite-network-status premium-network-status"><span className="topbar-dot" /> Live sources</Link>
             <button className="suite-icon-action" aria-label="Notifications" title="Notifications"><Bell size={18} /></button>
-            <Link href="/scan" className="suite-find-action premium-scan-action"><Radar size={16} /> <span>Scan now</span></Link>
+            <Link href="/scan" prefetch={false} onMouseEnter={() => warmRoute("/scan")} onFocus={() => warmRoute("/scan")} className="suite-find-action premium-scan-action"><Radar size={16} /> <span>Scan now</span></Link>
           </div>
         </header>
         <main className="content-inner suite-content premium-content">{children}</main>
