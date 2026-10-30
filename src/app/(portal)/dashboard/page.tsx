@@ -7,6 +7,7 @@ import { ArrowRight, Bookmark, CalendarClock, FileSearch, Globe2, RadioTower, Se
 import { BidList } from "@/components/bids/BidList";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatCard } from "@/components/ui/StatCard";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useBids } from "@/hooks/useBids";
 import { useSavedBids } from "@/hooks/useSavedBids";
 import { useSources } from "@/hooks/useSources";
@@ -16,6 +17,7 @@ const quickSearches = ["ICT", "Construction", "Consultancy", "Supplies", "Agricu
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { profile } = useAuth();
   const { bids, loading, error } = useBids();
   const { savedIds } = useSavedBids();
   const { sources } = useSources();
@@ -25,6 +27,7 @@ export default function DashboardPage() {
   const newToday = bids.filter((bid) => isSameLocalDay(bid.firstSeenAt, now));
   const closing = open.filter((bid) => daysUntil(bid.deadlineAt) <= 7).sort((a, b) => daysUntil(a.deadlineAt) - daysUntil(b.deadlineAt));
   const healthySources = sources.filter((source) => source.health === "healthy" && source.enabled).length;
+  const firstName = profile?.displayName?.trim().split(/\s+/)[0] || "there";
 
   function runSearch(event: React.FormEvent) {
     event.preventDefault();
@@ -33,23 +36,34 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="page-stack suite-dashboard">
+    <div className="page-stack suite-dashboard modern-dashboard">
       <PageHeader
         eyebrow="Procurement intelligence"
-        title="Your opportunity desk"
-        description="Search Uganda’s procurement landscape, follow deadlines and keep the opportunities worth pursuing in one place."
+        title={`Welcome back, ${firstName}`}
+        description="Your opportunity desk is ready. Search live procurement intelligence, monitor deadlines and focus on the bids worth pursuing."
         action={<Link href="/bids" className="button primary">Explore all bids <ArrowRight size={16} /></Link>}
       />
 
-      <section className="suite-hero dashboard-search-hero">
-        <span className="eyebrow">START A SEARCH</span>
-        <h2>What opportunity are you looking for today?</h2>
-        <p>Run one search across every connected source, or narrow the search to government portals, newspapers, development partners or private organizations.</p>
-        <form className="suite-hero-search" onSubmit={runSearch}>
-          <label><Search size={19} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Try ‘software development’, ‘stationery’ or an organization name…" /></label>
-          <button><Sparkles size={17} /> Search opportunities</button>
+      <section className="modern-opportunity-hero">
+        <div className="modern-opportunity-copy">
+          <span className="modern-search-kicker"><Sparkles size={14} /> SMART OPPORTUNITY SEARCH</span>
+          <h2>What opportunity are you looking for today?</h2>
+          <p>Search across the connected Bid Finder network in one place, then narrow the results by source, organization, category or deadline.</p>
+        </div>
+
+        <form className="modern-opportunity-search" onSubmit={runSearch}>
+          <label>
+            <Search size={20} />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search a service, requirement, organization or reference…" />
+            <span>30 sources</span>
+          </label>
+          <button type="submit"><Search size={17} /> Search opportunities</button>
         </form>
-        <div className="suite-quick-chips">{quickSearches.map((item) => <button key={item} onClick={() => router.push(`/bids?q=${encodeURIComponent(item)}`)}>{item}</button>)}</div>
+
+        <div className="modern-quick-row">
+          <span>Popular searches</span>
+          <div className="suite-quick-chips modern-quick-chips">{quickSearches.map((item) => <button key={item} onClick={() => router.push(`/bids?q=${encodeURIComponent(item)}`)}>{item}</button>)}</div>
+        </div>
       </section>
 
       <section className="stats-grid suite-stats" aria-label="Bid summary">

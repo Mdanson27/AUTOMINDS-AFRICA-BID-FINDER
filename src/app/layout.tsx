@@ -8,6 +8,7 @@ import "./mascot.css";
 import "./ingestion-status.css";
 import "./bid-quality.css";
 import "./premium-workspace.css";
+import "./modern-shell.css";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
