@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 from urllib.parse import urljoin, urlparse
 
@@ -41,8 +41,9 @@ IGNORE_TITLE_TERMS = (
     "cookie",
 )
 DATE_PATTERN = re.compile(
-    r"(?:\d{1,2}(?:st|nd|rd|th)?[\s,/-]+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)[\s,/-]+20\d{2}"
+    r"(?:\d{1,2}(?:st|nd|rd|th)?[\s,./-]+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)[\s,./-]+20\d{2}"
     r"|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+20\d{2}"
+    r"|\d{1,2}[./-]\d{1,2}[./-]20\d{2}"
     r"|20\d{2}[-/]\d{1,2}[-/]\d{1,2})",
     re.I,
 )
@@ -60,12 +61,13 @@ class PortalConfig:
 
 
 class PublicProcurementPortalSource(BidSource):
-    """Reusable parser for public procurement/tender listing pages.
+    """Conservative parser for public procurement/tender listing pages.
 
-    This adapter is intentionally conservative. It only emits records when it
-    can identify both a procurement signal and a credible closing date. That
-    keeps the 30-source network broad without weakening Bid Finder's rule that
-    questionable/expired notices must never leak into the live opportunity UI.
+    The adapter only emits records when it can identify procurement intent and
+    an explicit closing/deadline/submission date. It deliberately refuses to
+    guess a deadline from an unlabeled date such as a publication date. Sources
+    that need more specialized extraction stay monitored but cannot contaminate
+    the live opportunity feed with an inferred deadline.
     """
 
     def __init__(self, config: PortalConfig):
@@ -100,23 +102,11 @@ class PublicProcurementPortalSource(BidSource):
 
     @classmethod
     def _deadline(cls, text: str) -> datetime | None:
+        # Accuracy over coverage: never infer a closing deadline from an
+        # unlabeled date. The shared extractor accepts only explicit deadline,
+        # closing, submission, "before", or equivalent procurement wording.
         direct = extract_deadline(text)
-        if direct:
-            return cls._end_of_day_if_date_only(direct, text)
-
-        # Many institutional tender cards print publication and closing dates as
-        # plain dates without the word "deadline". In a procurement card, the
-        # latest near-future date is the safest closing-date candidate.
-        now = datetime.now(KAMPALA)
-        candidates: list[datetime] = []
-        for match in DATE_PATTERN.finditer(text):
-            parsed = parse_date(match.group(0))
-            if not parsed:
-                continue
-            parsed = cls._end_of_day_if_date_only(parsed, text)
-            if now - timedelta(days=2) <= parsed <= now + timedelta(days=180):
-                candidates.append(parsed)
-        return max(candidates) if candidates else None
+        return cls._end_of_day_if_date_only(direct, text) if direct else None
 
     @classmethod
     def _published(cls, text: str, deadline: datetime | None) -> datetime | None:
