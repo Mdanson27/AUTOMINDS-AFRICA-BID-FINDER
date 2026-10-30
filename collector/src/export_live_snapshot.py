@@ -51,22 +51,28 @@ def source_type(source_id: str) -> str:
 
 def financial_year_start(now: datetime) -> datetime:
     local_now = now.astimezone(KAMPALA)
-    year = local_now.year if local_now.month >= 7 else local_now.year - 1
+    year = local_now.year if local_now.month >= 6 else local_now.year - 1
     start = datetime(year, 7, 1, tzinfo=KAMPALA)
     return max(start, MIN_FINANCIAL_YEAR_START)
 
 
 def is_eligible_bid(bid, now: datetime) -> bool:
-    if bid.status in {"cancelled", "awarded"} or bid.deadline_at is None:
+    if bid.status in {"closed", "evaluation", "cancelled", "awarded"} or bid.deadline_at is None:
         return False
     local_now = now.astimezone(KAMPALA)
     start = financial_year_start(local_now)
     deadline = bid.deadline_at.astimezone(KAMPALA)
     latest = local_now + timedelta(days=MAX_DAYS_AHEAD)
-    if deadline < start or deadline > latest:
+
+    # Bid Finder is a live opportunity surface. A passed closing timestamp is
+    # never eligible, even if it falls inside the current financial year.
+    if deadline < local_now or deadline < start or deadline > latest:
         return False
-    if bid.published_at is not None and bid.published_at.astimezone(KAMPALA) < start:
-        return False
+
+    if bid.published_at is not None:
+        published = bid.published_at.astimezone(KAMPALA)
+        if published < start or published > deadline or published > local_now + timedelta(days=1):
+            return False
     return True
 
 
@@ -273,9 +279,10 @@ def main() -> int:
     for source in SOURCES:
         attempted_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         is_newspaper = source_type(source.source_id) == "newspaper"
+        allow_empty = bool(getattr(source, "allow_empty", False))
         try:
             bids = collect_one_source(source, now)
-            if not bids and not is_newspaper:
+            if not bids and not is_newspaper and not allow_empty:
                 raise RuntimeError("source returned zero normalized notices")
 
             eligible = [bid for bid in bids if is_eligible_bid(bid, now)]
@@ -286,7 +293,11 @@ def main() -> int:
                         bid = source.enrich(bid)
                     except Exception as enrich_exc:  # noqa: BLE001
                         print(f"WARNING {source.name} detail enrichment for {bid.reference_number or bid.title}: {enrich_exc}")
-                enriched_eligible.append(bid)
+                # Detail enrichment is allowed to correct the list-page deadline.
+                # Re-run the gate afterwards so an authoritative expired/invalid
+                # detail deadline can never leak into the live export.
+                if is_eligible_bid(bid, now):
+                    enriched_eligible.append(bid)
             eligible = enriched_eligible
 
             print(f"{source.name}: parsed {len(bids)} notices; kept {len(eligible)} in FY/current 90-day window")
