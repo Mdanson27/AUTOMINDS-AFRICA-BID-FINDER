@@ -1,6 +1,6 @@
 import unittest
 
-from src.neon_sync import _bid_row, _grant_row, _plan_row, _source_row
+from src.neon_sync import _bid_row, _grant_row, _pg_safe, _plan_row, _source_row
 
 
 class NeonSyncMappingTests(unittest.TestCase):
@@ -46,6 +46,26 @@ class NeonSyncMappingTests(unittest.TestCase):
         self.assertEqual(row["id"], "test-source")
         self.assertTrue(row["enabled"])
         self.assertEqual(row["health"], "planned")
+
+    def test_pg_safe_removes_null_bytes_recursively(self):
+        payload = {
+            "title\x00": "Supply\x00 of equipment",
+            "documents": [
+                {"title": "Specification\x00 document", "meta": {"note": "safe\x00nested"}},
+                "plain\x00value",
+            ],
+            "count": 2,
+            "active": True,
+            "empty": None,
+        }
+        cleaned = _pg_safe(payload)
+        self.assertEqual(cleaned["title"], "Supply of equipment")
+        self.assertEqual(cleaned["documents"][0]["title"], "Specification document")
+        self.assertEqual(cleaned["documents"][0]["meta"]["note"], "safenested")
+        self.assertEqual(cleaned["documents"][1], "plainvalue")
+        self.assertEqual(cleaned["count"], 2)
+        self.assertTrue(cleaned["active"])
+        self.assertIsNone(cleaned["empty"])
 
 
 if __name__ == "__main__":

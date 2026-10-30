@@ -29,6 +29,22 @@ def _load_json(name: str, default: Any) -> Any:
         return default
 
 
+def _pg_safe(value: Any) -> Any:
+    """Recursively remove NUL characters that PostgreSQL text/jsonb cannot store."""
+    if isinstance(value, str):
+        return value.replace("\x00", "")
+    if isinstance(value, list):
+        return [_pg_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [_pg_safe(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            str(key).replace("\x00", ""): _pg_safe(item)
+            for key, item in value.items()
+        }
+    return value
+
+
 def _collector_id_token() -> str:
     raw = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON", "").strip()
     api_key = os.environ.get("NEXT_PUBLIC_FIREBASE_API_KEY", "").strip()
@@ -75,7 +91,10 @@ class NeonWriter:
             return 0
         written = 0
         for start in range(0, len(values), batch_size):
-            batch = values[start : start + batch_size]
+            # PostgreSQL rejects U+0000 in both text and jsonb. Sanitizing at the
+            # single database egress point protects all current and future nested
+            # collector fields without weakening source-specific extraction.
+            batch = [_pg_safe(item) for item in values[start : start + batch_size]]
             response = self.client.post(
                 f"{self.base_url}/{table}",
                 params={"on_conflict": conflict},
