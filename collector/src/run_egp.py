@@ -16,6 +16,15 @@ MAX_DAYS_AHEAD = 90
 TERMINAL_STATUSES = {"closed", "evaluation", "awarded", "cancelled"}
 
 
+def _normalize_deadline_precision(bid):
+    """Preserve the full closing date when the source publishes no closing time."""
+    if bid.deadline_at is None or bid.deadline_precision != "date":
+        return bid
+    local_deadline = bid.deadline_at.astimezone(KAMPALA)
+    bid.deadline_at = local_deadline.replace(hour=23, minute=59, second=59, microsecond=0)
+    return bid
+
+
 def _display_candidate(bid, now: datetime) -> tuple[bool, str]:
     """Fail closed when an eGP record cannot safely be offered as a live bid."""
     deadline = bid.deadline_at
@@ -71,6 +80,8 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001 - keep the authoritative list fallback available
                 log.warning("Detail validation failed for %s: %s", bid.reference_number or bid.title, exc)
                 enriched = bid
+
+            enriched = _normalize_deadline_precision(enriched)
 
             if discovered_deadline and enriched.deadline_at and discovered_deadline != enriched.deadline_at:
                 deadline_updates += 1
