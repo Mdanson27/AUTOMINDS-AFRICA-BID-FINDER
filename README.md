@@ -4,80 +4,105 @@
 
 <p align="center">
   <strong>Uganda-focused procurement intelligence by AutoMinds Africa.</strong><br/>
-  Turning fragmented public procurement notices into a structured, searchable operating layer.
+  Turning fragmented procurement notices into a verified, searchable operating layer.
 </p>
 
 <p align="center">
-  <code>Next.js</code> · <code>TypeScript</code> · <code>Firebase</code> · <code>Python</code> · <code>BeautifulSoup</code> · <code>GitHub Actions</code>
+  <code>Next.js</code> · <code>TypeScript</code> · <code>Firebase Auth</code> · <code>Neon Postgres</code> · <code>Python</code> · <code>GitHub Actions</code>
 </p>
 
 ---
 
 ## What it does
 
-The platform combines a Next.js procurement workspace with a separate Python collection engine. The first live source adapter is **eGP Uganda**. It normalizes public bid notices, deduplicates them by procurement reference, tracks changes such as deadline extensions, and writes the resulting records to the application data layer.
+Bid Finder combines a Next.js procurement workspace with a separate Python collection engine monitoring a **30-source procurement network**. Collectors normalize public notices, verify actionable deadlines, reject expired/terminal opportunities from live surfaces, deduplicate repeated notices, preserve source evidence and track procurement changes.
 
-## Current stack
+## Production architecture
 
-- Next.js + TypeScript
-- Firebase Authentication
-- Cloud Firestore for the MVP data layer
-- Strict Firestore rules and indexes
-- Responsive AutoMinds suite design
-- Python + BeautifulSoup + HTTPX collector
-- Firebase Admin for server-side collector writes
-- GitHub Actions for scheduled collection and infrastructure deployment
+- Next.js + TypeScript frontend deployed on GitHub Pages
+- Firebase Authentication for existing user identity and sign-in
+- Neon Postgres as the application database
+- Neon Data API for browser-safe HTTPS access
+- PostgreSQL row-level security (RLS) using Firebase JWT identity
+- User-owned company profiles, preferences, saved bids, saved searches and notifications
+- Canonical procurement tables for bids, source evidence, organizations, plans, grants and crawl history
+- Python + BeautifulSoup + HTTPX + Playwright collectors
+- GitHub Actions for scheduled 30-source collection, validation, Neon synchronization and Pages deployment
+- Static JSON snapshots retained as a fast resilience fallback, not as the primary application database
 
 ## Security model
 
-No real Firebase configuration values or service-account credentials are committed to source control.
+The browser never receives a Postgres password or Neon connection string. Firebase ID tokens are presented to the Neon Data API, which maps authenticated requests to PostgreSQL RLS policies.
 
-Production web configuration is injected from GitHub Actions secrets during the Pages build. The server-side collector uses a separate `FIREBASE_SERVICE_ACCOUNT_JSON` Actions secret. Never place a service-account JSON file, private key, password, access token or unrestricted Google API key in this repository.
+User-owned rows are restricted to the Firebase UID in the JWT. Normal users cannot promote their own application role. Procurement-table writes are restricted to the dedicated `bidfinder-collector` identity or an application administrator.
 
-Firebase web configuration is delivered to browsers by design when the client SDK is used. It must therefore be protected with restricted Google API key settings, Firebase Authentication and strict Firestore rules rather than treated as a server credential.
+The scheduled collector uses the existing `FIREBASE_SERVICE_ACCOUNT_JSON` GitHub Actions secret only to mint a short-lived Firebase token for `bidfinder-collector`; it then writes through the same Data API/RLS boundary as the application. Never commit service-account JSON, private keys, passwords or access tokens.
 
-See [`docs/SECURITY_AND_INGESTION.md`](docs/SECURITY_AND_INGESTION.md).
+## Database model
+
+Core Neon tables include:
+
+- `app_users`
+- `user_preferences`
+- `companies`
+- `saved_bids`
+- `saved_searches`
+- `notifications`
+- `bids`
+- `bid_sources`
+- `bid_changes`
+- `sources`
+- `organizations`
+- `crawl_runs`
+- `procurement_plans`
+- `grants`
+- `bid_match_scores`
+
+The `bids` RLS read policy independently excludes expired and terminal opportunities from normal authenticated users.
 
 ## Run locally
 
 ```bash
 npm install
 cp .env.example .env.local
-# Fill .env.local with your local web configuration.
+# Fill in Firebase web configuration and NEXT_PUBLIC_NEON_DATA_API_URL.
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-## eGP collector
+## Collector
 
-From `collector/`:
+From the repository root:
 
 ```bash
-python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v
-python -m src.run_egp
+python -m pip install -r collector/requirements.txt
+python -m unittest discover -s collector/tests -v
+python -m collector.src.export_30_source_snapshot
+python -m collector.src.postprocess_snapshot
+python -m collector.src.export_grants
 ```
 
-`python -m src.run_egp` requires the `FIREBASE_SERVICE_ACCOUNT_JSON` environment variable. In production this value is supplied only through GitHub Actions secrets.
+Production deployment additionally runs:
 
-The collector records:
+```bash
+python -m collector.src.neon_sync
+```
 
-- normalized bid data
-- source trail
-- first/last seen timestamps
-- deterministic canonical keys for duplicate prevention
-- field-level change history
-- deadline-change flags
-- source health
-- crawl-run statistics
-- discovered organizations
+The Neon sync requires `FIREBASE_SERVICE_ACCOUNT_JSON`, `NEXT_PUBLIC_FIREBASE_API_KEY` and `NEON_DATA_API_URL` in the deployment environment.
 
-## Automated workflows
+## Automated workflow
 
-- `Deploy to GitHub Pages` — builds the frontend using GitHub Actions secrets.
-- `Deploy Firestore rules and indexes` — deploys the hardened database rules/indexes.
-- `Collect eGP Uganda bids` — runs every two hours and can also be started manually.
+`Deploy to GitHub Pages` performs the production cycle:
+
+1. load persistent procurement history;
+2. scan the 30-source network;
+3. validate and normalize live opportunities;
+4. merge persistence/change history;
+5. export grants and procurement plans;
+6. synchronize canonical data to Neon;
+7. typecheck, lint and build the Next.js static site;
+8. deploy the Pages artifact.
 
 ## Portal routes
 
@@ -85,6 +110,9 @@ The collector records:
 - `/dashboard`
 - `/bids`
 - `/bids/view?id=...`
+- `/grants`
+- `/plans`
+- `/papers`
 - `/closing-soon`
 - `/saved`
 - `/organizations`
@@ -94,17 +122,13 @@ The collector records:
 - `/admin/bids/new`
 - `/settings`
 
-## Data rule
+## Data rules
 
-The product is not padded with fake tenders. Search results come from records stored by real source collectors or explicit administrator testing utilities.
-
-## Next sources
-
-1. GPP / PPDA
-2. Daily Monitor
-3. New Vision
-4. Direct procuring-entity websites
-5. NGO and development-partner portals
+- No fake opportunities are used to pad the product.
+- No explicit/credible deadline means no live tender.
+- Passed deadlines do not appear in normal live results.
+- Terminal states such as closed, evaluation, awarded and cancelled are excluded from the live opportunity surface.
+- Repeated notices from several publishers should resolve to one canonical opportunity with source evidence preserved.
 
 ## Commands
 
@@ -115,7 +139,7 @@ npm run lint
 npm run build
 ```
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the broader application structure.
+The production Neon schema is versioned in [`neon/schema.sql`](neon/schema.sql).
 
 ---
 
