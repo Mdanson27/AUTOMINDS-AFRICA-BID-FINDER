@@ -4,6 +4,11 @@ from . import export_live_snapshot as live
 from .sources.public_portals import PUBLIC_PORTAL_SOURCES, PUBLIC_SOURCE_TYPES
 
 
+for source in PUBLIC_PORTAL_SOURCES:
+    # A successful fetch that legitimately contains no currently-open Uganda
+    # notices is a healthy zero, not a collector failure.
+    source.allow_empty = True
+
 BASE_SOURCES = tuple(live.SOURCES)
 NETWORK_SOURCES = (*BASE_SOURCES, *PUBLIC_PORTAL_SOURCES)
 ORIGINAL_SOURCE_TYPE = live.source_type
