@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 import unittest
 
 from src.export_30_source_snapshot import NETWORK_SOURCES, validate_network
+from src.sources.common_web import KAMPALA
 from src.sources.public_portals import PortalConfig, PublicProcurementPortalSource
 
 
@@ -23,17 +25,20 @@ class SourceNetworkTests(unittest.TestCase):
                 "government",
             )
         )
-        html = """
+        now = datetime.now(KAMPALA)
+        live_date = (now + timedelta(days=30)).strftime("%d %B %Y")
+        expired_date = (now - timedelta(days=30)).strftime("%d %B %Y")
+        html = f"""
         <main>
           <article>
             <h3>Invitation to Bid for Supply of Network Equipment</h3>
             <p>Procurement Reference No: TEST/SUPLS/2026/001</p>
-            <p>Closing date: 30 November 2026</p>
+            <p>Closing date: {live_date}</p>
             <a href="/tenders/1">Read more</a>
           </article>
           <article>
             <h3>Invitation to Bid for Expired Office Supplies</h3>
-            <p>Closing date: 1 August 2026</p>
+            <p>Closing date: {expired_date}</p>
           </article>
         </main>
         """
@@ -54,11 +59,12 @@ class SourceNetworkTests(unittest.TestCase):
                 ("uganda", "kampala"),
             )
         )
-        html = """
+        live_date = (datetime.now(KAMPALA) + timedelta(days=30)).strftime("%d %B %Y")
+        html = f"""
         <article>
           <h3>Invitation to Tender for Vehicle Supply</h3>
           <p>Country: Kenya</p>
-          <p>Deadline: 30 November 2026</p>
+          <p>Deadline: {live_date}</p>
         </article>
         """
         self.assertEqual([], list(source.parse(html)))
