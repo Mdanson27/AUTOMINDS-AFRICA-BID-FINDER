@@ -56,48 +56,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         void (async () => {
           try {
-            const [{ doc, getDoc, serverTimestamp, setDoc }, { db }] = await Promise.all([
-              import("firebase/firestore"),
-              import("@/lib/firebase"),
-            ]);
+            const { ensureNeonUser, eq, neonSelect } = await import("@/lib/neonApi");
+            await ensureNeonUser();
             if (!active) return;
-
-            const ref = doc(db, "users", nextUser.uid);
-            const snapshot = await getDoc(ref);
+            const rows = await neonSelect<Record<string, unknown>>(
+              "app_users",
+              `select=firebase_uid,email,display_name,role&firebase_uid=${eq(nextUser.uid)}&limit=1`,
+            );
             if (!active) return;
-
-            if (!snapshot.exists()) {
-              try {
-                await setDoc(ref, {
-                  ...initial,
-                  createdAt: serverTimestamp(),
-                  updatedAt: serverTimestamp(),
-                });
-              } catch {
-                // Firebase Auth remains the identity source if database persistence is temporarily unavailable.
-              }
-              if (active) setProfile(initial);
-              return;
-            }
-
-            const data = snapshot.data();
-            if (!active) return;
-            const resolvedDisplayName = String(data.displayName || nextUser.displayName || "").trim();
-            const resolvedProfile: UserProfile = {
+            const data = rows[0] || {};
+            const resolvedDisplayName = String(data.display_name || nextUser.displayName || "").trim();
+            setProfile({
               uid: nextUser.uid,
-              email: data.email || nextUser.email || "",
+              email: String(data.email || nextUser.email || ""),
               displayName: resolvedDisplayName,
               role: data.role === "admin" ? "admin" : "viewer",
-            };
-            setProfile(resolvedProfile);
-
-            if (!data.displayName && resolvedDisplayName) {
-              try {
-                await setDoc(ref, { displayName: resolvedDisplayName, updatedAt: serverTimestamp() }, { merge: true });
-              } catch {
-                // The Firebase Auth profile name remains a safe fallback.
-              }
-            }
+            });
           } catch {
             if (active) setProfile(initial);
           } finally {
@@ -139,8 +113,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const currentUser = auth.currentUser;
     const currentRole = profile?.role || "viewer";
 
-    // Firebase Auth is the durable identity source and must not depend on Firestore availability.
-    // This prevents account setup from trapping users if the workspace database is unavailable.
+    // Firebase Auth remains the durable identity source. Neon mirrors the profile
+    // but can never block onboarding after Auth has accepted the display name.
     await updateProfile(currentUser, { displayName: name });
     setProfile((current) => current ? { ...current, displayName: name } : {
       uid: currentUser.uid,
@@ -150,24 +124,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     setProfileResolved(true);
 
-    // Mirror the identity into Firestore when available. Failure here is non-blocking because
-    // Firebase Auth already persisted the account holder name across devices and sessions.
     try {
-      const [{ doc, serverTimestamp, setDoc }, { db }] = await Promise.all([
-        import("firebase/firestore"),
-        import("@/lib/firebase"),
-      ]);
-      await setDoc(doc(db, "users", currentUser.uid), {
-        uid: currentUser.uid,
-        email: currentUser.email || profile?.email || "",
-        displayName: name,
-        role: currentRole,
-        updatedAt: serverTimestamp(),
-      }, { merge: true });
+      const { ensureNeonUser } = await import("@/lib/neonApi");
+      await ensureNeonUser();
     } catch {
-      // Do not surface a database implementation error after the account identity already saved.
+      // The Firebase Auth profile is already persisted; Neon will reconcile on next session/focus.
     }
-  }, [profile?.email, profile?.role]);
+  }, [profile?.role]);
 
   const value = useMemo(
     () => ({ user, profile, loading, profileResolved, signIn, signOut, resetPassword, updateDisplayName }),

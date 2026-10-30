@@ -30,7 +30,9 @@ jobs:
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
       NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
       NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
-      NEXT_PUBLIC_FIRESTORE_DATABASE_ID: bidfinder-native
+      NEXT_PUBLIC_NEON_DATA_API_URL: https://ep-frosty-bar-b5zf1qa1.apirest.c-7.us-east-2.aws.neon.tech/bidfinder/rest/v1
+      NEON_DATA_API_URL: https://ep-frosty-bar-b5zf1qa1.apirest.c-7.us-east-2.aws.neon.tech/bidfinder/rest/v1
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,11 +52,11 @@ jobs:
         with:
           enablement: true
 
-      - name: Verify web configuration
+      - name: Verify production configuration
         shell: bash
         run: |
           missing=0
-          for name in NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID NEXT_PUBLIC_FIREBASE_APP_ID; do
+          for name in NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID NEXT_PUBLIC_FIREBASE_APP_ID NEXT_PUBLIC_NEON_DATA_API_URL NEON_DATA_API_URL FIREBASE_SERVICE_ACCOUNT_JSON; do
             if [ -z "${!name}" ]; then
               echo "::error::$name is not configured in the github-pages environment."
               missing=1
@@ -119,6 +121,9 @@ jobs:
 
       - name: Export real grants snapshot
         run: python -m collector.src.export_grants
+
+      - name: Sync validated procurement data to Neon
+        run: python -m collector.src.neon_sync
 
       - name: Install dependencies
         run: npm install
