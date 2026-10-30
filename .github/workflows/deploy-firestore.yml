@@ -8,6 +8,7 @@ on:
       - "firestore.rules"
       - "firestore.indexes.json"
       - "firebase.json"
+      - ".github/workflows/deploy-firestore.yml"
 
 permissions:
   contents: read
@@ -21,10 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-    timeout-minutes: 10
+    timeout-minutes: 12
     env:
       FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
       UNSAFE_SERVICE_ACCOUNT_VARIABLE: ${{ vars.FIREBASE_SERVICE_ACCOUNT_JSON }}
+      FIRESTORE_DATABASE_ID: bidfinder-native
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,5 +57,32 @@ jobs:
           PROJECT_ID=$(node -e 'const c=JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON); process.stdout.write(c.project_id)')
           echo "FIREBASE_PROJECT_ID=$PROJECT_ID" >> "$GITHUB_ENV"
 
-      - name: Deploy rules and indexes
+      - name: Ensure Native-mode workspace database exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          FIREBASE="npx --yes firebase-tools@latest"
+
+          if $FIREBASE firestore:databases:get "$FIRESTORE_DATABASE_ID" --project "$FIREBASE_PROJECT_ID" --json > "$RUNNER_TEMP/workspace-db.json" 2>/dev/null; then
+            echo "Firestore database $FIRESTORE_DATABASE_ID already exists."
+          else
+            echo "Creating Native-mode Firestore database $FIRESTORE_DATABASE_ID."
+            $FIREBASE firestore:databases:get default --project "$FIREBASE_PROJECT_ID" --json > "$RUNNER_TEMP/default-db.json"
+            LOCATION=$(node - <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/default-db.json', 'utf8'));
+          const value = raw.result || raw;
+          const location = value.locationId || value.location_id || value.location || '';
+          if (!location) process.exit(2);
+          process.stdout.write(location);
+          NODE
+            )
+            echo "Using existing Firestore location: $LOCATION"
+            $FIREBASE firestore:databases:create "$FIRESTORE_DATABASE_ID" \
+              --location="$LOCATION" \
+              --project "$FIREBASE_PROJECT_ID" \
+              --non-interactive
+          fi
+
+      - name: Deploy rules and indexes to Native workspace database
         run: npx --yes firebase-tools@latest deploy --only firestore:rules,firestore:indexes --project "$FIREBASE_PROJECT_ID" --non-interactive

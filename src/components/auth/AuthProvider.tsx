@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   updatedAt: serverTimestamp(),
                 });
               } catch {
-                // Keep the in-memory profile; onboarding can retry persistence.
+                // Firebase Auth remains the identity source if database persistence is temporarily unavailable.
               }
               if (active) setProfile(initial);
               return;
@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               try {
                 await setDoc(ref, { displayName: resolvedDisplayName, updatedAt: serverTimestamp() }, { merge: true });
               } catch {
-                // The auth profile name remains a safe fallback for this session.
+                // The Firebase Auth profile name remains a safe fallback.
               }
             }
           } catch {
@@ -137,21 +137,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!auth.currentUser) throw new Error("Your session is no longer available. Please sign in again.");
 
     const currentUser = auth.currentUser;
-    const [{ doc, serverTimestamp, setDoc }, { db }] = await Promise.all([
-      import("firebase/firestore"),
-      import("@/lib/firebase"),
-    ]);
-
     const currentRole = profile?.role || "viewer";
-    await setDoc(doc(db, "users", currentUser.uid), {
-      uid: currentUser.uid,
-      email: currentUser.email || profile?.email || "",
-      displayName: name,
-      role: currentRole,
-      updatedAt: serverTimestamp(),
-    }, { merge: true });
 
-    try { await updateProfile(currentUser, { displayName: name }); } catch {}
+    // Firebase Auth is the durable identity source and must not depend on Firestore availability.
+    // This prevents account setup from trapping users if the workspace database is unavailable.
+    await updateProfile(currentUser, { displayName: name });
     setProfile((current) => current ? { ...current, displayName: name } : {
       uid: currentUser.uid,
       email: currentUser.email || "",
@@ -159,6 +149,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role: currentRole,
     });
     setProfileResolved(true);
+
+    // Mirror the identity into Firestore when available. Failure here is non-blocking because
+    // Firebase Auth already persisted the account holder name across devices and sessions.
+    try {
+      const [{ doc, serverTimestamp, setDoc }, { db }] = await Promise.all([
+        import("firebase/firestore"),
+        import("@/lib/firebase"),
+      ]);
+      await setDoc(doc(db, "users", currentUser.uid), {
+        uid: currentUser.uid,
+        email: currentUser.email || profile?.email || "",
+        displayName: name,
+        role: currentRole,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+    } catch {
+      // Do not surface a database implementation error after the account identity already saved.
+    }
   }, [profile?.email, profile?.role]);
 
   const value = useMemo(
