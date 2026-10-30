@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 import logging
 import sys
+from zoneinfo import ZoneInfo
 
 from .firestore_store import FirestoreBidStore, IngestionStats
 from .sources.egp_uganda import EGPUgandaSource
@@ -9,6 +11,42 @@ from .sources.egp_uganda import EGPUgandaSource
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("autominds.egp")
+KAMPALA = ZoneInfo("Africa/Kampala")
+MAX_DAYS_AHEAD = 90
+TERMINAL_STATUSES = {"closed", "evaluation", "awarded", "cancelled"}
+
+
+def _normalize_deadline_precision(bid):
+    """Preserve the full closing date when the source publishes no closing time."""
+    if bid.deadline_at is None or bid.deadline_precision != "date":
+        return bid
+    local_deadline = bid.deadline_at.astimezone(KAMPALA)
+    bid.deadline_at = local_deadline.replace(hour=23, minute=59, second=59, microsecond=0)
+    return bid
+
+
+def _display_candidate(bid, now: datetime) -> tuple[bool, str]:
+    """Fail closed when an eGP record cannot safely be offered as a live bid."""
+    deadline = bid.deadline_at
+    if deadline is None:
+        return False, "missing-deadline"
+
+    deadline = deadline.astimezone(KAMPALA)
+    if deadline <= now:
+        return False, "deadline-passed"
+    if deadline > now + timedelta(days=MAX_DAYS_AHEAD):
+        return False, "deadline-outside-live-window"
+    if str(bid.status or "").lower() in TERMINAL_STATUSES:
+        return False, f"terminal-status:{bid.status}"
+
+    if bid.published_at is not None:
+        published = bid.published_at.astimezone(KAMPALA)
+        if published > deadline:
+            return False, "publication-after-deadline"
+        if published > now + timedelta(days=1):
+            return False, "publication-date-in-future"
+
+    return True, "verified-active"
 
 
 def main() -> int:
@@ -22,14 +60,58 @@ def main() -> int:
         # database. This keeps source failures distinct from storage failures.
         log.info("Fetching public eGP Uganda bid notices")
         raw = source.fetch()
-        bids = list(source.parse(raw))
-        if not bids:
+        parsed_bids = list(source.parse(raw))
+        if not parsed_bids:
             raise RuntimeError("eGP parser returned zero standard bid notices; refusing to write an empty crawl")
 
-        log.info("Parsed %s normalized bid notices", len(bids))
+        now = datetime.now(KAMPALA)
+        bids = []
+        rejected = 0
+        deadline_updates = 0
+
+        # The list page is discovery only. Always inspect the detail page before
+        # deciding whether a notice is expired: the list can lag behind a formal
+        # deadline extension/addendum. Only the post-enrichment deadline is used
+        # to decide whether the opportunity may be written to the live dataset.
+        for bid in parsed_bids:
+            discovered_deadline = bid.deadline_at
+            try:
+                enriched = source.enrich(bid)
+            except Exception as exc:  # noqa: BLE001 - keep the authoritative list fallback available
+                log.warning("Detail validation failed for %s: %s", bid.reference_number or bid.title, exc)
+                enriched = bid
+
+            enriched = _normalize_deadline_precision(enriched)
+
+            if discovered_deadline and enriched.deadline_at and discovered_deadline != enriched.deadline_at:
+                deadline_updates += 1
+                log.info(
+                    "Authoritative deadline update %s: %s -> %s",
+                    bid.reference_number or bid.title,
+                    discovered_deadline.isoformat(),
+                    enriched.deadline_at.isoformat(),
+                )
+
+            eligible, reason = _display_candidate(enriched, now)
+            if not eligible:
+                rejected += 1
+                log.warning("Withholding %s after detail validation: %s", enriched.reference_number or enriched.title, reason)
+                continue
+            bids.append(enriched)
+
+        if not bids:
+            raise RuntimeError("eGP validation produced zero active bids; refusing to write an empty live crawl")
+
+        log.info(
+            "Parsed %s eGP notices; validated %s active bids; withheld %s; corrected %s deadlines",
+            len(parsed_bids),
+            len(bids),
+            rejected,
+            deadline_updates,
+        )
         for index, bid in enumerate(bids[:3], start=1):
             log.info(
-                "Live eGP sample %s: reference=%s organization=%s deadline=%s title=%s",
+                "Validated eGP sample %s: reference=%s organization=%s deadline=%s title=%s",
                 index,
                 bid.reference_number or "(none)",
                 bid.organization,
