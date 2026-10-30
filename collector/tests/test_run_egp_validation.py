@@ -5,20 +5,20 @@ import unittest
 from zoneinfo import ZoneInfo
 
 from src.models import NormalizedBid, SourceRef
-from src.run_egp import _display_candidate
+from src.run_egp import _display_candidate, _normalize_deadline_precision
 
 
 KAMPALA = ZoneInfo("Africa/Kampala")
 
 
-def make_bid(*, now: datetime, deadline_offset: timedelta, status: str = "open", published_offset: timedelta = timedelta(days=-1)) -> NormalizedBid:
+def make_bid(*, now: datetime, deadline_offset: timedelta, status: str = "open", published_offset: timedelta = timedelta(days=-1), deadline_precision: str = "datetime") -> NormalizedBid:
     return NormalizedBid(
         title="Supply of network equipment",
         organization="Test Procuring Entity",
         reference_number="TEST/SUPLS/2026-2027/001",
         published_at=now + published_offset,
         deadline_at=now + deadline_offset,
-        deadline_precision="datetime",
+        deadline_precision=deadline_precision,
         status=status,
         sources=[
             SourceRef(
@@ -77,6 +77,19 @@ class TestLiveBidValidation(unittest.TestCase):
         )
         self.assertFalse(accepted)
         self.assertEqual(reason, "deadline-outside-live-window")
+
+    def test_date_only_deadline_remains_open_for_full_closing_day(self):
+        bid = make_bid(
+            now=self.now,
+            deadline_offset=timedelta(hours=-9),
+            deadline_precision="date",
+        )
+        normalized = _normalize_deadline_precision(bid)
+        self.assertEqual(normalized.deadline_at.hour, 23)
+        self.assertEqual(normalized.deadline_at.minute, 59)
+        accepted, reason = _display_candidate(normalized, self.now)
+        self.assertTrue(accepted)
+        self.assertEqual(reason, "verified-active")
 
 
 if __name__ == "__main__":
