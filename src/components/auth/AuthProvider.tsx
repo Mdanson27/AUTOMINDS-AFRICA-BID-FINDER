@@ -2,8 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { User, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut as firebaseSignOut } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { auth } from "@/lib/firebaseClient";
 import type { UserProfile } from "@/lib/types";
 
 type AuthContextValue = {
@@ -46,15 +45,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        // A valid authenticated session is enough to open the application.
-        // Profile hydration must never hold the protected route on a spinner,
-        // especially while the procurement data store is being provisioned.
+        // Open the application as soon as Firebase Auth restores the session.
+        // Firestore/profile code is lazy-loaded afterwards and never blocks UI.
         const initial = fallbackProfile(nextUser);
         setProfile(initial);
         setLoading(false);
 
         void (async () => {
           try {
+            const [{ doc, getDoc, serverTimestamp, setDoc }, { db }] = await Promise.all([
+              import("firebase/firestore"),
+              import("@/lib/firebase"),
+            ]);
+            if (!active) return;
+
             const ref = doc(db, "users", nextUser.uid);
             const snapshot = await getDoc(ref);
             if (!active) return;
