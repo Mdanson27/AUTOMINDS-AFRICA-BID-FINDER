@@ -5,65 +5,23 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Building2, Check, ChevronDown, CircleCheckBig, Globe2, Landmark, Newspaper, Radar, Search, SlidersHorizontal, UsersRound } from "lucide-react";
 import { BidList } from "@/components/bids/BidList";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { useBids } from "@/hooks/useBids";
 import { daysUntil } from "@/lib/date";
+import { subscribeUserPreferences } from "@/lib/userWorkspace";
 
 const catalog = [
-  "eGP Uganda",
-  "NITA-U",
-  "KCCA",
-  "URA",
-  "UCC",
-  "Ministry of Finance",
-  "World Bank Uganda",
-  "UNDP Uganda",
-  "African Development Bank Uganda",
-  "GPP / PPDA",
-  "Daily Monitor",
-  "New Vision",
-  "GIZ Uganda",
-  "UN Global Marketplace",
-  "UNICEF Uganda",
-  "UNHCR",
-  "World Food Programme",
-  "Enabel Uganda",
-  "EU Delegation to Uganda",
-  "International Rescue Committee",
-  "World Vision Uganda",
-  "Uganda Red Cross Society",
-  "Uganda Civil Aviation Authority",
-  "NSSF Uganda",
-  "Bank of Uganda",
-  "Electricity Regulatory Authority",
-  "Uganda Electricity Transmission Company",
-  "Uganda Development Bank",
-  "National Water & Sewerage Corporation",
-  "Save the Children",
+  "eGP Uganda", "NITA-U", "KCCA", "URA", "UCC", "Ministry of Finance", "World Bank Uganda", "UNDP Uganda", "African Development Bank Uganda", "GPP / PPDA",
+  "Daily Monitor", "New Vision", "GIZ Uganda", "UN Global Marketplace", "UNICEF Uganda", "UNHCR", "World Food Programme", "Enabel Uganda", "EU Delegation to Uganda",
+  "International Rescue Committee", "World Vision Uganda", "Uganda Red Cross Society", "Uganda Civil Aviation Authority", "NSSF Uganda", "Bank of Uganda", "Electricity Regulatory Authority",
+  "Uganda Electricity Transmission Company", "Uganda Development Bank", "National Water & Sewerage Corporation", "Save the Children",
 ];
 
 const scopes = [
   { id: "all", label: "Everywhere", icon: Globe2, sourcePatterns: [] as string[] },
-  {
-    id: "government",
-    label: "Government",
-    icon: Landmark,
-    sourcePatterns: [
-      "egp", "ppda", "gpp", "ura", "kcca", "nita", "ucc", "ministry", "finance", "mofped",
-      "civil aviation", "nssf", "bank of uganda", "electricity regulatory", "transmission company",
-      "development bank", "water & sewerage", "nwsc",
-    ],
-  },
+  { id: "government", label: "Government", icon: Landmark, sourcePatterns: ["egp", "ppda", "gpp", "ura", "kcca", "nita", "ucc", "ministry", "finance", "mofped", "civil aviation", "nssf", "bank of uganda", "electricity regulatory", "transmission company", "development bank", "water & sewerage", "nwsc"] },
   { id: "newspapers", label: "Newspapers", icon: Newspaper, sourcePatterns: ["daily monitor", "new vision"] },
-  {
-    id: "development",
-    label: "NGO & Development",
-    icon: UsersRound,
-    sourcePatterns: [
-      "ungm", "global marketplace", "undp", "uncdf", "afdb", "african development bank", "giz", "enabel",
-      "world bank", "unicef", "unhcr", "world food programme", "eu delegation", "international rescue committee",
-      "world vision", "red cross", "save the children",
-    ],
-  },
+  { id: "development", label: "NGO & Development", icon: UsersRound, sourcePatterns: ["ungm", "global marketplace", "undp", "uncdf", "afdb", "african development bank", "giz", "enabel", "world bank", "unicef", "unhcr", "world food programme", "eu delegation", "international rescue committee", "world vision", "red cross", "save the children"] },
   { id: "private", label: "Private sector", icon: Building2, sourcePatterns: ["private", "company", "telecom"] },
 ] as const;
 
@@ -77,6 +35,7 @@ function sourceMatchesScope(names: string[], scopeId: string) {
 }
 
 export default function BidsPage() {
+  const { user } = useAuth();
   const { bids, loading, error } = useBids();
   const [search, setSearch] = useState("");
   const deferredSearch = useDeferredValue(search);
@@ -100,6 +59,17 @@ export default function BidsPage() {
     if (q) setSearch(q);
     if (requestedScope && scopes.some((item) => item.id === requestedScope)) setScope(requestedScope);
   }, []);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+    const params = new URLSearchParams(window.location.search);
+    const requestedScope = params.get("scope");
+    return subscribeUserPreferences(user.uid, (preferences) => {
+      if (!requestedScope) setScope(preferences.scope);
+      setActiveOnly(preferences.activeOnly);
+      setSort(preferences.defaultSort);
+    });
+  }, [user?.uid]);
 
   const categories = useMemo(() => [...new Set(bids.map((b) => b.category).filter(Boolean))].sort(), [bids]);
   const sources = useMemo(() => [...new Set(bids.flatMap((b) => b.sources.map((s) => s.name)))].sort(), [bids]);
@@ -151,31 +121,22 @@ export default function BidsPage() {
 
   function reset() {
     setSearch(""); setActiveOnly(true); setStatus("all"); setCategory("all"); setSource("all"); setScope("all");
-    setOrganization(""); setProcurementType("all"); setDeadlineWindow("all"); setCustomSources([]);
+    setOrganization(""); setProcurementType("all"); setDeadlineWindow("all"); setCustomSources([]); setSort("deadline");
   }
 
   return (
     <div className="page-stack suite-find-page">
-      <PageHeader
-        eyebrow="Procurement search"
-        title="Find bids"
-        description="Search verified, still-actionable procurement notices across the full 30-source Bid Finder network. Expired and completed opportunities are excluded from live results."
-        action={<Link href="/scan" className="button primary"><Radar size={15} /> Scan newest</Link>}
-      />
+      <PageHeader eyebrow="Procurement search" title="Find bids" description="Search verified, still-actionable procurement notices across the full 30-source Bid Finder network. Expired and completed opportunities are excluded from live results." action={<Link href="/scan" className="button primary"><Radar size={15} /> Scan newest</Link>} />
 
       <section className="panel suite-search-console">
         <label className="suite-main-search"><Search size={21} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search title, organization, reference, service or requirement…" /><span>{filtered.length} result{filtered.length === 1 ? "" : "s"}</span></label>
-
         <div className="suite-filter-bar" aria-label="Quick filters">
           <button className={activeOnly ? "button primary" : "button secondary"} onClick={() => setActiveOnly((value) => !value)}><CircleCheckBig size={15} /> Active only ({activeCount})</button>
           <button className="suite-advanced-toggle" onClick={() => setAdvanced((value) => !value)}><SlidersHorizontal size={15} /> More filters</button>
           <button className="suite-reset" onClick={reset}>Reset</button>
         </div>
 
-        <div className="suite-search-question">
-          <div><span className="eyebrow">30-SOURCE COVERAGE</span><h2>Where should we search?</h2><p>Search the whole network, one procurement channel, or any combination of the 30 monitored sources.</p></div>
-          <button className="button secondary" onClick={() => setCustomOpen((value) => !value)}>Choose sources <ChevronDown size={15} /></button>
-        </div>
+        <div className="suite-search-question"><div><span className="eyebrow">30-SOURCE COVERAGE</span><h2>Where should we search?</h2><p>Search the whole network, one procurement channel, or any combination of the 30 monitored sources.</p></div><button className="button secondary" onClick={() => setCustomOpen((value) => !value)}>Choose sources <ChevronDown size={15} /></button></div>
         <div className="suite-scope-tabs">{scopes.map(({ id, label, icon: Icon }) => <button className={scope === id ? "active" : ""} onClick={() => setScope(id)} key={id}><Icon size={17} /><span>{label}</span></button>)}</div>
         {customOpen && <div className="suite-custom-sources"><div className="suite-custom-source-head"><strong>Choose individual sources</strong><span>{customSources.length ? `${customSources.length} selected` : "All 30 sources are available here, including sources with no current live notice."}</span></div><div className="suite-source-checks">{sourceChoices.map((name) => <button key={name} className={customSources.includes(name) ? "selected" : ""} onClick={() => toggleCustom(name)}><span className="source-check-mark">{customSources.includes(name) && <Check size={13} />}</span>{name}</button>)}</div></div>}
 
@@ -189,10 +150,7 @@ export default function BidsPage() {
         </div>}
       </section>
 
-      <section className="suite-results-section">
-        <div className="suite-results-head"><div><span className="eyebrow">SEARCH RESULTS</span><h2>{activeOnly ? "Active bids" : "Current opportunities"}</h2></div><label className="suite-sort">Sort by <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="deadline">Nearest deadline</option><option value="newest">Newest discovered</option><option value="organization">Organization</option></select></label></div>
-        {error ? <div className="suite-empty"><strong>Search data is temporarily unavailable</strong><span>{error}</span></div> : <BidList bids={filtered} loading={loading} />}
-      </section>
+      <section className="suite-results-section"><div className="suite-results-head"><div><span className="eyebrow">SEARCH RESULTS</span><h2>{activeOnly ? "Active bids" : "Current opportunities"}</h2></div><label className="suite-sort">Sort by <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="deadline">Nearest deadline</option><option value="newest">Newest discovered</option><option value="organization">Organization</option></select></label></div>{error ? <div className="suite-empty"><strong>Search data is temporarily unavailable</strong><span>{error}</span></div> : <BidList bids={filtered} loading={loading} />}</section>
     </div>
   );
 }
