@@ -1,6 +1,6 @@
 import unittest
 
-from collector.src.neon_sync import _bid_row, _grant_row, _plan_row, _source_row
+from src.neon_sync import _bid_row, _grant_row, _plan_row, _source_row
 
 
 class NeonSyncMappingTests(unittest.TestCase):
