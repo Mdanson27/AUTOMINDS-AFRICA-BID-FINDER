@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import json
 from pathlib import Path
@@ -16,6 +17,8 @@ for source in PUBLIC_PORTAL_SOURCES:
 BASE_SOURCES = tuple(live.SOURCES)
 NETWORK_SOURCES = (*BASE_SOURCES, *PUBLIC_PORTAL_SOURCES)
 ORIGINAL_SOURCE_TYPE = live.source_type
+ORIGINAL_COLLECT_ONE_SOURCE = live.collect_one_source
+MAX_SOURCE_WORKERS = 6
 
 
 def _network_source_type(source_id: str) -> str:
@@ -36,6 +39,41 @@ def validate_network() -> None:
     if len(set(ids)) != len(ids):
         duplicates = sorted({source_id for source_id in ids if ids.count(source_id) > 1})
         raise RuntimeError(f"Duplicate Bid Finder source ids: {', '.join(duplicates)}")
+
+
+def _precollect_sources(now: datetime):
+    """Fetch/parse independent publishers concurrently.
+
+    `export_live_snapshot.main()` still performs the canonical validation,
+    enrichment, source health accounting and deterministic merge. We only
+    parallelize the slow independent network I/O here, then feed the cached
+    result back into that proven pipeline. One slow/blocked publisher therefore
+    cannot serially delay the remaining 29 sources.
+    """
+    cache: dict[str, list] = {}
+    failures: dict[str, Exception] = {}
+
+    def collect(source):
+        return list(ORIGINAL_COLLECT_ONE_SOURCE(source, now))
+
+    with ThreadPoolExecutor(max_workers=MAX_SOURCE_WORKERS, thread_name_prefix="bid-source") as executor:
+        futures = {executor.submit(collect, source): source for source in NETWORK_SOURCES}
+        for future in as_completed(futures):
+            source = futures[future]
+            try:
+                cache[source.source_id] = future.result()
+                print(f"Prefetched {source.name}: {len(cache[source.source_id])} parsed notices")
+            except Exception as exc:  # noqa: BLE001
+                failures[source.source_id] = exc
+                print(f"Prefetch warning {source.name}: {exc}")
+
+    def cached_collect(source, _now):
+        failure = failures.get(source.source_id)
+        if failure is not None:
+            raise failure
+        return list(cache.get(source.source_id, []))
+
+    return cached_collect
 
 
 def _fold_procurement_plan_health_into_egp() -> None:
@@ -64,10 +102,20 @@ def main() -> int:
     # Preserve the correct July-June Uganda financial-year boundary in the
     # expanded exporter and all eligibility checks it calls.
     live.financial_year_start = _financial_year_start
+
     print("Bid Finder 30-source network enabled:")
     for index, source in enumerate(NETWORK_SOURCES, start=1):
         print(f"  {index:02d}. {source.name} [{source.source_id}]")
-    result = live.main()
+
+    # Parallelize only source fetch/parse. Validation/enrichment/merge remains
+    # centralized and deterministic inside the mature exporter.
+    prefetch_now = datetime.now(live.KAMPALA)
+    live.collect_one_source = _precollect_sources(prefetch_now)
+    try:
+        result = live.main()
+    finally:
+        live.collect_one_source = ORIGINAL_COLLECT_ONE_SOURCE
+
     _fold_procurement_plan_health_into_egp()
     return result
 
