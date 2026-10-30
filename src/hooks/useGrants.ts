@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { neonSelect } from "@/lib/neonApi";
 import type { GrantOpportunity } from "@/lib/types";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -9,16 +10,35 @@ let grantCache: GrantOpportunity[] | null = null;
 let grantError = "";
 let grantRequest: Promise<GrantOpportunity[]> | null = null;
 
-async function loadGrants() {
-  if (grantCache) return grantCache;
-  if (grantRequest) return grantRequest;
+async function loadSnapshot() {
+  const response = await fetch(`${basePath}/data/grants.json`, { cache: "default" });
+  if (!response.ok) throw new Error(`Grant snapshot request failed: ${response.status}`);
+  const data = await response.json();
+  if (!Array.isArray(data)) throw new Error("Invalid grants snapshot");
+  return data as GrantOpportunity[];
+}
+
+async function loadGrants(force = false) {
+  if (grantCache && !force) return grantCache;
+  if (grantRequest && !force) return grantRequest;
 
   grantRequest = (async () => {
-    const response = await fetch(`${basePath}/data/grants.json`, { cache: "default" });
-    if (!response.ok) throw new Error(`Grant snapshot request failed: ${response.status}`);
-    const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Invalid grants snapshot");
-    grantCache = data as GrantOpportunity[];
+    try {
+      const rows = await neonSelect<{ raw_record?: GrantOpportunity }>(
+        "grants",
+        "select=raw_record&order=deadline_at.asc&limit=1000",
+      );
+      const items = rows.flatMap((row) => row.raw_record ? [row.raw_record] : []);
+      if (items.length) {
+        grantCache = items;
+        grantError = "";
+        return grantCache;
+      }
+    } catch {
+      // Static export remains a fast resilience fallback.
+    }
+
+    grantCache = await loadSnapshot();
     grantError = "";
     return grantCache;
   })();
@@ -37,13 +57,7 @@ export function useGrants() {
 
   useEffect(() => {
     let active = true;
-    if (grantCache) {
-      setGrants(grantCache);
-      setLoading(false);
-      return () => { active = false; };
-    }
-
-    void loadGrants()
+    void loadGrants(false)
       .then((items) => {
         if (!active) return;
         setGrants(items);
