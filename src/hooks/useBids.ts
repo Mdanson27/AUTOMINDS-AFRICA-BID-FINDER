@@ -7,9 +7,9 @@ import type { Bid, BidStatus, OpportunityType } from "@/lib/types";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const MAX_DAYS_AHEAD = 90;
-const CLOSED_RETENTION_DAYS = 3;
 const DAY_MS = 86_400_000;
 const MIN_FY_START = new Date("2026-07-01T00:00:00+03:00").getTime();
+const COMPLETED_STATUSES = new Set<BidStatus>(["closed", "evaluation", "awarded", "cancelled"]);
 export const SNAPSHOT_REFRESH_EVENT = "bidfinder:refresh-snapshot";
 
 const GRANT_TERMS = [
@@ -62,21 +62,25 @@ function detectOpportunityType(bid: Bid): OpportunityType {
 }
 
 function normalizeBid(bid: Bid, now = new Date()): Bid | null {
+  if (bid.displayEligible === false || COMPLETED_STATUSES.has(bid.status)) return null;
+
   const deadline = new Date(bid.deadlineAt);
   if (Number.isNaN(deadline.getTime())) return null;
 
   const nowMs = now.getTime();
   const fyStart = currentFinancialYearStart(now);
   const latestDeadline = nowMs + MAX_DAYS_AHEAD * DAY_MS;
-  const oldestClosedDeadline = nowMs - CLOSED_RETENTION_DAYS * DAY_MS;
   const deadlineMs = deadline.getTime();
 
-  if (deadlineMs < fyStart || deadlineMs > latestDeadline) return null;
-  if (deadlineMs < oldestClosedDeadline) return null;
+  // Bid Finder is a live opportunity surface, not an archive. Once the
+  // submission deadline has passed, the bid must disappear immediately.
+  if (deadlineMs <= nowMs || deadlineMs < fyStart || deadlineMs > latestDeadline) return null;
 
   if (bid.publishedAt) {
     const published = new Date(bid.publishedAt);
-    if (!Number.isNaN(published.getTime()) && published.getTime() < fyStart) return null;
+    if (Number.isNaN(published.getTime())) return null;
+    const publishedMs = published.getTime();
+    if (publishedMs < fyStart || publishedMs > deadlineMs || publishedMs > nowMs + DAY_MS) return null;
   }
 
   // Global quality rule: every displayed tender must say what is actually
@@ -87,8 +91,7 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
   const title = plainText(specificTitle).slice(0, 320);
   if (!title) return null;
 
-  const isOpen = deadlineMs >= nowMs;
-  const status: BidStatus = isOpen && bid.status === "planned" ? "planned" : isOpen ? "open" : "closed";
+  const status: BidStatus = bid.status === "planned" ? "planned" : "open";
 
   return {
     ...bid,
@@ -113,9 +116,17 @@ function normalizeBid(bid: Bid, now = new Date()): Bid | null {
       kind: plainText(document.kind || "").slice(0, 40),
     })),
     status,
-    isOpen,
+    isOpen: true,
     sources: (bid.sources || []).map((source) => ({ ...source, name: plainText(source.name) })),
   };
+}
+
+function mergeSources(left: Bid["sources"], right: Bid["sources"]) {
+  const merged = new Map<string, Bid["sources"][number]>();
+  for (const source of [...(left || []), ...(right || [])]) {
+    merged.set(`${source.id || source.name}|${source.url}`, source);
+  }
+  return Array.from(merged.values());
 }
 
 function mergeBids(snapshotBids: Bid[], liveBids: Bid[]) {
@@ -123,7 +134,32 @@ function mergeBids(snapshotBids: Bid[], liveBids: Bid[]) {
   const now = new Date();
   for (const raw of [...snapshotBids, ...liveBids]) {
     const bid = normalizeBid(raw, now);
-    if (bid) merged.set(bid.id, bid);
+    if (!bid) continue;
+
+    const existing = merged.get(bid.id);
+    if (!existing) {
+      merged.set(bid.id, bid);
+      continue;
+    }
+
+    // Live Firestore records may intentionally be slimmer than the static
+    // enriched snapshot. Preserve rich intelligence while still accepting the
+    // newest deadline/status/source values from the live record.
+    merged.set(bid.id, {
+      ...existing,
+      ...bid,
+      description: bid.description || existing.description,
+      documents: bid.documents?.length ? bid.documents : existing.documents,
+      sourceMetadata: Object.keys(bid.sourceMetadata || {}).length ? bid.sourceMetadata : existing.sourceMetadata,
+      intelligence: bid.intelligence || existing.intelligence,
+      contacts: bid.contacts?.length ? bid.contacts : existing.contacts,
+      bidders: bid.bidders?.length ? bid.bidders : existing.bidders,
+      openingParticipants: bid.openingParticipants?.length ? bid.openingParticipants : existing.openingParticipants,
+      openingCommittee: bid.openingCommittee?.length ? bid.openingCommittee : existing.openingCommittee,
+      amendments: bid.amendments?.length ? bid.amendments : existing.amendments,
+      lifecycleEvents: bid.lifecycleEvents?.length ? bid.lifecycleEvents : existing.lifecycleEvents,
+      sources: mergeSources(existing.sources, bid.sources),
+    });
   }
   return Array.from(merged.values());
 }
@@ -141,13 +177,15 @@ export function useBids() {
     let active = true;
     let snapshotBids: Bid[] = [];
     let liveBids: Bid[] = [];
+    let snapshotSettled = false;
+    let liveSettled = false;
 
     const publish = () => {
       if (!active) return;
       const merged = mergeBids(snapshotBids, liveBids);
       setBids(merged);
       if (merged.length) setError("");
-      setLoading(false);
+      if (snapshotSettled && liveSettled) setLoading(false);
     };
 
     const loadSnapshot = async () => {
@@ -158,7 +196,6 @@ export function useBids() {
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error("Invalid opportunity snapshot");
         snapshotBids = data as Bid[];
-        publish();
       } catch {
         try {
           const response = await fetch(`${basePath}/data/egp-bids.json?v=${bust}`, { cache: "no-store" });
@@ -166,10 +203,12 @@ export function useBids() {
           const data = await response.json();
           if (!Array.isArray(data)) throw new Error("Invalid fallback opportunity snapshot");
           snapshotBids = data as Bid[];
-          publish();
         } catch {
-          if (liveBids.length) publish();
+          snapshotBids = [];
         }
+      } finally {
+        snapshotSettled = true;
+        publish();
       }
     };
 
@@ -179,13 +218,13 @@ export function useBids() {
     const unsubscribe = subscribeToBids(
       (items) => {
         liveBids = items;
+        liveSettled = true;
         publish();
       },
       (reason) => {
-        if (!snapshotBids.length && active) {
-          setError(reason);
-          setLoading(false);
-        }
+        liveSettled = true;
+        if (!snapshotBids.length && active) setError(reason);
+        publish();
       },
     );
 
