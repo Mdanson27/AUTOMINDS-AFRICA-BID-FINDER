@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
+  ArrowRight,
   Bell,
   Bookmark,
   BriefcaseBusiness,
@@ -23,6 +24,7 @@ import {
   Settings,
   Shield,
   Sparkles,
+  UserRound,
   X,
 } from "lucide-react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
@@ -62,10 +64,13 @@ const pageNames: Record<string, string> = {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, profileResolved, signOut, updateDisplayName } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [quickSearch, setQuickSearch] = useState("");
+  const [nameDraft, setNameDraft] = useState("");
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameError, setNameError] = useState("");
 
   const pageTitle = useMemo(() => {
     const exact = pageNames[pathname];
@@ -75,9 +80,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return "Bid Finder";
   }, [pathname]);
 
+  const needsAccountName = Boolean(user && profileResolved && !profile?.displayName?.trim());
+
   async function logout() {
     await signOut();
     router.replace("/login");
+  }
+
+  async function saveAccountName(event: React.FormEvent) {
+    event.preventDefault();
+    setNameError("");
+    setNameSaving(true);
+    try {
+      await updateDisplayName(nameDraft);
+      setNameDraft("");
+    } catch (error) {
+      setNameError(error instanceof Error ? error.message : "We could not save your name. Please try again.");
+    } finally {
+      setNameSaving(false);
+    }
   }
 
   function runSearch(event: React.FormEvent) {
@@ -111,22 +132,54 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={`app-shell suite-shell premium-shell ${collapsed ? "sidebar-collapsed" : ""}`}>
+      {needsAccountName && (
+        <div className="account-name-gate" role="dialog" aria-modal="true" aria-labelledby="account-name-title">
+          <div className="account-name-card">
+            <div className="account-name-icon"><UserRound size={24} /></div>
+            <span className="eyebrow">FINISH ACCOUNT SETUP</span>
+            <h2 id="account-name-title">What should Bid Finder call you?</h2>
+            <p>Add the account holder name once. We’ll use it for your workspace identity and personal greetings.</p>
+            <form onSubmit={saveAccountName}>
+              <label>
+                <span>Account holder name</span>
+                <input
+                  autoFocus
+                  value={nameDraft}
+                  onChange={(event) => { setNameDraft(event.target.value); setNameError(""); }}
+                  placeholder="e.g. Danson Mushabe"
+                  autoComplete="name"
+                  minLength={2}
+                  maxLength={80}
+                  required
+                />
+              </label>
+              {nameError && <div className="account-name-error">{nameError}</div>}
+              <button type="submit" disabled={nameSaving || nameDraft.trim().length < 2}>
+                {nameSaving ? "Saving your name…" : <>Continue to Bid Finder <ArrowRight size={17} /></>}
+              </button>
+            </form>
+            <small>Signed in as {user?.email}</small>
+          </div>
+        </div>
+      )}
+
       <aside className={`sidebar suite-sidebar premium-sidebar ${mobileOpen ? "mobile-open" : ""}`}>
         <div className="premium-sidebar-top">
-          <div className="suite-sidebar-brand">
-            <BrandLogo compact={collapsed} light />
-            {!collapsed && (
+          <div className="suite-sidebar-brand modern-sidebar-brand">
+            {!collapsed && <>
+              <BrandLogo light />
               <div className="suite-sidebar-product">
                 <strong>AutoMinds Africa</strong>
                 <span>PROCUREMENT INTELLIGENCE</span>
               </div>
-            )}
-            <button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button>
+            </>}
+            <div className="modern-sidebar-actions">
+              <button className="premium-collapse" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} title={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+                {collapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}
+              </button>
+              <button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button>
+            </div>
           </div>
-
-          <button className="premium-collapse" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
-            {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-          </button>
 
           <Link href="/scan" prefetch={false} onMouseEnter={() => warmRoute("/scan")} onFocus={() => warmRoute("/scan")} className={`premium-new-scan ${pathname === "/scan" ? "active" : ""}`} title={collapsed ? "Scan newest bids" : undefined}>
             <Sparkles size={18} />
@@ -157,7 +210,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button onClick={logout} title={collapsed ? "Sign out" : undefined}><LogOut size={18} /><span>Sign out</span></button>
           <div className="user-chip premium-user-chip">
             <div className="avatar">{(profile?.displayName || user?.email || "U")[0].toUpperCase()}</div>
-            <div><strong>{profile?.displayName || "Bid Finder User"}</strong><small>{user?.email}</small></div>
+            <div><strong>{profile?.displayName || "Account setup"}</strong><small>{user?.email}</small></div>
           </div>
         </div>
       </aside>
