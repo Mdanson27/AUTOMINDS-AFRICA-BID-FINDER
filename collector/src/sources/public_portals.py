@@ -40,11 +40,15 @@ IGNORE_TITLE_TERMS = (
     "privacy",
     "cookie",
 )
-DATE_PATTERN = re.compile(
+DATE_TOKEN = (
     r"(?:\d{1,2}(?:st|nd|rd|th)?[\s,./-]+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)[\s,./-]+20\d{2}"
     r"|(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:st|nd|rd|th)?,?\s+20\d{2}"
     r"|\d{1,2}[./-]\d{1,2}[./-]20\d{2}"
-    r"|20\d{2}[-/]\d{1,2}[-/]\d{1,2})",
+    r"|20\d{2}[-/]\d{1,2}[-/]\d{1,2})"
+)
+DATE_PATTERN = re.compile(DATE_TOKEN, re.I)
+PUBLISHED_PATTERN = re.compile(
+    rf"(?:published(?:\s+on)?|publication\s+date|date\s+published|posted(?:\s+on)?|date\s+posted|issue\s+date)\s*[:\-]?\s*({DATE_TOKEN})",
     re.I,
 )
 TIME_PATTERN = re.compile(r"\b\d{1,2}:\d{2}\s*(?:am|pm|hrs?|hours?)?\b|\b\d{1,2}\s*(?:am|pm)\b", re.I)
@@ -81,7 +85,7 @@ class PublicProcurementPortalSource(BidSource):
     def fetch(self) -> str:
         response = httpx.get(
             self.url,
-            timeout=35,
+            timeout=18,
             follow_redirects=True,
             headers={"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"},
         )
@@ -110,12 +114,16 @@ class PublicProcurementPortalSource(BidSource):
 
     @classmethod
     def _published(cls, text: str, deadline: datetime | None) -> datetime | None:
-        candidates: list[datetime] = []
-        for match in DATE_PATTERN.finditer(text):
-            parsed = parse_date(match.group(0))
-            if parsed and (deadline is None or parsed <= deadline):
-                candidates.append(parsed)
-        return min(candidates) if candidates else None
+        # Publication timestamps are optional. Only trust explicitly-labelled
+        # publication/posted/issue dates; never use "the earliest date on the
+        # card", which can be a schedule date from an unrelated field.
+        match = PUBLISHED_PATTERN.search(text)
+        if not match:
+            return None
+        parsed = parse_date(match.group(1))
+        if not parsed or (deadline is not None and parsed > deadline):
+            return None
+        return parsed
 
     @staticmethod
     def _title_from_block(block) -> str:
@@ -200,7 +208,7 @@ class PublicProcurementPortalSource(BidSource):
         try:
             response = httpx.get(
                 source_url,
-                timeout=20,
+                timeout=15,
                 follow_redirects=True,
                 headers={"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"},
             )
@@ -216,6 +224,9 @@ class PublicProcurementPortalSource(BidSource):
         reference = extract_reference(text)
         if reference:
             bid.reference_number = reference
+        published = self._published(text, bid.deadline_at)
+        if published:
+            bid.published_at = published
         if len(text) > len(bid.description):
             bid.description = text[:4000]
         return bid
@@ -227,8 +238,8 @@ PUBLIC_PORTAL_CONFIGS = (
     PortalConfig("unicef-uganda", "UNICEF Uganda", "https://www.unicef.org/uganda/procurement", "UNICEF Uganda", "development", ("uganda", "kampala")),
     PortalConfig("unhcr-uganda", "UNHCR", "https://www.unhcr.org/get-involved/work-us/become-supplier/bidding-opportunities", "UNHCR", "development", ("uganda", "kampala")),
     PortalConfig("wfp-uganda", "World Food Programme", "https://www.wfp.org/do-business-with-wfp", "World Food Programme", "development", ("uganda", "kampala")),
-    PortalConfig("enabel-uganda", "Enabel Uganda", "https://www.enabel.be/public-procurement/?in_category%5B0%5D=all&in_country=1460&is_status=0", "Enabel Uganda", "development", ("uganda",)),
-    PortalConfig("eu-delegation-uganda", "EU Delegation to Uganda", "https://www.eeas.europa.eu/delegations/uganda_en", "Delegation of the European Union to Uganda", "development", ("uganda", "kampala")),
+    PortalConfig("enabel-uganda", "Enabel Uganda", "https://www.enabel.be/list-public-procurement/", "Enabel Uganda", "development", ("uganda",)),
+    PortalConfig("eu-delegation-uganda", "EU Delegation to Uganda", "https://www.eeas.europa.eu/eeas/tenders_en", "Delegation of the European Union to Uganda", "development", ("uganda", "kampala")),
     PortalConfig("irc-uganda", "International Rescue Committee", "https://www.rescue.org/procurement-policies-and-bid-opportunities", "International Rescue Committee", "ngo", ("uganda", "kampala", "2ua")),
     PortalConfig("world-vision-uganda", "World Vision Uganda", "https://www.wvi.org/uganda/tenders", "World Vision Uganda", "ngo"),
     PortalConfig("uganda-red-cross", "Uganda Red Cross Society", "https://redcrossug.org/jobs/", "Uganda Red Cross Society", "ngo"),
