@@ -9,10 +9,10 @@ import { auth } from "@/lib/firebase";
 const scanApiUrl = process.env.NEXT_PUBLIC_SCAN_API_URL || "";
 
 const modes = [
-  { id: "all", label: "Everywhere", description: "Government, newspapers and development sources", icon: Globe2 },
+  { id: "all", label: "All 30 sources", description: "The complete Bid Finder collection network", icon: Globe2 },
   { id: "government", label: "Government", description: "eGP, PPDA and public institutions", icon: Landmark },
   { id: "newspaper", label: "Current papers", description: "Daily Monitor and New Vision tender notices", icon: Newspaper },
-  { id: "development", label: "Development", description: "World Bank, UN and development partners", icon: UsersRound },
+  { id: "development", label: "NGO & Development", description: "UN, multilaterals, development partners and NGOs", icon: UsersRound },
   { id: "custom", label: "Choose sources", description: "Run a focused source-by-source check", icon: SearchCheck },
 ] as const;
 
@@ -49,7 +49,7 @@ export default function ScanPage() {
   const visibleSources = useMemo(() => {
     if (mode === "all" || mode === "custom") return sources;
     if (mode === "newspaper") return sources.filter((source) => source.type === "newspaper");
-    if (mode === "development") return sources.filter((source) => source.type === "development");
+    if (mode === "development") return sources.filter((source) => source.type === "development" || source.type === "ngo");
     return sources.filter((source) => source.type === "government");
   }, [mode, sources]);
 
@@ -81,7 +81,7 @@ export default function ScanPage() {
       } else {
         requestSnapshotRefresh();
         await new Promise((resolve) => window.setTimeout(resolve, 650));
-        setMessage("Latest published procurement snapshot checked. Background source collectors refresh every two hours; the instant server scan endpoint is ready to connect when the scanner service is deployed.");
+        setMessage("Latest published procurement snapshot checked. The 30-source collection network refreshes in the background every two hours.");
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The scan could not be started.");
@@ -94,14 +94,14 @@ export default function ScanPage() {
     <div className="scan-center-page page-stack">
       <section className="scan-hero">
         <div>
-          <span className="eyebrow">LIVE DISCOVERY</span>
+          <span className="eyebrow">30-SOURCE LIVE DISCOVERY</span>
           <h1>Scan Uganda&apos;s procurement landscape.</h1>
-          <p>Check the newest public opportunities across government portals, current newspaper tender pages and development partners. Select exactly where Bid Finder should look, then refresh the latest intelligence in one workspace.</p>
+          <p>Check current opportunities across government portals, newspapers, multilaterals, UN organizations, development partners and NGOs. Every source is validated independently so one unavailable publisher cannot stop the rest of the network.</p>
         </div>
         <div className="scan-hero-state">
           <strong>{bids.length}</strong>
           <span>eligible opportunities in the current search window</span>
-          <small>{healthy} live source{healthy === 1 ? "" : "s"} reporting healthy</small>
+          <small>{sources.length || 30} monitored sources · {healthy} healthy</small>
         </div>
       </section>
 
@@ -109,7 +109,7 @@ export default function ScanPage() {
         <div className="scan-main">
           <section className="scan-section">
             <div className="scan-section-head">
-              <div><h2>Where should we scan?</h2><p>Use a broad scan or focus on a specific procurement channel.</p></div>
+              <div><h2>Where should we scan?</h2><p>Use the complete network or focus on one procurement channel.</p></div>
             </div>
             <div className="scan-mode-grid">
               {modes.map(({ id, label, description, icon: Icon }) => (
@@ -122,7 +122,7 @@ export default function ScanPage() {
 
           <section className="scan-section">
             <div className="scan-section-head">
-              <div><h2>Source selection</h2><p>Health and last-check information come from the live collection network.</p></div>
+              <div><h2>Source selection</h2><p>Health and last-check information come from the actual collection run, including healthy sources with zero current notices.</p></div>
               <span className="enrichment-badge"><Radar size={14} /> {visibleSources.length} available</span>
             </div>
             <div className="scan-source-list">
@@ -135,7 +135,7 @@ export default function ScanPage() {
                   />
                   <span>
                     <strong>{source.name}</strong>
-                    <small>{source.recordsFound || 0} notices seen · checked {relativeTime(source.lastAttemptedCrawlAt)}</small>
+                    <small>{source.recordsFound ?? 0} notices seen · checked {relativeTime(source.lastAttemptedCrawlAt)}</small>
                   </span>
                   <span className={`scan-health ${source.health}`}>{source.health}</span>
                 </label>
@@ -154,11 +154,11 @@ export default function ScanPage() {
 
         <aside className="scan-side">
           <section className="scan-section">
-            <div className="scan-section-head"><div><h2>Network readiness</h2><p>Only sources that actually respond are treated as healthy.</p></div></div>
+            <div className="scan-section-head"><div><h2>Network readiness</h2><p>Reachable sources with no current opportunities remain healthy; blocked or failed collectors are shown separately.</p></div></div>
             <div className="scan-side-stat-grid">
+              <div className="scan-side-stat"><strong>{sources.length || 30}</strong><span>Monitored sources</span></div>
               <div className="scan-side-stat"><strong>{healthy}</strong><span>Healthy sources</span></div>
               <div className="scan-side-stat"><strong>{warning}</strong><span>Need attention</span></div>
-              <div className="scan-side-stat"><strong>{newspaperSources.length}</strong><span>Paper sources</span></div>
               <div className="scan-side-stat"><strong>90d</strong><span>Maximum deadline window</span></div>
             </div>
           </section>

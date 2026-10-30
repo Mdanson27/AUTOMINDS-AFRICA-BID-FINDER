@@ -51,13 +51,13 @@ class BidQualityTests(unittest.TestCase):
         bid = make_bid(deadline=NOW + timedelta(days=20))
         self.assertTrue(is_eligible_bid(bid, NOW))
 
-    def test_keeps_recent_closed_bid_from_current_financial_year(self):
+    def test_rejects_recent_closed_bid_from_live_export(self):
         bid = make_bid(
             deadline=datetime(2026, 8, 15, 17, 0, tzinfo=KAMPALA),
             published=datetime(2026, 7, 12, 9, 0, tzinfo=KAMPALA),
             status="closed",
         )
-        self.assertTrue(is_eligible_bid(bid, NOW))
+        self.assertFalse(is_eligible_bid(bid, NOW))
 
     def test_rejects_pre_financial_year_bid(self):
         bid = make_bid(

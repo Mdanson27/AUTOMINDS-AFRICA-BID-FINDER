@@ -87,8 +87,8 @@ jobs:
             echo "Persistent state branch had no bid snapshot; starting from an empty history."
           fi
 
-      - name: Export live procurement discovery snapshot
-        run: python -m collector.src.export_live_snapshot
+      - name: Export live procurement discovery snapshot from 30-source network
+        run: python -m collector.src.export_30_source_snapshot
 
       - name: Merge discovery with persistent bid history
         run: python -m collector.src.postprocess_snapshot
