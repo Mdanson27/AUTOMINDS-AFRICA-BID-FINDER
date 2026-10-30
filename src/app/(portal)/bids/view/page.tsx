@@ -66,7 +66,10 @@ export default function BidDetailPage() {
   const bid = bids.find((item) => item.id === bidId) || savedBids.find((item) => item.id === bidId);
   const descriptionParagraphs = useMemo(() => splitDescription(bid?.description || ""), [bid?.description]);
 
-  if (!mounted || (loading && !savedReady)) return <div className="premium-loading"><div className="premium-loading-head" /><div className="premium-loading-toolbar" /><div className="premium-loading-card" /></div>;
+  // Do not declare a bid missing until every possible source for this screen
+  // has completed its initial load. This removes the previous "Bid not found"
+  // flash while the live dataset was still arriving.
+  if (!mounted || loading || !savedReady) return <div className="premium-loading"><div className="premium-loading-head" /><div className="premium-loading-toolbar" /><div className="premium-loading-card" /></div>;
   if (error && !bid) return <EmptyState title="Could not load this bid" description={error} />;
   if (!bid) return <EmptyState title="Bid not found" description="This opportunity is not available in the live dataset or your saved bids." action={<Link href="/bids" className="button secondary">Back to bids</Link>} />;
 
