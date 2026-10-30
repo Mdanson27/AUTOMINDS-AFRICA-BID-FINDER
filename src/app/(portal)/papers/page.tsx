@@ -1,125 +1,211 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AlertTriangle, CheckCircle2, ExternalLink, Newspaper, RefreshCw, Search } from "lucide-react";
-import { BidList } from "@/components/bids/BidList";
-import { requestSnapshotRefresh, useBids } from "@/hooks/useBids";
-import { useSources } from "@/hooks/useSources";
-import type { BidSource } from "@/lib/types";
+import { ExternalLink } from "lucide-react";
 
-const paperNames = new Set(["Daily Monitor", "New Vision"]);
-const paperLinks: Record<string, string> = {
-  "Daily Monitor": "https://www.monitor.co.ug/uganda/jobs/tenders",
-  "New Vision": "https://www.newvision.co.ug/opportunities/tenders",
-};
-
-function relativeTime(value?: string) {
-  if (!value) return "No successful verification yet";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Unknown";
-  const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
-  if (minutes < 2) return "Checked just now";
-  if (minutes < 60) return `Checked ${minutes} min ago`;
-  const hours = Math.round(minutes / 60);
-  if (hours < 24) return `Checked ${hours} hr ago`;
-  return `Checked ${Math.round(hours / 24)} days ago`;
-}
-
-function countLabel(value?: number | null) {
-  return value === null || value === undefined ? "Unknown" : String(value);
-}
-
-function collectorTone(source: BidSource) {
-  return source.collectorStatus === "HEALTHY" ? "healthy" : "warning";
-}
+const papers = [
+  {
+    name: "Daily Monitor",
+    href: "https://www.monitor.co.ug/uganda/jobs/tenders",
+    logo: "https://www.thecitizen.co.tz/resource/image/2710224/landscape_ratio3x2/1620/1080/18926b999ccec70c91c7a4b87efa7d58/xj/monitor.jpg",
+    logoClassName: "monitor-logo",
+  },
+  {
+    name: "New Vision",
+    href: "https://www.newvision.co.ug/opportunities/tenders",
+    logo: "https://assets.kreatio.net/new_vision/images/small_logo1.jpg",
+    logoClassName: "newvision-logo",
+  },
+] as const;
 
 export default function PapersPage() {
-  const { bids, loading } = useBids();
-  const { sources } = useSources();
-  const [query, setQuery] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
-
-  const paperSources = useMemo<BidSource[]>(() => {
-    const existing = sources.filter((source) => source.type === "newspaper" || paperNames.has(source.name));
-    const byName = new Map(existing.map((source) => [source.name, source]));
-    return ["Daily Monitor", "New Vision"].map((name) => {
-      const existingSource = byName.get(name);
-      if (existingSource) return existingSource;
-      return {
-        id: name.toLowerCase().replace(/\s+/g, "-"),
-        name,
-        type: "newspaper",
-        baseUrl: paperLinks[name],
-        health: "planned",
-        enabled: true,
-        recordsFound: null,
-        collectorStatus: "UNKNOWN",
-        captureStatus: "INCOMPLETE",
-      };
-    });
-  }, [sources]);
-
-  const paperBids = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return bids.filter((bid) => {
-      const actualPaperSource = bid.sources.some((source) => paperNames.has(source.name));
-      if (!actualPaperSource) return false;
-      if (!needle) return true;
-      return [bid.title, bid.organization, bid.referenceNumber, bid.description].join(" ").toLowerCase().includes(needle);
-    }).sort((a, b) => new Date(b.firstSeenAt).getTime() - new Date(a.firstSeenAt).getTime());
-  }, [bids, query]);
-
-  async function refresh() {
-    setRefreshing(true);
-    requestSnapshotRefresh();
-    await new Promise((resolve) => window.setTimeout(resolve, 700));
-    setRefreshing(false);
-  }
-
   return (
-    <div className="papers-page page-stack">
-      <section className="papers-hero">
-        <div>
-          <span className="eyebrow">CURRENT PAPERS</span>
-          <h1>Search today&apos;s tender pages.</h1>
-          <p>Only opportunities whose canonical publisher is Daily Monitor or New Vision appear here. Collector failures are shown as failures, never disguised as zero tenders.</p>
-        </div>
-        <button className="papers-refresh" onClick={refresh} disabled={refreshing}>{refreshing ? <RefreshCw size={15} className="spin" /> : <RefreshCw size={15} />} {refreshing ? "Checking latest…" : "Refresh latest"}</button>
+    <div className="newspaper-page">
+      <header className="newspaper-heading">
+        <span className="eyebrow">CURRENT PAPERS</span>
+        <h1>Newspaper tender pages</h1>
+        <p>Choose a newspaper to open its tender and procurement notices.</p>
+      </header>
+
+      <section className="newspaper-grid" aria-label="Uganda newspaper tender pages">
+        {papers.map((paper) => (
+          <article className="newspaper-card" key={paper.name}>
+            <div className="newspaper-logo-wrap">
+              <img
+                className={`newspaper-logo ${paper.logoClassName}`}
+                src={paper.logo}
+                alt={`${paper.name} logo`}
+              />
+            </div>
+
+            <div className="newspaper-card-copy">
+              <h2>{paper.name}</h2>
+              <span>Tenders &amp; procurement opportunities</span>
+            </div>
+
+            <a
+              className="newspaper-open-button"
+              href={paper.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open ${paper.name} tenders`}
+            >
+              Open tender page
+              <ExternalLink size={17} aria-hidden="true" />
+            </a>
+          </article>
+        ))}
       </section>
 
-      <div className="paper-source-strip">
-        {paperSources.map((source) => {
-          const healthy = collectorTone(source) === "healthy";
-          return (
-            <article className="paper-source-card paper-source-health" key={source.name}>
-              <span className="paper-source-icon"><Newspaper size={18} /></span>
-              <div className="paper-source-health-body">
-                <div className="paper-source-title-row">
-                  <strong>{source.name}</strong>
-                  <span className={`paper-health-badge ${healthy ? "is-healthy" : "is-warning"}`}>{healthy ? <CheckCircle2 size={13} /> : <AlertTriangle size={13} />}{source.collectorStatus || source.health}</span>
-                </div>
-                <small>Capture: {source.captureStatus || "UNKNOWN"}</small>
-                <small>Direct access: {source.directStatus || (source.httpStatus ? `HTTP ${source.httpStatus}` : "Not reported")}</small>
-                <small>Discovery fallback: {source.discoveryStatus || "Not reported"}</small>
-                <small>URLs discovered: {countLabel(source.urlsDiscovered)} · fetched: {countLabel(source.urlsSuccessfullyFetched)}</small>
-                <small>Verified: {countLabel(source.verifiedRecords)} · review: {countLabel(source.needsReview)}</small>
-                <small>Records found: {countLabel(source.recordsFound)} · {relativeTime(source.lastAttemptedCrawlAt || source.lastSuccessfulCrawlAt)}</small>
-                {source.captureWarnings?.length ? <small className="paper-health-warning">{source.captureWarnings[0]}</small> : null}
-              </div>
-              <a href={paperLinks[source.name] || source.baseUrl} target="_blank" rel="noreferrer" aria-label={`Open ${source.name}`}><ExternalLink size={15} /></a>
-            </article>
-          );
-        })}
-      </div>
+      <style jsx>{`
+        .newspaper-page {
+          width: min(1240px, 100%);
+          margin: 0 auto;
+          padding: 8px 0 30px;
+        }
 
-      <label className="paper-searchbar"><Search size={18} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search current paper tenders by title, organization or reference…" /><span>{paperBids.length} found</span></label>
-      <div className="paper-result-note">Only direct Daily Monitor / New Vision source matches are shown here. Search-engine discovery may locate an original newspaper URL, but the search engine itself never becomes the source.</div>
+        .newspaper-heading {
+          padding: 8px 0 28px;
+          border-bottom: 1px solid rgba(14, 48, 77, 0.09);
+        }
 
-      {paperBids.length || loading ? (
-        <BidList bids={paperBids} loading={loading} />
-      ) : (
-        <div className="paper-empty"><Newspaper size={28} /><h3>No verified current-paper bids are available in this snapshot.</h3><p>Check the collector cards above: an empty result set is only a genuine zero when capture completed successfully. BLOCKED, PARTIAL, or INCOMPLETE means the true count is unknown.</p></div>
-      )}
+        .newspaper-heading h1 {
+          margin: 7px 0 8px;
+          color: #071d35;
+          font-size: clamp(30px, 4vw, 44px);
+          line-height: 1.04;
+          letter-spacing: -1.4px;
+        }
+
+        .newspaper-heading p {
+          margin: 0;
+          color: #718391;
+          font-size: 12px;
+          line-height: 1.6;
+        }
+
+        .newspaper-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 20px;
+          margin-top: 28px;
+        }
+
+        .newspaper-card {
+          min-height: 440px;
+          padding: 28px;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          background: #fff;
+          border: 1px solid rgba(14, 48, 77, 0.1);
+          border-radius: 20px;
+          box-shadow: 0 12px 34px rgba(7, 29, 53, 0.05);
+          overflow: hidden;
+          transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .newspaper-card:hover {
+          transform: translateY(-2px);
+          border-color: rgba(14, 48, 77, 0.17);
+          box-shadow: 0 18px 42px rgba(7, 29, 53, 0.08);
+        }
+
+        .newspaper-logo-wrap {
+          min-height: 235px;
+          display: grid;
+          place-items: center;
+          padding: 24px;
+          border-radius: 15px;
+          background: #f7f8fa;
+          overflow: hidden;
+        }
+
+        .newspaper-logo {
+          display: block;
+          width: min(100%, 420px);
+          max-height: 180px;
+          object-fit: contain;
+        }
+
+        .monitor-logo {
+          border-radius: 8px;
+        }
+
+        .newvision-logo {
+          width: min(100%, 300px);
+        }
+
+        .newspaper-card-copy {
+          padding: 22px 2px 19px;
+        }
+
+        .newspaper-card-copy h2 {
+          margin: 0;
+          color: #071d35;
+          font-size: 22px;
+          letter-spacing: -0.5px;
+        }
+
+        .newspaper-card-copy span {
+          display: block;
+          margin-top: 6px;
+          color: #7d8e9b;
+          font-size: 11px;
+        }
+
+        .newspaper-open-button {
+          min-height: 50px;
+          margin-top: auto;
+          padding: 0 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          border-radius: 11px;
+          background: #071d35;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 850;
+          text-decoration: none;
+          box-shadow: 0 8px 20px rgba(7, 29, 53, 0.14);
+          transition: transform 0.16s ease, background 0.16s ease;
+        }
+
+        .newspaper-open-button:hover {
+          background: #0c3158;
+          transform: translateY(-1px);
+        }
+
+        @media (max-width: 820px) {
+          .newspaper-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .newspaper-card {
+            min-height: 390px;
+          }
+
+          .newspaper-logo-wrap {
+            min-height: 200px;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .newspaper-card {
+            padding: 18px;
+            border-radius: 16px;
+          }
+
+          .newspaper-logo-wrap {
+            min-height: 170px;
+            padding: 18px;
+          }
+
+          .newspaper-card-copy h2 {
+            font-size: 19px;
+          }
+        }
+      `}</style>
     </div>
   );
 }
