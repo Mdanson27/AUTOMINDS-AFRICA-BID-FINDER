@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import json
 from pathlib import Path
+import time
 
 from . import export_live_snapshot as live
 from .sources.public_portals import PUBLIC_PORTAL_SOURCES, PUBLIC_SOURCE_TYPES
@@ -19,6 +20,7 @@ NETWORK_SOURCES = (*BASE_SOURCES, *PUBLIC_PORTAL_SOURCES)
 ORIGINAL_SOURCE_TYPE = live.source_type
 ORIGINAL_COLLECT_ONE_SOURCE = live.collect_one_source
 MAX_SOURCE_WORKERS = 6
+CORE_RETRY_SOURCES = {"egp-uganda", "gpp-ppda"}
 
 
 def _network_source_type(source_id: str) -> str:
@@ -46,15 +48,27 @@ def _precollect_sources(now: datetime):
 
     `export_live_snapshot.main()` still performs the canonical validation,
     enrichment, source health accounting and deterministic merge. We only
-    parallelize the slow independent network I/O here, then feed the cached
-    result back into that proven pipeline. One slow/blocked publisher therefore
-    cannot serially delay the remaining 29 sources.
+    parallelize slow independent network I/O here, then feed cached results
+    back into that proven pipeline. Core Uganda portals get one retry before
+    being marked unavailable because transient eGP/GPP timeouts should not
+    erase their opportunities from a scan.
     """
     cache: dict[str, list] = {}
     failures: dict[str, Exception] = {}
 
     def collect(source):
-        return list(ORIGINAL_COLLECT_ONE_SOURCE(source, now))
+        attempts = 2 if source.source_id in CORE_RETRY_SOURCES else 1
+        last_error: Exception | None = None
+        for attempt in range(attempts):
+            try:
+                return list(ORIGINAL_COLLECT_ONE_SOURCE(source, now))
+            except Exception as exc:  # noqa: BLE001
+                last_error = exc
+                if attempt + 1 < attempts:
+                    print(f"Retrying {source.name} after transient collection failure: {exc}")
+                    time.sleep(1.0)
+        assert last_error is not None
+        raise last_error
 
     with ThreadPoolExecutor(max_workers=MAX_SOURCE_WORKERS, thread_name_prefix="bid-source") as executor:
         futures = {executor.submit(collect, source): source for source in NETWORK_SOURCES}
