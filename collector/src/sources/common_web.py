@@ -50,6 +50,7 @@ def extract_deadline(text: str) -> datetime | None:
     patterns = [
         rf"{lead}\D{{0,90}}?(\d{{1,2}}(?:st|nd|rd|th)?\s+{month}\s+20\d{{2}}(?:\s+(?:at\s+)?\d{{1,2}}(?::\d{{2}})?\s*(?:AM|PM|hours?)?)?)",
         rf"{lead}\D{{0,90}}?({month}\s+\d{{1,2}}(?:st|nd|rd|th)?,?\s+20\d{{2}}(?:\s+(?:at\s+)?\d{{1,2}}(?::\d{{2}})?\s*(?:AM|PM)?)?)",
+        rf"{lead}\D{{0,60}}?(\d{{1,2}}[./-]\d{{1,2}}[./-]20\d{{2}}(?:\s+(?:at\s+)?\d{{1,2}}(?::\d{{2}})?\s*(?:AM|PM|hours?)?)?)",
         rf"{lead}\D{{0,60}}?(20\d{{2}}[-/]\d{{1,2}}[-/]\d{{1,2}}(?:[ T]\d{{1,2}}:\d{{2}})?)",
     ]
     for pattern in patterns:
@@ -63,11 +64,10 @@ def extract_deadline(text: str) -> datetime | None:
 
 def extract_reference(text: str) -> str:
     text = clean(text)
-    # Labels must terminate on a word boundary. Without this, the short `ref`
-    # alternative can match the beginning of the word `reference` and produce
-    # nonsense such as `erence` as the procurement reference number.
+    # Labels must terminate cleanly. Without this, the short `ref` alternative
+    # can match the beginning of `reference` and produce nonsense like `erence`.
     patterns = [
-        r"(?:procurement\s+reference(?:\s+(?:number|no\.?))?|tender\s+reference(?:\s+(?:number|no\.?))?|reference(?:\s+(?:number|no\.?))?|ref\.?\b|rfq\s*no\.?\b|rfp\s*no\.?\b|itb\s*no\.?\b|eoi\s*no\.?\b)\s*[:#-]?\s*([A-Z0-9][A-Z0-9._/()\-]{4,})",
+        r"(?:procurement\s+reference(?:\s+(?:number|no\b\.?))?|tender\s+reference(?:\s+(?:number|no\b\.?))?|reference(?:\s+(?:number|no\b\.?))?|ref\b\.?|rfq\s*no\b\.?|rfp\s*no\b\.?|itb\s*no\b\.?|eoi\s*no\b\.?)\s*[:#-]?\s*([A-Z0-9][A-Z0-9._/()\-]{4,})",
         r"\b([A-Z]{2,}[A-Z0-9._/-]*/[A-Z0-9._/-]+/20\d{2}(?:-20\d{2})?/[A-Z0-9._/-]+)\b",
     ]
     for pattern in patterns:
