@@ -5,6 +5,7 @@ import unittest
 
 from src.export_30_source_snapshot import NETWORK_SOURCES, validate_network
 from src.sources.common_web import KAMPALA
+from src.sources.gpp_ppda import GPPPPDASource
 from src.sources.public_portals import PortalConfig, PublicProcurementPortalSource
 
 
@@ -92,6 +93,29 @@ class SourceNetworkTests(unittest.TestCase):
         </article>
         """
         self.assertEqual([], list(source.parse(html)))
+
+    def test_rendered_gpp_card_is_parsed_without_old_json_api(self):
+        source = GPPPPDASource()
+        closing = datetime.now(KAMPALA) + timedelta(days=4)
+        html = f"""
+        <main>
+          <section class="tender-card">
+            <h3>Construction of Education Complex Building at MUBS</h3>
+            <div>Procuring Entity: Makerere University Business School</div>
+            <div>Category: Education</div>
+            <div>Type: Works</div>
+            <div>Deadline: {closing.strftime('%d %b %Y')}</div>
+            <a href="/public/bid-invitations/tender-notice/99999">VIEW BID NOTICE</a>
+          </section>
+        </main>
+        """
+        bids = source._parse_rendered_html(html)
+        self.assertEqual(1, len(bids))
+        self.assertEqual("Makerere University Business School", bids[0].organization)
+        self.assertEqual("Works", bids[0].procurement_type)
+        self.assertEqual("Education", bids[0].category)
+        self.assertEqual(closing.date(), bids[0].deadline_at.date())
+        self.assertIn("tender-notice/99999", str(bids[0].sources[0].url))
 
 
 if __name__ == "__main__":
