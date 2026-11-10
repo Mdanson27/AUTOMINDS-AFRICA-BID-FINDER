@@ -1,21 +1,2578 @@
 [
   {
+    "id": "fdf1b3ecf6e9f75b7acf6e0d540e",
+    "title": "Micro Procurement",
+    "organization": "Parliament of Uganda",
+    "referenceNumber": "POU/NCONS/2026-2027/00866",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:pou/ncons/2026-2027/00866|parliament of uganda",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155179444/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "JOSAM TECHNOLOGIES LIMITED (Nkrumah road)",
+      "Bid opening 1 · Submission Date": "2026-11-09 08:03:04",
+      "Bid opening 1 · Amount": "595,000.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "BILYANAKA COMPANIES LIMITED (P.O. BOX 135034, KAMPALA-UGANDA)",
+      "Bid opening 2 · Submission Date": "2026-11-09 09:14:52",
+      "Bid opening 2 · Amount": "649,000.00",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "XTRAORDINARY MEDIA GROUP LIMITED (P.O BOX 541, NTINDA. CAPITAL SHOPPERS MALL, NTINDA STRETCHER)",
+      "Bid opening 3 · Submission Date": "2026-11-09 12:52:33",
+      "Bid opening 3 · Amount": "1,003,000.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155179444/opening/details",
+    "canonicalIdentity": "ref-org:pou/ncons/2026-2027/00866|parliament of uganda",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "JOSAM TECHNOLOGIES LIMITED (Nkrumah road)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "BILYANAKA COMPANIES LIMITED (P.O. BOX 135034, KAMPALA-UGANDA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "XTRAORDINARY MEDIA GROUP LIMITED (P.O BOX 541, NTINDA. CAPITAL SHOPPERS MALL, NTINDA STRETCHER)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "JOSAM TECHNOLOGIES LIMITED",
+        "address": "Nkrumah road",
+        "submissionAt": "2026-11-09T05:03:04Z",
+        "amount": "595,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BILYANAKA COMPANIES LIMITED",
+        "address": "P.O. BOX 135034, KAMPALA-UGANDA",
+        "submissionAt": "2026-11-09T06:14:52Z",
+        "amount": "649,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "XTRAORDINARY MEDIA GROUP LIMITED",
+        "address": "P.O BOX 541, NTINDA. CAPITAL SHOPPERS MALL, NTINDA STRETCHER",
+        "submissionAt": "2026-11-09T09:52:33Z",
+        "amount": "1,003,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 3,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155179444/opening/details",
+        "details": {
+          "bidsReceived": "3"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "813cbd94485611672619c4e08d89",
+    "title": "Micro Procurement",
+    "organization": "Directorate of Public Prosecutions",
+    "referenceNumber": "DPP/NCONS/2026-2027/00421",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:dpp/ncons/2026-2027/00421|directorate of public prosecutions",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155248328/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-09 16:18:24",
+      "Bid opening 1 · Amount": "1,114,107.77"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155248328/opening/details",
+    "canonicalIdentity": "ref-org:dpp/ncons/2026-2027/00421|directorate of public prosecutions",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "CFAO MOBILITY UGANDA LIMITED",
+        "address": "Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala",
+        "submissionAt": "2026-11-09T13:18:24Z",
+        "amount": "1,114,107.77",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155248328/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "afe0c6f12ee759f85ed6bac3e864",
+    "title": "Open Domestic",
+    "organization": "Uganda National Bureau of Standards",
+    "referenceNumber": "UNBS/NCONS/2026-2027/00056",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Open Domestic",
+    "procurementType": "Open Domestic",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:unbs/ncons/2026-2027/00056|uganda national bureau of standards",
+    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/152140444/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      },
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/index/410382508_egp",
+        "detectedAt": "2026-11-09T20:48:40.770753Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "SAVARA INTERNATIONAL LIMITED (Plot 128 Old Kira Road Kamure Park Building Kampala Uganda)",
+      "Bid opening 1 · Submission Date": "2026-10-21 12:04:32",
+      "Bid opening 1 · Amount": "6,342,500.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "DEALAN ASSOCIATES LIMITED (P.O.BOX 21752 Kampala)",
+      "Bid opening 2 · Submission Date": "2026-10-21 18:33:33",
+      "Bid opening 2 · Amount": "12,555,000.01",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "WEPLINK UGANDA LTD (Plot 23/25 Old Kampala Road P.O.Box 12329 Kampala)",
+      "Bid opening 3 · Submission Date": "2026-10-23 11:39:14",
+      "Bid opening 3 · Amount": "6,574,500.02",
+      "Bid opening 4 · #": "4",
+      "Bid opening 4 · Name & Address of The Bidder": "CYBILL ICT (U) LTD (Bweyogerere Butto)",
+      "Bid opening 4 · Submission Date": "2026-10-27 15:52:11",
+      "Bid opening 4 · Amount": "6,935,760.00",
+      "Bid opening 5 · #": "5",
+      "Bid opening 5 · Name & Address of The Bidder": "MTA COMPUTERS LTD (Plot 20 Lumumba Avenue Piato Building Kampala- Uganda)",
+      "Bid opening 5 · Submission Date": "2026-11-02 16:04:39",
+      "Bid opening 5 · Amount": "10,856,000.00",
+      "Bid opening 6 · #": "6",
+      "Bid opening 6 · Name & Address of The Bidder": "CYBER BASE LIMITED (CYBER BASE LTD, SUITE 1, 2ND FLOOR, CONRAD PLAZA P.O. BOX 25778, KAMPALA-UGANDA)",
+      "Bid opening 6 · Submission Date": "2026-11-02 16:32:21",
+      "Bid opening 6 · Amount": "1,888,000.00",
+      "Bid opening 7 · #": "7",
+      "Bid opening 7 · Name & Address of The Bidder": "MFI OFFICE SOLUTIONS (UGANDA) LIMITED CHANGED TO MFI DOCUMENT SOLUTIONS LTD (PLOT 43, LUMUMBA AVENUE, P.O. BOX 21444, KAMPALA)",
+      "Bid opening 7 · Submission Date": "2026-11-03 13:08:54",
+      "Bid opening 7 · Amount": "10,606,312.00",
+      "Bid opening 8 · #": "8",
+      "Bid opening 8 · Name & Address of The Bidder": "ORISON SOLUTIONS LTD (P. O. BOX 108157)",
+      "Bid opening 8 · Submission Date": "2026-11-06 12:53:00",
+      "Bid opening 8 · Amount": "10,227,565.70",
+      "Bid opening 9 · #": "9",
+      "Bid opening 9 · Name & Address of The Bidder": "INFO CONSULTS INTERNATIONAL LIMITED (UICT INNOVATION HUB NAKAWA)",
+      "Bid opening 9 · Submission Date": "2026-11-06 14:37:00",
+      "Bid opening 9 · Amount": "9,817,600.00",
+      "Bid opening 10 · #": "10",
+      "Bid opening 10 · Name & Address of The Bidder": "KEYSTONE ADVOCATES (P.O BOX 801876)",
+      "Bid opening 10 · Submission Date": "2026-11-06 18:09:46",
+      "Bid opening 10 · Amount": "7,200,000.00",
+      "Bid opening 11 · #": "11",
+      "Bid opening 11 · Name & Address of The Bidder": "CLOUDS ITC LIMITED (Wakiso District, Kira Municipality, Bweyogerere Division, Bweyogerere, NTEBETEBE, NTEBETEBE)",
+      "Bid opening 11 · Submission Date": "2026-11-08 15:03:40",
+      "Bid opening 11 · Amount": "9,449,440.00",
+      "Bid opening 12 · #": "12",
+      "Bid opening 12 · Name & Address of The Bidder": "GOVNET SERVICES LTD (Plot 100, Nkinzi road, Wandegeya, Kampala)",
+      "Bid opening 12 · Submission Date": "2026-11-09 09:05:00",
+      "Bid opening 12 · Amount": "6,950,000.00",
+      "Bid opening 13 · #": "13",
+      "Bid opening 13 · Name & Address of The Bidder": "SKY TOWER TECHNOLOGIES (U) LIMITED (4 Pilkington Rd, Kampala, Uganda)",
+      "Bid opening 13 · Submission Date": "2026-11-09 12:22:20",
+      "Bid opening 13 · Amount": "12,095,000.00",
+      "Bid opening 14 · #": "14",
+      "Bid opening 14 · Name & Address of The Bidder": "BLUE CRANE COMMUNICATIONS (U) LIMITED (1st Floor Plot 16/17, Nyonyi Gardens P.O.Box 7493, Kmapala, UG)",
+      "Bid opening 14 · Submission Date": "2026-11-09 13:05:29",
+      "Bid opening 14 · Amount": "6,390,000.00",
+      "Bid opening 15 · #": "15",
+      "Bid opening 15 · Name & Address of The Bidder": "IMPIGER TECHNOLOGIES PRIVATE LIMITED (Plot 42, 3rd Floor, Block C, Lugogo bypass Lugogo House)",
+      "Bid opening 15 · Submission Date": "2026-11-09 15:13:33",
+      "Bid opening 15 · Amount": "19,717,800.00",
+      "Bid opening 16 · #": "16",
+      "Bid opening 16 · Name & Address of The Bidder": "TENECE PROFESSIONAL SERVICES LIMITED (Ground Floor, Grace Courts Plot 17/19 Salim Bey Road, Ntinda -Kampala)",
+      "Bid opening 16 · Submission Date": "2026-11-09 19:38:10",
+      "Bid opening 16 · Amount": "18,048,100.00",
+      "Bid opening 17 · #": "17",
+      "Bid opening 17 · Name & Address of The Bidder": "NEW WAVE TECHNOLOGIES LTD (Plot 128 Old Kira Road P.O BOX 500538 Wandegeya)",
+      "Bid opening 17 · Submission Date": "2026-11-09 21:34:14",
+      "Bid opening 17 · Amount": "5,728,900.00",
+      "Bid opening 18 · #": "18",
+      "Bid opening 18 · Name & Address of The Bidder": "BRAIN MEDIA SOLUTIONS LIMITED (Plot 30 Hamu Road P O Box 185031 Kampala)",
+      "Bid opening 18 · Submission Date": "2026-11-09 21:45:18",
+      "Bid opening 18 · Amount": "7,304,200.00",
+      "Bid opening 19 · #": "19",
+      "Bid opening 19 · Name & Address of The Bidder": "SCINTL TECHNOLOGIES LTD (35 Kira Road, Kira Chambers, Kamwokya. Kampala-Uganda P.O Box 157320 Kampala Uganda)",
+      "Bid opening 19 · Submission Date": "2026-11-10 00:09:55",
+      "Bid opening 19 · Amount": "6,106,500.00",
+      "Bid opening 20 · #": "20",
+      "Bid opening 20 · Name & Address of The Bidder": "MILKWELL LTD (PLOT 13B Kampala Road, Amadinda House, 1st Floor floor, Shop-Suite 4. P.O Box 37832 Kampala Road)",
+      "Bid opening 20 · Submission Date": "2026-11-10 09:09:36",
+      "Bid opening 20 · Amount": "1,705,392,640.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/152140444/opening/details",
+    "canonicalIdentity": "ref-org:unbs/ncons/2026-2027/00056|uganda national bureau of standards",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-10-20T10:42:37.044842Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "SAVARA INTERNATIONAL LIMITED (Plot 128 Old Kira Road Kamure Park Building Kampala Uganda)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "DEALAN ASSOCIATES LIMITED (P.O.BOX 21752 Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "WEPLINK UGANDA LTD (Plot 23/25 Old Kampala Road P.O.Box 12329 Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 4 · Name & Address of The Bidder",
+        "value": "CYBILL ICT (U) LTD (Bweyogerere Butto)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 5 · Name & Address of The Bidder",
+        "value": "MTA COMPUTERS LTD (Plot 20 Lumumba Avenue Piato Building Kampala- Uganda)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 6 · Name & Address of The Bidder",
+        "value": "CYBER BASE LIMITED (CYBER BASE LTD, SUITE 1, 2ND FLOOR, CONRAD PLAZA P.O. BOX 25778, KAMPALA-UGANDA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 7 · Name & Address of The Bidder",
+        "value": "MFI OFFICE SOLUTIONS (UGANDA) LIMITED CHANGED TO MFI DOCUMENT SOLUTIONS LTD (PLOT 43, LUMUMBA AVENUE, P.O. BOX 21444, KAMPALA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 8 · Name & Address of The Bidder",
+        "value": "ORISON SOLUTIONS LTD (P. O. BOX 108157)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 9 · Name & Address of The Bidder",
+        "value": "INFO CONSULTS INTERNATIONAL LIMITED (UICT INNOVATION HUB NAKAWA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 10 · Name & Address of The Bidder",
+        "value": "KEYSTONE ADVOCATES (P.O BOX 801876)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 11 · Name & Address of The Bidder",
+        "value": "CLOUDS ITC LIMITED (Wakiso District, Kira Municipality, Bweyogerere Division, Bweyogerere, NTEBETEBE, NTEBETEBE)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 12 · Name & Address of The Bidder",
+        "value": "GOVNET SERVICES LTD (Plot 100, Nkinzi road, Wandegeya, Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 13 · Name & Address of The Bidder",
+        "value": "SKY TOWER TECHNOLOGIES (U) LIMITED (4 Pilkington Rd, Kampala, Uganda)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 14 · Name & Address of The Bidder",
+        "value": "BLUE CRANE COMMUNICATIONS (U) LIMITED (1st Floor Plot 16/17, Nyonyi Gardens P.O.Box 7493, Kmapala, UG)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 15 · Name & Address of The Bidder",
+        "value": "IMPIGER TECHNOLOGIES PRIVATE LIMITED (Plot 42, 3rd Floor, Block C, Lugogo bypass Lugogo House)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 16 · Name & Address of The Bidder",
+        "value": "TENECE PROFESSIONAL SERVICES LIMITED (Ground Floor, Grace Courts Plot 17/19 Salim Bey Road, Ntinda -Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 17 · Name & Address of The Bidder",
+        "value": "NEW WAVE TECHNOLOGIES LTD (Plot 128 Old Kira Road P.O BOX 500538 Wandegeya)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 18 · Name & Address of The Bidder",
+        "value": "BRAIN MEDIA SOLUTIONS LIMITED (Plot 30 Hamu Road P O Box 185031 Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 19 · Name & Address of The Bidder",
+        "value": "SCINTL TECHNOLOGIES LTD (35 Kira Road, Kira Chambers, Kamwokya. Kampala-Uganda P.O Box 157320 Kampala Uganda)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 20 · Name & Address of The Bidder",
+        "value": "MILKWELL LTD (PLOT 13B Kampala Road, Amadinda House, 1st Floor floor, Shop-Suite 4. P.O Box 37832 Kampala Road)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "SAVARA INTERNATIONAL LIMITED",
+        "address": "Plot 128 Old Kira Road Kamure Park Building Kampala Uganda",
+        "submissionAt": "2026-10-21T09:04:32Z",
+        "amount": "6,342,500.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "DEALAN ASSOCIATES LIMITED",
+        "address": "P.O.BOX 21752 Kampala",
+        "submissionAt": "2026-10-21T15:33:33Z",
+        "amount": "12,555,000.01",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "WEPLINK UGANDA LTD",
+        "address": "Plot 23/25 Old Kampala Road P.O.Box 12329 Kampala",
+        "submissionAt": "2026-10-23T08:39:14Z",
+        "amount": "6,574,500.02",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "CYBILL ICT",
+        "address": "U) LTD (Bweyogerere Butto",
+        "submissionAt": "2026-10-27T12:52:11Z",
+        "amount": "6,935,760.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "MTA COMPUTERS LTD",
+        "address": "Plot 20 Lumumba Avenue Piato Building Kampala- Uganda",
+        "submissionAt": "2026-11-02T13:04:39Z",
+        "amount": "10,856,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "CYBER BASE LIMITED",
+        "address": "CYBER BASE LTD, SUITE 1, 2ND FLOOR, CONRAD PLAZA P.O. BOX 25778, KAMPALA-UGANDA",
+        "submissionAt": "2026-11-02T13:32:21Z",
+        "amount": "1,888,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "MFI OFFICE SOLUTIONS",
+        "address": "UGANDA) LIMITED CHANGED TO MFI DOCUMENT SOLUTIONS LTD (PLOT 43, LUMUMBA AVENUE, P.O. BOX 21444, KAMPALA",
+        "submissionAt": "2026-11-03T10:08:54Z",
+        "amount": "10,606,312.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "ORISON SOLUTIONS LTD",
+        "address": "P. O. BOX 108157",
+        "submissionAt": "2026-11-06T09:53:00Z",
+        "amount": "10,227,565.70",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "INFO CONSULTS INTERNATIONAL LIMITED",
+        "address": "UICT INNOVATION HUB NAKAWA",
+        "submissionAt": "2026-11-06T11:37:00Z",
+        "amount": "9,817,600.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "KEYSTONE ADVOCATES",
+        "address": "P.O BOX 801876",
+        "submissionAt": "2026-11-06T15:09:46Z",
+        "amount": "7,200,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "CLOUDS ITC LIMITED",
+        "address": "Wakiso District, Kira Municipality, Bweyogerere Division, Bweyogerere, NTEBETEBE, NTEBETEBE",
+        "submissionAt": "2026-11-08T12:03:40Z",
+        "amount": "9,449,440.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "GOVNET SERVICES LTD",
+        "address": "Plot 100, Nkinzi road, Wandegeya, Kampala",
+        "submissionAt": "2026-11-09T06:05:00Z",
+        "amount": "6,950,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "SKY TOWER TECHNOLOGIES",
+        "address": "U) LIMITED (4 Pilkington Rd, Kampala, Uganda",
+        "submissionAt": "2026-11-09T09:22:20Z",
+        "amount": "12,095,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BLUE CRANE COMMUNICATIONS",
+        "address": "U) LIMITED (1st Floor Plot 16/17, Nyonyi Gardens P.O.Box 7493, Kmapala, UG",
+        "submissionAt": "2026-11-09T10:05:29Z",
+        "amount": "6,390,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "IMPIGER TECHNOLOGIES PRIVATE LIMITED",
+        "address": "Plot 42, 3rd Floor, Block C, Lugogo bypass Lugogo House",
+        "submissionAt": "2026-11-09T12:13:33Z",
+        "amount": "19,717,800.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "TENECE PROFESSIONAL SERVICES LIMITED",
+        "address": "Ground Floor, Grace Courts Plot 17/19 Salim Bey Road, Ntinda -Kampala",
+        "submissionAt": "2026-11-09T16:38:10Z",
+        "amount": "18,048,100.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "NEW WAVE TECHNOLOGIES LTD",
+        "address": "Plot 128 Old Kira Road P.O BOX 500538 Wandegeya",
+        "submissionAt": "2026-11-09T18:34:14Z",
+        "amount": "5,728,900.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BRAIN MEDIA SOLUTIONS LIMITED",
+        "address": "Plot 30 Hamu Road P O Box 185031 Kampala",
+        "submissionAt": "2026-11-09T18:45:18Z",
+        "amount": "7,304,200.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "SCINTL TECHNOLOGIES LTD",
+        "address": "35 Kira Road, Kira Chambers, Kamwokya. Kampala-Uganda P.O Box 157320 Kampala Uganda",
+        "submissionAt": "2026-11-09T21:09:55Z",
+        "amount": "6,106,500.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "MILKWELL LTD",
+        "address": "PLOT 13B Kampala Road, Amadinda House, 1st Floor floor, Shop-Suite 4. P.O Box 37832 Kampala Road",
+        "submissionAt": "2026-11-10T06:09:36Z",
+        "amount": "1,705,392,640.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 20,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/152140444/opening/details",
+        "details": {
+          "bidsReceived": "20"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "a03cdc3b57d9e18505049c880903",
+    "title": "Micro Procurement",
+    "organization": "Directorate of Public Prosecutions",
+    "referenceNumber": "DPP/NCONS/2026-2027/00350",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:dpp/ncons/2026-2027/00350|directorate of public prosecutions",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155252380/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "VICTORIA MOTORS LTD (PLOT 10 OLD PORT BELL ROAD P.O BOX 104588 KAMPALA, UGANDA)",
+      "Bid opening 1 · Submission Date": "2026-11-10 09:08:56",
+      "Bid opening 1 · Amount": "6,854,384.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155252380/opening/details",
+    "canonicalIdentity": "ref-org:dpp/ncons/2026-2027/00350|directorate of public prosecutions",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "VICTORIA MOTORS LTD (PLOT 10 OLD PORT BELL ROAD P.O BOX 104588 KAMPALA, UGANDA)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "VICTORIA MOTORS LTD",
+        "address": "PLOT 10 OLD PORT BELL ROAD P.O BOX 104588 KAMPALA, UGANDA",
+        "submissionAt": "2026-11-10T06:08:56Z",
+        "amount": "6,854,384.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155252380/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "1626eff0bd8245277264a25c5804",
+    "title": "Micro Procurement",
+    "organization": "Directorate of Public Prosecutions",
+    "referenceNumber": "DPP/NCONS/2026-2027/00343",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:dpp/ncons/2026-2027/00343|directorate of public prosecutions",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155254406/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-09 16:34:49",
+      "Bid opening 1 · Amount": "469,300.16"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155254406/opening/details",
+    "canonicalIdentity": "ref-org:dpp/ncons/2026-2027/00343|directorate of public prosecutions",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "CFAO MOBILITY UGANDA LIMITED",
+        "address": "Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala",
+        "submissionAt": "2026-11-09T13:34:49Z",
+        "amount": "469,300.16",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155254406/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "81ba132108b73e3b98f32b1c03fa",
+    "title": "Micro Procurement",
+    "organization": "Kampala Capital City Authority",
+    "referenceNumber": "KCCA/SUPLS/2026-2027/00381",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:kcca/supls/2026-2027/00381|kampala capital city authority",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155262510/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "E - SPRING UGANDA LTD (KAFUMBE MUKASA ROAD KAMPALA)",
+      "Bid opening 1 · Submission Date": "2026-11-09 13:41:13",
+      "Bid opening 1 · Amount": "3,829,101.01"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155262510/opening/details",
+    "canonicalIdentity": "ref-org:kcca/supls/2026-2027/00381|kampala capital city authority",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "E - SPRING UGANDA LTD (KAFUMBE MUKASA ROAD KAMPALA)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "E - SPRING UGANDA LTD",
+        "address": "KAFUMBE MUKASA ROAD KAMPALA",
+        "submissionAt": "2026-11-09T10:41:13Z",
+        "amount": "3,829,101.01",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155262510/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "969224fe212891e4509658f019dc",
+    "title": "Request For Quotations/Proposals",
+    "organization": "Uganda Civil Aviation Authority",
+    "referenceNumber": "UCAA/CONS/2026-2027/00007",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Request For Quotations/Proposals",
+    "procurementType": "Request For Quotations/Proposals",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:ucaa/cons/2026-2027/00007|uganda civil aviation authority",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154251536/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "PEARL DEVELOPMENT GROUP LIMITED (LWEZA KIGO ROAD OFF ENTEBBE ROAD)",
+      "Bid opening 1 · Submission Date": "2026-11-04 17:10:24",
+      "Bid opening 1 · Amount": "117,150,001.16",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "ELGON TERRACE HOTEL LIMITED (Plot 4 Upper Terrace Kololo)",
+      "Bid opening 2 · Submission Date": "2026-11-06 16:56:50",
+      "Bid opening 2 · Amount": "69,642,500.24"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Request For Quotations/Proposals",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154251536/opening/details",
+    "canonicalIdentity": "ref-org:ucaa/cons/2026-2027/00007|uganda civil aviation authority",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "PEARL DEVELOPMENT GROUP LIMITED (LWEZA KIGO ROAD OFF ENTEBBE ROAD)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "ELGON TERRACE HOTEL LIMITED (Plot 4 Upper Terrace Kololo)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "PEARL DEVELOPMENT GROUP LIMITED",
+        "address": "LWEZA KIGO ROAD OFF ENTEBBE ROAD",
+        "submissionAt": "2026-11-04T14:10:24Z",
+        "amount": "117,150,001.16",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "ELGON TERRACE HOTEL LIMITED",
+        "address": "Plot 4 Upper Terrace Kololo",
+        "submissionAt": "2026-11-06T13:56:50Z",
+        "amount": "69,642,500.24",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 2,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154251536/opening/details",
+        "details": {
+          "bidsReceived": "2"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "8c3d0c6394dbc111bc2c898c7735",
+    "title": "Micro Procurement",
+    "organization": "Parliament of Uganda",
+    "referenceNumber": "POU/NCONS/2026-2027/00803",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:pou/ncons/2026-2027/00803|parliament of uganda",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154796530/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "THE MOTORCENTER EAST AFRICA LTD (Plot 7 and 16, Old Portbell Road, Industrial Area, P. O. Box 11482, Kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-06 09:31:51",
+      "Bid opening 1 · Amount": "3,044,400.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154796530/opening/details",
+    "canonicalIdentity": "ref-org:pou/ncons/2026-2027/00803|parliament of uganda",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "THE MOTORCENTER EAST AFRICA LTD (Plot 7 and 16, Old Portbell Road, Industrial Area, P. O. Box 11482, Kampala)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "THE MOTORCENTER EAST AFRICA LTD",
+        "address": "Plot 7 and 16, Old Portbell Road, Industrial Area, P. O. Box 11482, Kampala",
+        "submissionAt": "2026-11-06T06:31:51Z",
+        "amount": "3,044,400.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154796530/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "72962cf085d07f5774488b2e7dd5",
+    "title": "Open Domestic",
+    "organization": "Ministry of Water & Environment",
+    "referenceNumber": "MoWE/WRKS/2026-2027/00063",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Open Domestic",
+    "procurementType": "Open Domestic",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:mowe/wrks/2026-2027/00063|ministry of water environment",
+    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/151727140/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      },
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/index/408976464_egp",
+        "detectedAt": "2026-11-09T20:48:40.770753Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "BEST DEALS INVESTMENT COMPANY LIMITED (P. O BOX 948 KAMPALA)",
+      "Bid opening 1 · Submission Date": "2026-11-06 09:59:20",
+      "Bid opening 1 · Amount": "1,311,155,879.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "HAMLET GROUP LIMITED (P.O. BOX 125053 Kampala GPO)",
+      "Bid opening 2 · Submission Date": "2026-11-09 09:20:11",
+      "Bid opening 2 · Amount": "1,350,035,522.00",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "AZU PROPERTIES LIMITED (floor, Shop- P.O Box12421, KAMPALA Street)",
+      "Bid opening 3 · Submission Date": "2026-11-09 10:24:45",
+      "Bid opening 3 · Amount": "1,263,942,427.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/151727140/opening/details",
+    "canonicalIdentity": "ref-org:mowe/wrks/2026-2027/00063|ministry of water environment",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-10-20T10:42:37.044842Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "BEST DEALS INVESTMENT COMPANY LIMITED (P. O BOX 948 KAMPALA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "HAMLET GROUP LIMITED (P.O. BOX 125053 Kampala GPO)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "AZU PROPERTIES LIMITED (floor, Shop- P.O Box12421, KAMPALA Street)",
+        "kind": "address"
+      },
+      {
+        "label": "Email",
+        "value": "mukwayatina@gmail.com",
+        "kind": "email"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "BEST DEALS INVESTMENT COMPANY LIMITED",
+        "address": "P. O BOX 948 KAMPALA",
+        "submissionAt": "2026-11-06T06:59:20Z",
+        "amount": "1,311,155,879.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "HAMLET GROUP LIMITED",
+        "address": "P.O. BOX 125053 Kampala GPO",
+        "submissionAt": "2026-11-09T06:20:11Z",
+        "amount": "1,350,035,522.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "AZU PROPERTIES LIMITED",
+        "address": "floor, Shop- P.O Box12421, KAMPALA Street",
+        "submissionAt": "2026-11-09T07:24:45Z",
+        "amount": "1,263,942,427.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 3,
+    "openingParticipants": [
+      {
+        "name": "Christine Mukwaya",
+        "address": "mukwayatina@gmail.com",
+        "position": "pde-branch-user",
+        "departmentCompany": "Ministry of Water & Environment"
+      }
+    ],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/151727140/opening/details",
+        "details": {
+          "bidsReceived": "3"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "ef98d393d88890f85fb1d95275d3",
+    "title": "Micro Procurement",
+    "organization": "Uganda Registration Services Bureau",
+    "referenceNumber": "URSB/NCONS/2026-2027/00268",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:ursb/ncons/2026-2027/00268|uganda registration services bureau",
+    "firstSeenAt": "2026-11-06T15:58:22.662642Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": true,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/155359758/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      },
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154814764/opening/details",
+        "detectedAt": "2026-11-06T15:57:57.408887Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD (BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728)",
+      "Bid opening 1 · Submission Date": "2026-11-10 09:45:50",
+      "Bid opening 1 · Amount": "2,006,000.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/155359758/opening/details",
+    "canonicalIdentity": "ref-org:ursb/ncons/2026-2027/00268|uganda registration services bureau",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-06T15:58:22.662642Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-06T16:12:03.112981Z",
+        "reason": "discovered-and-verified"
+      },
+      {
+        "status": "closed",
+        "at": "2026-11-06T21:36:16.925859Z",
+        "reason": "deadline-passed"
+      },
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "verified-status-change"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD (BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728)",
+        "kind": "address"
+      },
+      {
+        "label": "Phone",
+        "value": "0752786728",
+        "kind": "phone"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD",
+        "address": "BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728",
+        "submissionAt": "2026-11-10T06:45:50Z",
+        "amount": "2,006,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/155359758/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "2ccb60aaae913b020bf2af95af85",
+    "title": "Micro Procurement",
+    "organization": "Ministry of Health",
+    "referenceNumber": "MOH/SUPLS/2026-2027/00010",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:moh/supls/2026-2027/00010|ministry of health",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154851232/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "GOLDPATH ENTERPRISE - SMC LIMITED (198228 Kampala GPO)",
+      "Bid opening 1 · Submission Date": "2026-11-09 21:12:06",
+      "Bid opening 1 · Amount": "9,357,400.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "VISIBLE INVESTMENTS LIMITED (P. O. BOX 138377 KAMPALA)",
+      "Bid opening 2 · Submission Date": "2026-11-09 23:23:48",
+      "Bid opening 2 · Amount": "7,850,000.00",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "MATRIX AGENCIES LTD (NKRUMAH ,PLOT8/10)",
+      "Bid opening 3 · Submission Date": "2026-11-10 10:40:55",
+      "Bid opening 3 · Amount": "10,620,000.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154851232/opening/details",
+    "canonicalIdentity": "ref-org:moh/supls/2026-2027/00010|ministry of health",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "GOLDPATH ENTERPRISE - SMC LIMITED (198228 Kampala GPO)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "VISIBLE INVESTMENTS LIMITED (P. O. BOX 138377 KAMPALA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "MATRIX AGENCIES LTD (NKRUMAH ,PLOT8/10)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "GOLDPATH ENTERPRISE - SMC LIMITED",
+        "address": "198228 Kampala GPO",
+        "submissionAt": "2026-11-09T18:12:06Z",
+        "amount": "9,357,400.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "VISIBLE INVESTMENTS LIMITED",
+        "address": "P. O. BOX 138377 KAMPALA",
+        "submissionAt": "2026-11-09T20:23:48Z",
+        "amount": "7,850,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "MATRIX AGENCIES LTD",
+        "address": "NKRUMAH ,PLOT8/10",
+        "submissionAt": "2026-11-10T07:40:55Z",
+        "amount": "10,620,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 3,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154851232/opening/details",
+        "details": {
+          "bidsReceived": "3"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "4f27dcf201223299f100c19dc198",
+    "title": "Micro Procurement",
+    "organization": "Ministry of Lands, Housing and Urban Development",
+    "referenceNumber": "MoLHUD/NCONS/2026-2027/00101",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:molhud/ncons/2026-2027/00101|ministry of lands housing and urban development",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154397408/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-05 11:18:54",
+      "Bid opening 1 · Amount": "20,301,617.26"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154397408/opening/details",
+    "canonicalIdentity": "ref-org:molhud/ncons/2026-2027/00101|ministry of lands housing and urban development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "CFAO MOBILITY UGANDA LIMITED (Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "CFAO MOBILITY UGANDA LIMITED",
+        "address": "Plot 668 First street Kampala Industrial & Business Park, Namanve P.O Box 31731 Kampala",
+        "submissionAt": "2026-11-05T08:18:54Z",
+        "amount": "20,301,617.26",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154397408/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "870c34b1c850b6476110a1501d31",
+    "title": "Request For Quotations/Proposals",
+    "organization": "Ministry of Energy & Mineral Development",
+    "referenceNumber": "MEMD/WRKS/2026-2027/00013",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Request For Quotations/Proposals",
+    "procurementType": "Request For Quotations/Proposals",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:memd/wrks/2026-2027/00013|ministry of energy mineral development",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/151808180/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "ACTROS EAST AFRICA LIMITED (Afri-Courts Building, 2nd floor. P.O Box109065 KAMPALA, Buganda Road)",
+      "Bid opening 1 · Submission Date": "2026-11-09 10:09:31",
+      "Bid opening 1 · Amount": "368,331,000.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "SEDOK TECHNOLOGIES LTD (Plot 62, Bombo Road, Kampala P.O.BOX 8649 KAMPALA)",
+      "Bid opening 2 · Submission Date": "2026-11-10 09:37:24",
+      "Bid opening 2 · Amount": "367,000,500.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Request For Quotations/Proposals",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/151808180/opening/details",
+    "canonicalIdentity": "ref-org:memd/wrks/2026-2027/00013|ministry of energy mineral development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "ACTROS EAST AFRICA LIMITED (Afri-Courts Building, 2nd floor. P.O Box109065 KAMPALA, Buganda Road)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "SEDOK TECHNOLOGIES LTD (Plot 62, Bombo Road, Kampala P.O.BOX 8649 KAMPALA)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "ACTROS EAST AFRICA LIMITED",
+        "address": "Afri-Courts Building, 2nd floor. P.O Box109065 KAMPALA, Buganda Road",
+        "submissionAt": "2026-11-09T07:09:31Z",
+        "amount": "368,331,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "SEDOK TECHNOLOGIES LTD",
+        "address": "Plot 62, Bombo Road, Kampala P.O.BOX 8649 KAMPALA",
+        "submissionAt": "2026-11-10T06:37:24Z",
+        "amount": "367,000,500.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 2,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/151808180/opening/details",
+        "details": {
+          "bidsReceived": "2"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "ac78554912a072d11e15c0beb9c9",
+    "title": "Micro Procurement",
+    "organization": "Ministry of Water & Environment",
+    "referenceNumber": "MoWE/SUPLS/2026-2027/00159",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:mowe/supls/2026-2027/00159|ministry of water environment",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/154920116/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "RESTEVE INTERNATIONAL LTD (P.O BOX 29583 Nasser Road)",
+      "Bid opening 1 · Submission Date": "2026-11-05 16:57:38",
+      "Bid opening 1 · Amount": "8,260,000.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154920116/opening/details",
+    "canonicalIdentity": "ref-org:mowe/supls/2026-2027/00159|ministry of water environment",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "RESTEVE INTERNATIONAL LTD (P.O BOX 29583 Nasser Road)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "RESTEVE INTERNATIONAL LTD",
+        "address": "P.O BOX 29583 Nasser Road",
+        "submissionAt": "2026-11-05T13:57:38Z",
+        "amount": "8,260,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 1,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154920116/opening/details",
+        "details": {
+          "bidsReceived": "1"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "a7039ebcb6710525605bc4dda2f7",
+    "title": "Open Domestic",
+    "organization": "Ministry of Energy & Mineral Development",
+    "referenceNumber": "MEMD/WRKS/2026-2027/00009",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Open Domestic",
+    "procurementType": "Open Domestic",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:memd/wrks/2026-2027/00009|ministry of energy mineral development",
+    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/151810206/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      },
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/index/409126388_egp",
+        "detectedAt": "2026-11-09T20:48:40.770753Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "GRANTON POWER LTD (113278 Kla)",
+      "Bid opening 1 · Submission Date": "2026-11-02 10:43:54",
+      "Bid opening 1 · Amount": "993,725,200.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "SUN CRAFT ENERGY SYSTEMS L.L.C (P.O.BOX 115518, Dubai, UAE)",
+      "Bid opening 2 · Submission Date": "2026-11-06 13:12:06",
+      "Bid opening 2 · Amount": "2,373,796,587.99",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "ALTEC-MMXIV LIMITED (P. O. Box 145713 Kampala GPO)",
+      "Bid opening 3 · Submission Date": "2026-11-07 23:51:47",
+      "Bid opening 3 · Amount": "2,399,992,000.02"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/151810206/opening/details",
+    "canonicalIdentity": "ref-org:memd/wrks/2026-2027/00009|ministry of energy mineral development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-10-20T10:42:37.044842Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "GRANTON POWER LTD (113278 Kla)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "SUN CRAFT ENERGY SYSTEMS L.L.C (P.O.BOX 115518, Dubai, UAE)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "ALTEC-MMXIV LIMITED (P. O. Box 145713 Kampala GPO)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "GRANTON POWER LTD",
+        "address": "113278 Kla",
+        "submissionAt": "2026-11-02T07:43:54Z",
+        "amount": "993,725,200.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "SUN CRAFT ENERGY SYSTEMS L.L.C",
+        "address": "P.O.BOX 115518, Dubai, UAE",
+        "submissionAt": "2026-11-06T10:12:06Z",
+        "amount": "2,373,796,587.99",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "ALTEC-MMXIV LIMITED",
+        "address": "P. O. Box 145713 Kampala GPO",
+        "submissionAt": "2026-11-07T20:51:47Z",
+        "amount": "2,399,992,000.02",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 3,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/151810206/opening/details",
+        "details": {
+          "bidsReceived": "3"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "3d38ee3944a239939829542f6e31",
+    "title": "Request For Quotations/Proposals",
+    "organization": "Ministry of Energy & Mineral Development",
+    "referenceNumber": "MEMD/SUPLS/2026-2027/00114",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Request For Quotations/Proposals",
+    "procurementType": "Request For Quotations/Proposals",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:memd/supls/2026-2027/00114|ministry of energy mineral development",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/151820336/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "KAKOMO HOLDINGS LIMITED (MUKONO JINJA HIGHWAY MUKONO MUNICIPALITY P.O Box 34694 KAMPALA UGANDA)",
+      "Bid opening 1 · Submission Date": "2026-11-05 10:40:20",
+      "Bid opening 1 · Amount": "32,479,500.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "TASHLINKS LIMITED (ntinda kiwatule najjera)",
+      "Bid opening 2 · Submission Date": "2026-11-05 13:00:14",
+      "Bid opening 2 · Amount": "33,999,930.00",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "PRIZED HOLDINGS LIMITED (Plot 37/39 Bombo Road)",
+      "Bid opening 3 · Submission Date": "2026-11-09 13:45:43",
+      "Bid opening 3 · Amount": "38,468,000.00",
+      "Bid opening 4 · #": "4",
+      "Bid opening 4 · Name & Address of The Bidder": "BOOM AGE UGANDA LIMITED (Plot 45, Musana House Nkrumah Road)",
+      "Bid opening 4 · Submission Date": "2026-11-09 14:20:15",
+      "Bid opening 4 · Amount": "36,580,000.00",
+      "Bid opening 5 · #": "5",
+      "Bid opening 5 · Name & Address of The Bidder": "DESH BUSINESS SOLUTIONS (U) LTD (Nkurumah Road)",
+      "Bid opening 5 · Submission Date": "2026-11-09 17:50:46",
+      "Bid opening 5 · Amount": "31,683,000.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Request For Quotations/Proposals",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/151820336/opening/details",
+    "canonicalIdentity": "ref-org:memd/supls/2026-2027/00114|ministry of energy mineral development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "KAKOMO HOLDINGS LIMITED (MUKONO JINJA HIGHWAY MUKONO MUNICIPALITY P.O Box 34694 KAMPALA UGANDA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "TASHLINKS LIMITED (ntinda kiwatule najjera)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "PRIZED HOLDINGS LIMITED (Plot 37/39 Bombo Road)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 4 · Name & Address of The Bidder",
+        "value": "BOOM AGE UGANDA LIMITED (Plot 45, Musana House Nkrumah Road)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 5 · Name & Address of The Bidder",
+        "value": "DESH BUSINESS SOLUTIONS (U) LTD (Nkurumah Road)",
+        "kind": "address"
+      },
+      {
+        "label": "Email",
+        "value": "s.nambuya@energy.go.ug",
+        "kind": "email"
+      },
+      {
+        "label": "Email",
+        "value": "m.adroner@energy.go.ug",
+        "kind": "email"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "KAKOMO HOLDINGS LIMITED",
+        "address": "MUKONO JINJA HIGHWAY MUKONO MUNICIPALITY P.O Box 34694 KAMPALA UGANDA",
+        "submissionAt": "2026-11-05T07:40:20Z",
+        "amount": "32,479,500.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "TASHLINKS LIMITED",
+        "address": "ntinda kiwatule najjera",
+        "submissionAt": "2026-11-05T10:00:14Z",
+        "amount": "33,999,930.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "PRIZED HOLDINGS LIMITED",
+        "address": "Plot 37/39 Bombo Road",
+        "submissionAt": "2026-11-09T10:45:43Z",
+        "amount": "38,468,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BOOM AGE UGANDA LIMITED",
+        "address": "Plot 45, Musana House Nkrumah Road",
+        "submissionAt": "2026-11-09T11:20:15Z",
+        "amount": "36,580,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "DESH BUSINESS SOLUTIONS",
+        "address": "U) LTD (Nkurumah Road",
+        "submissionAt": "2026-11-09T14:50:46Z",
+        "amount": "31,683,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 5,
+    "openingParticipants": [
+      {
+        "name": "Nambuya Barbara",
+        "address": "s.nambuya@energy.go.ug",
+        "position": "pde-branch-user",
+        "departmentCompany": "Ministry of Energy & Mineral Development"
+      },
+      {
+        "name": "Adroner Mary",
+        "address": "m.adroner@energy.go.ug",
+        "position": "pde-pdu-user",
+        "departmentCompany": "Ministry of Energy & Mineral Development"
+      }
+    ],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/151820336/opening/details",
+        "details": {
+          "bidsReceived": "5"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
+    "id": "d2766bc1b992d69083d8e347c2d4",
+    "title": "Request For Quotations/Proposals",
+    "organization": "Ministry of Energy & Mineral Development",
+    "referenceNumber": "MEMD/SUPLS/2026-2027/00117",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Request For Quotations/Proposals",
+    "procurementType": "Request For Quotations/Proposals",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-10T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:memd/supls/2026-2027/00117|ministry of energy mineral development",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/151822362/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "JERO - ONE TECHNOLOGIES LIMITED (Kampala Road P.O BOX 104120 Kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-04 20:08:33",
+      "Bid opening 1 · Amount": "57,413,372.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "BAHEKA CONSULT LIMITED (P.o Box 10805. Kampala Nasser Road)",
+      "Bid opening 2 · Submission Date": "2026-11-10 09:32:36",
+      "Bid opening 2 · Amount": "54,687,572.00"
+    },
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Electronic eGP portal submission",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Request For Quotations/Proposals",
+    "sourceStage": "Bid opening",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/151822362/opening/details",
+    "canonicalIdentity": "ref-org:memd/supls/2026-2027/00117|ministry of energy mineral development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ],
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "JERO - ONE TECHNOLOGIES LIMITED (Kampala Road P.O BOX 104120 Kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "BAHEKA CONSULT LIMITED (P.o Box 10805. Kampala Nasser Road)",
+        "kind": "address"
+      },
+      {
+        "label": "Email",
+        "value": "l.owere@energy.go.ug",
+        "kind": "email"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "JERO - ONE TECHNOLOGIES LIMITED",
+        "address": "Kampala Road P.O BOX 104120 Kampala",
+        "submissionAt": "2026-11-04T17:08:33Z",
+        "amount": "57,413,372.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BAHEKA CONSULT LIMITED",
+        "address": "P.o Box 10805. Kampala Nasser Road",
+        "submissionAt": "2026-11-10T06:32:36Z",
+        "amount": "54,687,572.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 2,
+    "openingParticipants": [
+      {
+        "name": "Leonard owere",
+        "address": "l.owere@energy.go.ug",
+        "position": "pde-branch-user",
+        "departmentCompany": "Ministry of Energy & Mineral Development"
+      }
+    ],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/151822362/opening/details",
+        "details": {
+          "bidsReceived": "2"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
+  },
+  {
     "id": "b4e3c714ddd140b0028c436531e6",
-    "title": "Building, Construction, Architectural, Plumbing and Carpentry Works - 01 Ranger outposts constructed in Kidepo Valley Conservation Area",
+    "title": "Open Domestic",
     "organization": "Ministry of Tourism, Wildlife and Antiquities",
     "referenceNumber": "MOTW/WRKS/2026-2027/00003",
-    "description": "Ministry of Tourism, Wildlife and Antiquities has allocated funds to be used for the above indicated. Your experience on this site will be improved by allowing cookies.",
-    "category": "Works",
-    "procurementType": "Works",
-    "publishedAt": "2026-10-20T21:00:00Z",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Open Domestic",
+    "procurementType": "Open Domestic",
+    "publishedAt": "",
     "deadlineAt": "2026-11-10T20:59:59Z",
     "status": "open",
     "isOpen": true,
     "fingerprint": "ref-org:motw/wrks/2026-2027/00003|ministry of tourism wildlife and antiquities",
     "firstSeenAt": "2026-10-21T13:51:54.274199Z",
-    "lastSeenAt": "2026-11-09T20:51:35.378009Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/bid/notice/152863726/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      },
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
@@ -29,35 +2586,44 @@
         "detectedAt": "2026-10-22T04:56:12.683246Z"
       }
     ],
-    "noticeType": "Request for Quotation Notice",
-    "openingAt": "",
-    "applicationUrl": "https://egpuganda.go.ug/login",
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
     "documents": [],
-    "sourceMetadata": {},
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "TAMA TAMA LIMITED (Kira town council plot 7101 P.O Box 22261,kampala)",
+      "Bid opening 1 · Submission Date": "2026-11-02 12:07:07",
+      "Bid opening 1 · Amount": "1,686,290,833.04",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "BYABEKI TECHNICAL SERVICES (U) LIMITED (Mbarara City)",
+      "Bid opening 2 · Submission Date": "2026-11-03 16:01:11",
+      "Bid opening 2 · Amount": "897,333,801.32"
+    },
     "intelligence": {
-      "enrichmentStatus": "basic",
-      "confidence": "low",
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
       "bidSecurity": "",
       "tenderFee": "",
-      "submissionMethod": "",
+      "submissionMethod": "Electronic eGP portal submission",
       "mandatoryRequirements": [],
       "eligibility": [],
       "keyDates": []
     },
-    "titleSpecificity": "specific",
-    "titleSource": "source-title",
-    "displayEligible": true,
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
     "procurementMethod": "",
-    "sourceStage": "Bidding / submission",
+    "sourceStage": "Bid opening",
     "canonicalSource": "eGP Uganda",
-    "canonicalSourceUrl": "https://egpuganda.go.ug/index/412833968_egp",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/152863726/opening/details",
     "canonicalIdentity": "ref-org:motw/wrks/2026-2027/00003|ministry of tourism wildlife and antiquities",
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-21T13:51:54.274199Z",
-    "lastVerifiedAt": "2026-11-09T20:51:35.378009Z",
-    "verificationStatus": "not-seen-current-scan",
-    "verificationNote": "Source completed but did not return this known bid; existing bid retained.",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
       {
         "status": "open",
@@ -65,193 +2631,206 @@
         "reason": "discovered-and-verified"
       }
     ],
-    "retainedFromPreviousSnapshot": true
+    "contacts": [
+      {
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "TAMA TAMA LIMITED (Kira town council plot 7101 P.O Box 22261,kampala)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "BYABEKI TECHNICAL SERVICES (U) LIMITED (Mbarara City)",
+        "kind": "address"
+      }
+    ],
+    "bidders": [
+      {
+        "name": "TAMA TAMA LIMITED",
+        "address": "Kira town council plot 7101 P.O Box 22261,kampala",
+        "submissionAt": "2026-11-02T09:07:07Z",
+        "amount": "1,686,290,833.04",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "BYABEKI TECHNICAL SERVICES",
+        "address": "U) LIMITED (Mbarara City",
+        "submissionAt": "2026-11-03T13:01:11Z",
+        "amount": "897,333,801.32",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      }
+    ],
+    "bidsReceived": 2,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
+      {
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/152863726/opening/details",
+        "details": {
+          "bidsReceived": "2"
+        }
+      }
+    ],
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
   },
   {
-    "id": "72962cf085d07f5774488b2e7dd5",
-    "title": "Construction of a Climate smart Water Storage and harvesting System and Associated Catchment Protection Measures in Ntoroko District under IFDMP",
-    "organization": "Ministry of Water & Environment",
-    "referenceNumber": "MoWE/WRKS/2026-2027/00063",
-    "description": "Ministry of Water & Environment has allocated funds to be used for the above indicated. Your experience on this site will be improved by allowing cookies.",
-    "category": "Works",
-    "procurementType": "Works",
-    "publishedAt": "2026-10-07T21:00:00Z",
+    "id": "58ddd0a378e5ea0785c64d5402b2",
+    "title": "Micro Procurement",
+    "organization": "Ministry of Works and Transport",
+    "referenceNumber": "MOWT/NCONS/2026-2027/00052",
+    "description": "Your experience on this site will be improved by allowing cookies.",
+    "category": "Micro Procurement",
+    "procurementType": "Micro Procurement",
+    "publishedAt": "",
     "deadlineAt": "2026-11-10T20:59:59Z",
     "status": "open",
     "isOpen": true,
-    "fingerprint": "ref-org:mowe/wrks/2026-2027/00063|ministry of water environment",
-    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-09T20:51:35.378009Z",
+    "fingerprint": "ref-org:mowt/ncons/2026-2027/00052|ministry of works and transport",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
-        "url": "https://egpuganda.go.ug/index/408976464_egp",
-        "detectedAt": "2026-11-09T20:48:40.770753Z"
+        "url": "https://egpuganda.go.ug/bid/notice/154995078/opening/details",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
-    "noticeType": "Request for Quotation Notice",
-    "openingAt": "",
-    "applicationUrl": "https://egpuganda.go.ug/login",
+    "noticeType": "",
+    "openingAt": "2026-11-09T21:00:00Z",
+    "applicationUrl": "",
     "documents": [],
-    "sourceMetadata": {},
+    "sourceMetadata": {
+      "Bid opening 1 · #": "1",
+      "Bid opening 1 · Name & Address of The Bidder": "TOYOZU INVESTMENTS LTD (PO Box 33918, KAMPALA - UGANDA)",
+      "Bid opening 1 · Submission Date": "2026-11-07 18:44:44",
+      "Bid opening 1 · Amount": "11,033,000.00",
+      "Bid opening 2 · #": "2",
+      "Bid opening 2 · Name & Address of The Bidder": "KATWAALO MOTOR ENTERPRISE (NDEEBA 73377 KAMPALA UGANDA)",
+      "Bid opening 2 · Submission Date": "2026-11-08 11:44:20",
+      "Bid opening 2 · Amount": "9,888,400.00",
+      "Bid opening 3 · #": "3",
+      "Bid opening 3 · Name & Address of The Bidder": "SUMMER AUTO SERVICES LTD (P.O Box30265 KAMPALA Gaba Road,Plot 5719 Branch off 50 mtrs from Shell Bunga Street:Margret Close)",
+      "Bid opening 3 · Submission Date": "2026-11-09 14:13:51",
+      "Bid opening 3 · Amount": "13,994,800.00"
+    },
     "intelligence": {
-      "enrichmentStatus": "basic",
-      "confidence": "low",
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
       "bidSecurity": "",
       "tenderFee": "",
-      "submissionMethod": "",
+      "submissionMethod": "Electronic eGP portal submission",
       "mandatoryRequirements": [],
       "eligibility": [],
       "keyDates": []
     },
-    "titleSpecificity": "specific",
-    "titleSource": "source-title",
-    "displayEligible": true,
-    "procurementMethod": "",
-    "sourceStage": "Bidding / submission",
+    "titleSpecificity": "unresolved",
+    "titleSource": "unresolved",
+    "displayEligible": false,
+    "procurementMethod": "Micro Procurement",
+    "sourceStage": "Bid opening",
     "canonicalSource": "eGP Uganda",
-    "canonicalSourceUrl": "https://egpuganda.go.ug/index/408976464_egp",
-    "canonicalIdentity": "ref-org:mowe/wrks/2026-2027/00063|ministry of water environment",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154995078/opening/details",
+    "canonicalIdentity": "ref-org:mowt/ncons/2026-2027/00052|ministry of works and transport",
     "retentionStatus": "active",
     "opportunityType": "tender",
-    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-09T20:51:35.378009Z",
-    "verificationStatus": "not-seen-current-scan",
-    "verificationNote": "Source completed but did not return this known bid; existing bid retained.",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
       {
         "status": "open",
-        "at": "2026-10-20T10:42:37.044842Z",
+        "at": "2026-11-10T12:45:53.849566Z",
         "reason": "discovered-and-verified"
       }
     ],
-    "retainedFromPreviousSnapshot": true
-  },
-  {
-    "id": "a7039ebcb6710525605bc4dda2f7",
-    "title": "Procure two (2) EV charging Equipment (Supply, installation and commissioning of EV charging Equipment)",
-    "organization": "Ministry of Energy & Mineral Development",
-    "referenceNumber": "MEMD/WRKS/2026-2027/00009",
-    "description": "Ministry of Energy & Mineral Development has allocated funds to be used for the above indicated. Your experience on this site will be improved by allowing cookies.",
-    "category": "Works",
-    "procurementType": "Works",
-    "publishedAt": "2026-10-08T21:00:00Z",
-    "deadlineAt": "2026-11-10T20:59:59Z",
-    "status": "open",
-    "isOpen": true,
-    "fingerprint": "ref-org:memd/wrks/2026-2027/00009|ministry of energy mineral development",
-    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-09T20:51:35.378009Z",
-    "deadlineChanged": false,
-    "sources": [
+    "contacts": [
       {
-        "id": "egp-uganda",
-        "name": "eGP Uganda",
-        "url": "https://egpuganda.go.ug/index/409126388_egp",
-        "detectedAt": "2026-11-09T20:48:40.770753Z"
+        "label": "Bid opening 1 · Name & Address of The Bidder",
+        "value": "TOYOZU INVESTMENTS LTD (PO Box 33918, KAMPALA - UGANDA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 2 · Name & Address of The Bidder",
+        "value": "KATWAALO MOTOR ENTERPRISE (NDEEBA 73377 KAMPALA UGANDA)",
+        "kind": "address"
+      },
+      {
+        "label": "Bid opening 3 · Name & Address of The Bidder",
+        "value": "SUMMER AUTO SERVICES LTD (P.O Box30265 KAMPALA Gaba Road,Plot 5719 Branch off 50 mtrs from Shell Bunga Street:Margret Close)",
+        "kind": "address"
       }
     ],
-    "noticeType": "Request for Quotation Notice",
-    "openingAt": "",
-    "applicationUrl": "https://egpuganda.go.ug/login",
-    "documents": [],
-    "sourceMetadata": {},
-    "intelligence": {
-      "enrichmentStatus": "basic",
-      "confidence": "low",
-      "bidSecurity": "",
-      "tenderFee": "",
-      "submissionMethod": "",
-      "mandatoryRequirements": [],
-      "eligibility": [],
-      "keyDates": []
-    },
-    "titleSpecificity": "specific",
-    "titleSource": "source-title",
-    "displayEligible": true,
-    "procurementMethod": "",
-    "sourceStage": "Bidding / submission",
-    "canonicalSource": "eGP Uganda",
-    "canonicalSourceUrl": "https://egpuganda.go.ug/index/409126388_egp",
-    "canonicalIdentity": "ref-org:memd/wrks/2026-2027/00009|ministry of energy mineral development",
-    "retentionStatus": "active",
-    "opportunityType": "tender",
-    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-09T20:51:35.378009Z",
-    "verificationStatus": "not-seen-current-scan",
-    "verificationNote": "Source completed but did not return this known bid; existing bid retained.",
-    "statusHistory": [
+    "bidders": [
       {
-        "status": "open",
-        "at": "2026-10-20T10:42:37.044842Z",
-        "reason": "discovered-and-verified"
+        "name": "TOYOZU INVESTMENTS LTD",
+        "address": "PO Box 33918, KAMPALA - UGANDA",
+        "submissionAt": "2026-11-07T15:44:44Z",
+        "amount": "11,033,000.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "KATWAALO MOTOR ENTERPRISE",
+        "address": "NDEEBA 73377 KAMPALA UGANDA",
+        "submissionAt": "2026-11-08T08:44:20Z",
+        "amount": "9,888,400.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
+      },
+      {
+        "name": "SUMMER AUTO SERVICES LTD",
+        "address": "P.O Box30265 KAMPALA Gaba Road,Plot 5719 Branch off 50 mtrs from Shell Bunga Street:Margret Close",
+        "submissionAt": "2026-11-09T11:13:51Z",
+        "amount": "13,994,800.00",
+        "currency": "",
+        "rank": "",
+        "status": "",
+        "evaluationStage": "",
+        "reasons": []
       }
     ],
-    "retainedFromPreviousSnapshot": true
-  },
-  {
-    "id": "afe0c6f12ee759f85ed6bac3e864",
-    "title": "Computer programming and software development - Framework for the Provision of Software Development Services",
-    "organization": "Uganda National Bureau of Standards",
-    "referenceNumber": "UNBS/NCONS/2026-2027/00056",
-    "description": "Uganda National Bureau of Standards has allocated funds to be used for the above indicated. Your experience on this site will be improved by allowing cookies.",
-    "category": "Non Consultancy Services",
-    "procurementType": "Non Consultancy Services",
-    "publishedAt": "2026-10-13T21:00:00Z",
-    "deadlineAt": "2026-11-10T20:59:59Z",
-    "status": "open",
-    "isOpen": true,
-    "fingerprint": "ref-org:unbs/ncons/2026-2027/00056|uganda national bureau of standards",
-    "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-09T20:51:35.378009Z",
-    "deadlineChanged": false,
-    "sources": [
+    "bidsReceived": 3,
+    "openingParticipants": [],
+    "openingCommittee": [],
+    "amendments": [],
+    "lifecycleEvents": [
       {
-        "id": "egp-uganda",
-        "name": "eGP Uganda",
-        "url": "https://egpuganda.go.ug/index/410382508_egp",
-        "detectedAt": "2026-11-09T20:48:40.770753Z"
+        "stage": "bid-opening",
+        "title": "Bid opening",
+        "occurredAt": "2026-11-09T21:00:00Z",
+        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154995078/opening/details",
+        "details": {
+          "bidsReceived": "3"
+        }
       }
     ],
-    "noticeType": "Request for Quotation Notice",
-    "openingAt": "",
-    "applicationUrl": "https://egpuganda.go.ug/login",
-    "documents": [],
-    "sourceMetadata": {},
-    "intelligence": {
-      "enrichmentStatus": "basic",
-      "confidence": "low",
-      "bidSecurity": "",
-      "tenderFee": "",
-      "submissionMethod": "",
-      "mandatoryRequirements": [],
-      "eligibility": [],
-      "keyDates": []
-    },
-    "titleSpecificity": "specific",
-    "titleSource": "source-title",
-    "displayEligible": true,
-    "procurementMethod": "",
-    "sourceStage": "Bidding / submission",
-    "canonicalSource": "eGP Uganda",
-    "canonicalSourceUrl": "https://egpuganda.go.ug/index/410382508_egp",
-    "canonicalIdentity": "ref-org:unbs/ncons/2026-2027/00056|uganda national bureau of standards",
-    "retentionStatus": "active",
-    "opportunityType": "tender",
-    "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-09T20:51:35.378009Z",
-    "verificationStatus": "not-seen-current-scan",
-    "verificationNote": "Source completed but did not return this known bid; existing bid retained.",
-    "statusHistory": [
-      {
-        "status": "open",
-        "at": "2026-10-20T10:42:37.044842Z",
-        "reason": "discovered-and-verified"
-      }
-    ],
-    "retainedFromPreviousSnapshot": true
+    "bestEvaluatedBidder": "",
+    "contractAmount": "",
+    "contractCurrency": "",
+    "phase4Enriched": true
   },
   {
     "id": "1234e9691ae1bf631b9e09987891",
@@ -338,14 +2917,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00475708|electricity access scale up project easp",
     "firstSeenAt": "2026-10-28T16:42:12.464808Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00475708",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -378,7 +2957,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-28T16:42:12.464808Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -468,14 +3047,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:npa/ncons/2026-2027/00019|national planning authority",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/416168764_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       },
       {
         "id": "egp-uganda",
@@ -510,7 +3089,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -535,14 +3114,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:pou/supls/2026-2027/00130|parliament of uganda",
     "firstSeenAt": "2026-10-28T08:38:40.664528Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/411966840_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -571,7 +3150,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-28T08:38:40.664528Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -596,14 +3175,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:pou/supls/2026-2027/00129|parliament of uganda",
     "firstSeenAt": "2026-10-28T08:38:40.664528Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/411964814_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -632,7 +3211,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-28T08:38:40.664528Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -657,14 +3236,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:pou/supls/2026-2027/00126|parliament of uganda",
     "firstSeenAt": "2026-10-28T08:38:40.664528Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/411970892_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -693,7 +3272,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-28T08:38:40.664528Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -718,14 +3297,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:motw/ncons/2026-2027/00037|ministry of tourism wildlife and antiquities",
     "firstSeenAt": "2026-10-21T13:51:54.274199Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/410246766_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -754,7 +3333,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-21T13:51:54.274199Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -779,14 +3358,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:motw/ncons/2026-2027/00036|ministry of tourism wildlife and antiquities",
     "firstSeenAt": "2026-10-21T13:51:54.274199Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/409574134_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -815,7 +3394,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-21T13:51:54.274199Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -840,14 +3419,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|water supply and sanitation for refugee settlements and host communities in northern uganda|giz uganda",
     "firstSeenAt": "2026-10-30T08:57:17.928749Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/sites/default/files/media/els-document/2026-10/7000025705-bid-documents.zip",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -879,7 +3458,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T08:57:17.928749Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -904,14 +3483,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/supls/2026-2027/00038|uganda civil aviation authority",
     "firstSeenAt": "2026-10-22T11:59:31.084515Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/409316832_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -940,7 +3519,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-22T11:59:31.084515Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -965,14 +3544,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:uganda electricity distribution company|engineering procurement and construction epc of kigo 33 11kv substation 33kv 11kv integration lines land acquisition and wayleave clearance|gpp ppda",
     "firstSeenAt": "2026-10-30T08:57:17.928749Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98684",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -1003,7 +3582,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T08:57:17.928749Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1028,14 +3607,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|welcome to the giz uganda tenders page|giz uganda",
     "firstSeenAt": "2026-11-09T01:45:48.271390Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
-    "deadlineChanged": true,
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/en/invitation-tender-consultancy-services-customary-land-registration-and-capacity-building-responsible",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       },
       {
         "id": "giz-uganda",
@@ -1075,7 +3654,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T01:45:48.271390Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1100,14 +3679,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|invitation to tender for consultancy services for customary land registration and capacity building on responsible agriculture investment for 12 forest owners and neighbouring communities in omoro and nwoya|giz uganda",
     "firstSeenAt": "2026-10-30T08:57:17.928749Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/en/invitation-tender-consultancy-services-customary-land-registration-and-capacity-building-responsible",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -1141,7 +3720,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T08:57:17.928749Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1296,14 +3875,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:pou/ncons/2026-2027/00804|parliament of uganda",
     "firstSeenAt": "2026-11-03T16:18:50.910403Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/417457300_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -1332,7 +3911,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-03T16:18:50.910403Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1357,14 +3936,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ppda/cons/2026-2027/00026|public procurement and disposal of the public assets authority",
     "firstSeenAt": "2026-10-21T13:51:54.274199Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412890696_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -1393,7 +3972,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-21T13:51:54.274199Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1418,14 +3997,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:dcic/ncons/2026-2027/00017|directorate of citizenship and immigration control",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/406881580_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -1454,7 +4033,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1541,14 +4120,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00472335|uganda digital acceleration project govnet",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00472335",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -1577,7 +4156,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1602,14 +4181,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00171|ministry of water environment",
     "firstSeenAt": "2026-10-30T08:57:17.928749Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412319364_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -1638,7 +4217,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T08:57:17.928749Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1663,14 +4242,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:national water sewerage corporation|hydrogeological surveys and siting of production boreholes in nwsc areas for a period of 18 months under four 04 lots|gpp ppda",
     "firstSeenAt": "2026-11-04T06:33:28.209316Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98749",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -1701,7 +4280,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-04T06:33:28.209316Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1726,14 +4305,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|invitation to tender for consultancy services to coordinate and implement the pue cooking demonstrator project|giz uganda",
     "firstSeenAt": "2026-11-04T06:33:28.209316Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/en/invitation-tender-consultancy-services-coordinate-and-implement-pue-cooking-demonstrator-project",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -1767,7 +4346,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-04T06:33:28.209316Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1854,14 +4433,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00476881|uganda digital acceleration project govnet",
     "firstSeenAt": "2026-10-28T16:42:12.464808Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00476881",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -1890,7 +4469,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-28T16:42:12.464808Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1915,14 +4494,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:pou/supls/2026-2027/00115|parliament of uganda",
     "firstSeenAt": "2026-11-03T16:18:50.910403Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/415980346_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -1951,7 +4530,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-03T16:18:50.910403Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -1976,14 +4555,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:kcca/supls/2026-2027/00310|kampala capital city authority",
     "firstSeenAt": "2026-10-29T19:41:06.252598Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/416768460_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2012,7 +4591,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-29T19:41:06.252598Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2037,14 +4616,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:makerere university business school|motor vehicles bus and station wagon|gpp ppda",
     "firstSeenAt": "2026-10-30T12:33:44.561370Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98735",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -2075,7 +4654,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T12:33:44.561370Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2100,14 +4679,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|sustainable agriculture for forest ecosystems|giz uganda",
     "firstSeenAt": "2026-10-30T08:57:17.928749Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/sites/default/files/media/els-document/2026-10/7000025994-bid-documents.zip",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -2139,7 +4718,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T08:57:17.928749Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2164,14 +4743,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00471233|uganda secondary education expansion project",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00471233",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -2200,7 +4779,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2290,14 +4869,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/supls/2026-2027/00116|ministry of energy mineral development",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/421373558_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       },
       {
         "id": "egp-uganda",
@@ -2332,7 +4911,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2357,14 +4936,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/wrks/2026-2027/00010|ministry of energy mineral development",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412499678_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2393,7 +4972,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2418,14 +4997,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:giz uganda|enhancing good governance in sudan programme|giz uganda",
     "firstSeenAt": "2026-11-02T16:16:33.843381Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/sites/default/files/media/els-document/2026-11/7000026264-bid-documents.zip",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -2457,7 +5036,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-02T16:16:33.843381Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2482,14 +5061,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00477104|uganda secondary education expansion project",
     "firstSeenAt": "2026-10-24T11:08:50.280110Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00477104",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -2520,7 +5099,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-24T11:08:50.280110Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2545,14 +5124,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/supls/2026-2027/00031|uganda civil aviation authority",
     "firstSeenAt": "2026-11-09T20:49:07.460701Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/418340636_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2581,7 +5160,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T20:49:07.460701Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2606,14 +5185,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ursb/supls/2026-2027/00068|uganda registration services bureau",
     "firstSeenAt": "2026-11-09T20:49:07.460701Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/421452572_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2644,7 +5223,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T20:49:07.460701Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2669,14 +5248,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:molhud/supls/2026-2027/00097|ministry of lands housing and urban development",
     "firstSeenAt": "2026-10-26T15:24:10.642938Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/408099206_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2705,7 +5284,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-26T15:24:10.642938Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2730,14 +5309,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:molhud/cons/2026-2027/00005|ministry of lands housing and urban development",
     "firstSeenAt": "2026-10-23T07:45:20.303432Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/410874826_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -2766,7 +5345,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-23T07:45:20.303432Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2791,14 +5370,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:terego district local government|construction and climate proofing of opd kitchen and waiting shed at cilio hc iii|gpp ppda",
     "firstSeenAt": "2026-11-03T16:18:50.910403Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98746",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -2829,7 +5408,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-03T16:18:50.910403Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -2854,14 +5433,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:nts_final.pdfux|giz uganda",
     "firstSeenAt": "2026-11-02T16:16:33.843381Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "giz-uganda",
         "name": "GIZ Uganda",
         "url": "https://www.giz.de/sites/default/files/media/els-document/2026-10/7000026088-national-transition-strategy-sef.zip",
-        "detectedAt": "2026-11-10T04:13:42.226397Z"
+        "detectedAt": "2026-11-10T12:43:13.103898Z"
       }
     ],
     "noticeType": "",
@@ -2893,7 +5472,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-02T16:16:33.843381Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3117,14 +5696,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/cons/2026-2027/00020|ministry of energy mineral development",
     "firstSeenAt": "2026-11-09T09:53:12.819758Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/418302142_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3153,7 +5732,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T09:53:12.819758Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3178,14 +5757,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/ncons/2026-2027/00183|uganda civil aviation authority",
     "firstSeenAt": "2026-11-02T16:16:33.843381Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/414592536_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3214,7 +5793,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-02T16:16:33.843381Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3239,14 +5818,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/ncons/2026-2027/00164|uganda civil aviation authority",
     "firstSeenAt": "2026-11-02T16:16:33.843381Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/414778928_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3275,7 +5854,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-02T16:16:33.843381Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3365,14 +5944,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/ncons/2026-2027/00057|ministry of water environment",
     "firstSeenAt": "2026-11-04T23:44:30.896989Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/413930034_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3401,7 +5980,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-04T23:44:30.896989Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3426,14 +6005,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00129|ministry of water environment",
     "firstSeenAt": "2026-11-04T16:28:34.750045Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/413198648_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3462,7 +6041,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-04T16:28:34.750045Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3487,14 +6066,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00096|ministry of water environment",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/413044672_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       },
       {
         "id": "egp-uganda",
@@ -3529,7 +6108,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3619,14 +6198,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/supls/2026-2027/00105|ministry of energy mineral development",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/410380482_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3655,7 +6234,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3680,14 +6259,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/supls/2026-2027/00057|ministry of energy mineral development",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/415789902_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3716,7 +6295,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3741,14 +6320,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/cons/2026-2027/00005|ministry of energy mineral development",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412244402_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3777,7 +6356,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3802,14 +6381,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/supls/2025-2026/00167|uganda civil aviation authority",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/418468274_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3838,7 +6417,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3863,14 +6442,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00092|ministry of water environment",
     "firstSeenAt": "2026-11-05T16:30:56.946082Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412207934_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -3899,7 +6478,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T16:30:56.946082Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3924,14 +6503,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00081|ministry of water environment",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/412951476_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       },
       {
         "id": "egp-uganda",
@@ -3966,7 +6545,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -3991,14 +6570,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:mowe/supls/2026-2027/00134|ministry of water environment",
     "firstSeenAt": "2026-11-05T06:55:59.071539Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/410787708_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4027,7 +6606,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T06:55:59.071539Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4052,14 +6631,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00475664|uganda climate smart agricultural transformation project",
     "firstSeenAt": "2026-10-20T10:39:08.290590Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00475664",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -4090,7 +6669,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:39:08.290590Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4115,14 +6694,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/cons/2026-2027/00027|ministry of energy mineral development",
     "firstSeenAt": "2026-11-09T20:49:07.460701Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/422149516_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4151,7 +6730,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T20:49:07.460701Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4176,14 +6755,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/ncons/2026-2027/00186|uganda civil aviation authority",
     "firstSeenAt": "2026-11-06T15:58:22.662642Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/419461014_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4212,7 +6791,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-06T15:58:22.662642Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4237,14 +6816,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:moh/cons/2026-2027/00001|ministry of health",
     "firstSeenAt": "2026-11-06T15:58:22.662642Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/415637952_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4273,7 +6852,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-06T15:58:22.662642Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4347,6 +6926,69 @@
     "retainedFromPreviousSnapshot": true
   },
   {
+    "id": "3816c31b50ca36f5ea9fd81191b6",
+    "title": "Uganda Skills Development in Refugee and Host Communities — Request for Bids",
+    "organization": "Uganda Skills Development in Refugee and Host Communities",
+    "referenceNumber": "OP00479942",
+    "description": "Uganda Skills Development in Refugee and Host Communities | P176263 | REPUBLIC OF UGANDA MINISTRY OF EDUCATION AND SPORTS UGANDA SKILLS DEVELOPMENT IN REFUGEE AND HOST COMMUNITIES PROJECT (USDRH) GRANT NO: C8198-UG Request for Bids Small Works (One-Envelope Bidding Process) Country: Uganda Name of Project: Uganda Skills Development in Refugee and Host Communities Contract Title: Construction and Rehabilitation of a Skills Development Centre at Buhungiro Technical School in Isingiro District under the Uganda Skills Development in Refugee and Host Communities (USDRH) Grant No.: P176263 RFB Reference No.: UG-MOES-575711-CW-RFB The Government of the Republic of Uganda has received financing from the Multi-Donor Trust Fund for Forced Displacement toward the cost of the Uganda Skills Development in Refugee and Host Communities (USDRH) , and intends to apply part of the proceeds toward payments under the contracts for Construction and Rehabilitation of a Skills Development Centre at Buhungiro Technical School in Isingiro District. For this contract, the Borrower shall process the payments using the Direct Payment disbursement method, as defined in the World Bank’s Disbursement Guidelines for Investment Project Financing. The Ministry of Education and Sports now invites sealed Bids from eligible Bidders for Rehabilitation and refurbishment of selected facilities including; Girl's Dormitory Renovation, Carpentery & Joinery Renovation, Agro-Processing Laboratory, Feed Mill, Milking Parlour, Zero Grazing, Spray Race, Broiler, Layer & Pullet Barn, Boy's Dormitory, Administration Latrin",
+    "category": "Request for Bids",
+    "procurementType": "Request for Bids",
+    "publishedAt": "",
+    "deadlineAt": "2026-11-30T00:00:00Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:op00479942|uganda skills development in refugee and host communities",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "world-bank-uganda",
+        "name": "World Bank Uganda",
+        "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00479942",
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
+      }
+    ],
+    "noticeType": "",
+    "openingAt": "",
+    "applicationUrl": "",
+    "documents": [],
+    "sourceMetadata": {},
+    "intelligence": {
+      "enrichmentStatus": "partial",
+      "confidence": "medium",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "Physical / sealed submission",
+      "mandatoryRequirements": [],
+      "eligibility": [
+        "Eligible bidders"
+      ],
+      "keyDates": []
+    },
+    "titleSpecificity": "specific",
+    "titleSource": "source-title",
+    "displayEligible": true,
+    "procurementMethod": "Request for Bids",
+    "sourceStage": "Bidding / submission",
+    "canonicalSource": "World Bank Uganda",
+    "canonicalSourceUrl": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00479942",
+    "canonicalIdentity": "ref-org:op00479942|uganda skills development in refugee and host communities",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
+        "reason": "discovered-and-verified"
+      }
+    ]
+  },
+  {
     "id": "92d9e4d6089c6669a425f5d96275",
     "title": "Uganda Digital Acceleration Project - GovNet — Request for Bids",
     "organization": "Uganda Digital Acceleration Project - GovNet",
@@ -4360,14 +7002,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00475833|uganda digital acceleration project govnet",
     "firstSeenAt": "2026-10-20T10:58:23.280232Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00475833",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -4396,7 +7038,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-20T10:58:23.280232Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4421,14 +7063,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/ncons/2026-2027/00181|uganda civil aviation authority",
     "firstSeenAt": "2026-11-09T09:53:12.819758Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/421207426_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4457,7 +7099,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T09:53:12.819758Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4482,14 +7124,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:memd/wrks/2026-2027/00015|ministry of energy mineral development",
     "firstSeenAt": "2026-11-09T09:53:12.819758Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/414594562_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4518,7 +7160,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-09T09:53:12.819758Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4543,14 +7185,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:ucaa/ncons/2026-2027/00173|uganda civil aviation authority",
     "firstSeenAt": "2026-11-06T15:58:22.662642Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/418634406_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4579,7 +7221,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-06T15:58:22.662642Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4604,14 +7246,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:national water sewerage corporation|supply and installation of heavy duty lathe machine for the maintenance work shop in wpd|gpp ppda",
     "firstSeenAt": "2026-10-30T19:27:29.128591Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98737",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -4642,7 +7284,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T19:27:29.128591Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4667,14 +7309,14 @@
     "isOpen": true,
     "fingerprint": "org-title-source:national water sewerage corporation|supply of assorted equipment for water loss|gpp ppda",
     "firstSeenAt": "2026-10-30T19:27:29.128591Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "gpp-ppda",
         "name": "GPP / PPDA",
         "url": "https://gpp.ppda.go.ug/public/bid-invitations/tender-notice/98738",
-        "detectedAt": "2026-11-10T04:13:44.442246Z"
+        "detectedAt": "2026-11-10T12:43:14.419312Z"
       }
     ],
     "noticeType": "",
@@ -4705,13 +7347,74 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-10-30T19:27:29.128591Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
       {
         "status": "open",
         "at": "2026-10-30T19:28:10.186759Z",
+        "reason": "discovered-and-verified"
+      }
+    ]
+  },
+  {
+    "id": "6c8b4756bb210152ad69d00c59bf",
+    "title": "Well drilling and construction services - Supervision consultant for drilling and Modelling",
+    "organization": "Ministry of Energy & Mineral Development",
+    "referenceNumber": "MEMD/CONS/2026-2027/00017",
+    "description": "Ministry of Energy & Mineral Development has allocated funds to be used for the above indicated. Your experience on this site will be improved by allowing cookies.",
+    "category": "Consultancy Services",
+    "procurementType": "Consultancy Services",
+    "publishedAt": "2026-10-28T21:00:00Z",
+    "deadlineAt": "2026-12-02T20:59:59Z",
+    "status": "open",
+    "isOpen": true,
+    "fingerprint": "ref-org:memd/cons/2026-2027/00017|ministry of energy mineral development",
+    "firstSeenAt": "2026-11-10T12:43:26.448232Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
+    "deadlineChanged": false,
+    "sources": [
+      {
+        "id": "egp-uganda",
+        "name": "eGP Uganda",
+        "url": "https://egpuganda.go.ug/index/416977138_egp",
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
+      }
+    ],
+    "noticeType": "Request for Quotation Notice",
+    "openingAt": "",
+    "applicationUrl": "https://egpuganda.go.ug/login",
+    "documents": [],
+    "sourceMetadata": {},
+    "intelligence": {
+      "enrichmentStatus": "basic",
+      "confidence": "low",
+      "bidSecurity": "",
+      "tenderFee": "",
+      "submissionMethod": "",
+      "mandatoryRequirements": [],
+      "eligibility": [],
+      "keyDates": []
+    },
+    "titleSpecificity": "specific",
+    "titleSource": "source-title",
+    "displayEligible": true,
+    "procurementMethod": "",
+    "sourceStage": "Bidding / submission",
+    "canonicalSource": "eGP Uganda",
+    "canonicalSourceUrl": "https://egpuganda.go.ug/index/416977138_egp",
+    "canonicalIdentity": "ref-org:memd/cons/2026-2027/00017|ministry of energy mineral development",
+    "retentionStatus": "active",
+    "opportunityType": "tender",
+    "firstDetectedAt": "2026-11-10T12:43:26.448232Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
+    "verificationStatus": "verified",
+    "verificationNote": "Observed in the current source scan.",
+    "statusHistory": [
+      {
+        "status": "open",
+        "at": "2026-11-10T12:45:53.849566Z",
         "reason": "discovered-and-verified"
       }
     ]
@@ -4730,14 +7433,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:molhud/cons/2026-2027/00006|ministry of lands housing and urban development",
     "firstSeenAt": "2026-11-05T06:55:59.071539Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "egp-uganda",
         "name": "eGP Uganda",
         "url": "https://egpuganda.go.ug/index/417927332_egp",
-        "detectedAt": "2026-11-10T04:13:43.368343Z"
+        "detectedAt": "2026-11-10T12:43:08.806703Z"
       }
     ],
     "noticeType": "Request for Quotation Notice",
@@ -4766,7 +7469,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-05T06:55:59.071539Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -4791,14 +7494,14 @@
     "isOpen": true,
     "fingerprint": "ref-org:op00479028|uganda learning acceleration program ulearn",
     "firstSeenAt": "2026-11-04T16:28:34.750045Z",
-    "lastSeenAt": "2026-11-10T04:17:01.027614Z",
+    "lastSeenAt": "2026-11-10T12:45:53.849566Z",
     "deadlineChanged": false,
     "sources": [
       {
         "id": "world-bank-uganda",
         "name": "World Bank Uganda",
         "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP00479028",
-        "detectedAt": "2026-11-10T04:13:36.639480Z"
+        "detectedAt": "2026-11-10T12:43:06.029211Z"
       }
     ],
     "noticeType": "",
@@ -4829,7 +7532,7 @@
     "retentionStatus": "active",
     "opportunityType": "tender",
     "firstDetectedAt": "2026-11-04T16:28:34.750045Z",
-    "lastVerifiedAt": "2026-11-10T04:17:01.027614Z",
+    "lastVerifiedAt": "2026-11-10T12:45:53.849566Z",
     "verificationStatus": "verified",
     "verificationNote": "Observed in the current source scan.",
     "statusHistory": [
@@ -13621,7 +16324,7 @@
     "title": "Open Domestic",
     "organization": "Ministry of Energy & Mineral Development",
     "referenceNumber": "MEMD/SUPLS/2026-2027/00012",
-    "description": "Your experience on this site will be improved by allowing cookies.",
+    "description": "Select All 2025-2026 2024-2025 2023-2024 2022-2023 2021-2022 2020-2021 2019-2020 Your experience on this site will be improved by allowing cookies.",
     "category": "Open Domestic",
     "procurementType": "Open Domestic",
     "publishedAt": "",
@@ -13689,20 +16392,8 @@
         "kind": "address"
       }
     ],
-    "bidders": [
-      {
-        "name": "MOTOR CARE UGANDA LTD",
-        "address": "PLOT 95 JINJA ROAD P.O BOX 12704, KAMPALA UGANDA",
-        "submissionAt": "2026-10-02T07:59:50Z",
-        "amount": "784,406,935.20",
-        "currency": "",
-        "rank": "",
-        "status": "",
-        "evaluationStage": "",
-        "reasons": []
-      }
-    ],
-    "bidsReceived": 1,
+    "bidders": [],
+    "bidsReceived": null,
     "openingParticipants": [],
     "openingCommittee": [],
     "amendments": [],
@@ -13712,9 +16403,7 @@
         "title": "Bid opening",
         "occurredAt": "2026-10-04T21:00:00Z",
         "sourceUrl": "https://egpuganda.go.ug/bid/notice/147638672/opening/details",
-        "details": {
-          "bidsReceived": "1"
-        }
+        "details": {}
       },
       {
         "stage": "closed",
@@ -136085,149 +138774,6 @@
         "title": "Submission deadline passed",
         "occurredAt": "2026-11-06T20:59:59Z",
         "sourceUrl": "https://egpuganda.go.ug/bid/notice/154292056/opening/details",
-        "details": {}
-      }
-    ],
-    "bestEvaluatedBidder": "",
-    "contractAmount": "",
-    "contractCurrency": "",
-    "phase4Enriched": true,
-    "retainedFromPreviousSnapshot": true
-  },
-  {
-    "id": "ef98d393d88890f85fb1d95275d3",
-    "title": "Micro Procurement",
-    "organization": "Uganda Registration Services Bureau",
-    "referenceNumber": "URSB/NCONS/2026-2027/00268",
-    "description": "Your experience on this site will be improved by allowing cookies.",
-    "category": "Micro Procurement",
-    "procurementType": "Micro Procurement",
-    "publishedAt": "",
-    "deadlineAt": "2026-11-06T20:59:59Z",
-    "status": "closed",
-    "isOpen": false,
-    "fingerprint": "ref-org:ursb/ncons/2026-2027/00268|uganda registration services bureau",
-    "firstSeenAt": "2026-11-06T15:58:22.662642Z",
-    "lastSeenAt": "2026-11-06T16:12:03.112981Z",
-    "deadlineChanged": false,
-    "sources": [
-      {
-        "id": "egp-uganda",
-        "name": "eGP Uganda",
-        "url": "https://egpuganda.go.ug/bid/notice/154814764/opening/details",
-        "detectedAt": "2026-11-06T15:57:57.408887Z"
-      }
-    ],
-    "noticeType": "",
-    "openingAt": "2026-11-05T21:00:00Z",
-    "applicationUrl": "",
-    "documents": [],
-    "sourceMetadata": {
-      "Bid opening 1 · #": "1",
-      "Bid opening 1 · Name & Address of The Bidder": "AUTO TUNE AND ENGINEERING LIMITED (Plot 24 undefined floor, Shop-undefined P.O Box 128011 Dewinton Road Street)",
-      "Bid opening 1 · Submission Date": "2026-11-05 11:28:48",
-      "Bid opening 1 · Amount": "4,062,740.00",
-      "Bid opening 2 · #": "2",
-      "Bid opening 2 · Name & Address of The Bidder": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD (BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728)",
-      "Bid opening 2 · Submission Date": "2026-11-06 10:10:23",
-      "Bid opening 2 · Amount": "2,525,200.00"
-    },
-    "intelligence": {
-      "enrichmentStatus": "partial",
-      "confidence": "medium",
-      "bidSecurity": "",
-      "tenderFee": "",
-      "submissionMethod": "Electronic eGP portal submission",
-      "mandatoryRequirements": [],
-      "eligibility": [],
-      "keyDates": []
-    },
-    "titleSpecificity": "unresolved",
-    "titleSource": "unresolved",
-    "displayEligible": false,
-    "procurementMethod": "Micro Procurement",
-    "sourceStage": "Bid opening",
-    "canonicalSource": "eGP Uganda",
-    "canonicalSourceUrl": "https://egpuganda.go.ug/bid/notice/154814764/opening/details",
-    "canonicalIdentity": "ref-org:ursb/ncons/2026-2027/00268|uganda registration services bureau",
-    "retentionStatus": "expired",
-    "opportunityType": "tender",
-    "firstDetectedAt": "2026-11-06T15:58:22.662642Z",
-    "lastVerifiedAt": "2026-11-06T16:12:03.112981Z",
-    "verificationStatus": "not-seen-current-scan",
-    "verificationNote": "Source completed but did not return this known bid; existing bid retained.",
-    "statusHistory": [
-      {
-        "status": "open",
-        "at": "2026-11-06T16:12:03.112981Z",
-        "reason": "discovered-and-verified"
-      },
-      {
-        "status": "closed",
-        "at": "2026-11-06T21:36:16.925859Z",
-        "reason": "deadline-passed"
-      }
-    ],
-    "contacts": [
-      {
-        "label": "Bid opening 1 · Name & Address of The Bidder",
-        "value": "AUTO TUNE AND ENGINEERING LIMITED (Plot 24 undefined floor, Shop-undefined P.O Box 128011 Dewinton Road Street)",
-        "kind": "address"
-      },
-      {
-        "label": "Bid opening 2 · Name & Address of The Bidder",
-        "value": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD (BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728)",
-        "kind": "address"
-      },
-      {
-        "label": "Phone",
-        "value": "0752786728",
-        "kind": "phone"
-      }
-    ],
-    "bidders": [
-      {
-        "name": "AUTO TUNE AND ENGINEERING LIMITED",
-        "address": "Plot 24 undefined floor, Shop-undefined P.O Box 128011 Dewinton Road Street",
-        "submissionAt": "2026-11-05T08:28:48Z",
-        "amount": "4,062,740.00",
-        "currency": "",
-        "rank": "",
-        "status": "",
-        "evaluationStage": "",
-        "reasons": []
-      },
-      {
-        "name": "BAB'S TRANSPORTERS & GENERAL MECHANIC LTD",
-        "address": "BAB'S TRANSPORTERS & GENERAL MECHANIC BOMBO ROAD MAKERERE-KAVULE 0752786728",
-        "submissionAt": "2026-11-06T07:10:23Z",
-        "amount": "2,525,200.00",
-        "currency": "",
-        "rank": "",
-        "status": "",
-        "evaluationStage": "",
-        "reasons": []
-      }
-    ],
-    "bidsReceived": 2,
-    "openingParticipants": [],
-    "openingCommittee": [],
-    "amendments": [],
-    "lifecycleEvents": [
-      {
-        "stage": "bid-opening",
-        "title": "Bid opening",
-        "occurredAt": "2026-11-05T21:00:00Z",
-        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154814764/opening/details",
-        "details": {
-          "bidsReceived": "2"
-        }
-      },
-      {
-        "stage": "closed",
-        "title": "Submission deadline passed",
-        "occurredAt": "2026-11-06T20:59:59Z",
-        "sourceUrl": "https://egpuganda.go.ug/bid/notice/154814764/opening/details",
         "details": {}
       }
     ],
